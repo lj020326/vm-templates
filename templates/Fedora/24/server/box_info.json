@@ -1,0 +1,8 @@
+{
+  "auto_build": "False",
+  "box_name": "fedora24",
+  "box_tag": "dettonville/fedora24",
+  "description": "Fedora 24",
+  "private": "False",
+  "short_description": "Fedora 24"
+}

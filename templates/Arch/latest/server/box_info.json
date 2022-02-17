@@ -1,0 +1,8 @@
+{
+  "auto_build": "False",
+  "box_name": "arch",
+  "box_tag": "dettonville/arch",
+  "description": "Arch Linux",
+  "private": "False",
+  "short_description": "Arch Linux"
+}

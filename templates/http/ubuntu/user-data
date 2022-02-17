@@ -1,0 +1,55 @@
+#cloud-config
+autoinstall:
+  version: 1
+  early-commands:
+#    # otherwise packer tries to connect and exceed max attempts
+#    - systemctl stop ssh
+    # Block inbound SSH to stop Packer trying to connect during intial install
+    - iptables -A INPUT -p tcp --dport 22 -j DROP
+  identity:
+    hostname: ubuntu-server
+    # Generated via: printf ${password} | mkpasswd -s -m sha-512
+    password: "$6$rounds=656000$MHGZkhSNI.8YWvX9$uDPTAoPNIJ7dHkMYxSfr6IjK7zsRMB26o/8Tbd5yIBG.cv6j9Xe0oRKjAVM8SbU7Hgm9UUdy2Ek4mbP7f7M7I."
+    username: packer
+  network:
+    network:
+      version: 2
+      renderer: networkd
+      ethernets:
+        ens160:
+          dhcp4: yes
+          dhcp6: no
+          ## ref: https://www.oxcrag.net/2019/02/07/creating-a-working-ubuntu-18-04-vmware-template/
+          dhcp-identifier: mac
+  apt:
+    preserve_sources_list: false
+    primary:
+      - arches: [amd64]
+        uri: "http://archive.ubuntu.com/ubuntu/"
+  ssh:
+    # For now we install openssh-server during package installs
+    install-server: no
+    allow-pw: true
+  storage:
+    layout:
+      name: lvm
+  packages:
+    - open-vm-tools
+    - bc
+    - lsb-release
+    - openssh-server
+#    - ntp
+    - wget
+    - curl
+    - rsync
+    - git
+    - jq
+    - python3
+    - python3-pip
+    - python3-apt
+    - python3-virtualenv
+  late-commands:
+    - echo 'packer ALL=(ALL) NOPASSWD:ALL' > /target/etc/sudoers.d/packer
+#    - chmod 440 /target/etc/sudoers.d/packer
+#    - sed -ie 's/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX="net.ifnames=0 biosdevname=0"/' /target/etc/default/grub
+#    - curtin in-target --target /target update-grub2

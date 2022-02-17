@@ -1,0 +1,22 @@
+{
+    "vm_cpu_num": "1",
+    "vm_mem_size": "1024",
+    "vm_disk_type_orig": "pvscsi",
+    "vm_disk_type": "scsi",
+    "vm_disk_size_orig": "10240",
+    "vm_disk_size": "16240",
+    "vm_disk_thin_provisioned": "true",
+    "vm_network": "BridgedNetwork",
+    "vm_network_card_e1000": "e1000",
+    "vm_network_card": "vmxnet3",
+    "vm_network_mgt": "VM Network",
+    "vm_guest_os_type": "debian10_64Guest",
+
+    "ip_settle_timeout": "1m",
+    "ip_settle_timeout_bad": "1m",
+
+    "vm_boot_wait": "5s",
+    "vm_boot_keygroup_interval": "200ms",
+    "boot_command_prefix": "<esc><wait>",
+    "boot_command": "install auto=true priority=critical url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/debian/preseed.cfg"
+}

@@ -1,0 +1,121 @@
+{
+  "builders": [
+    {
+      "boot_command": [
+        "<enter><wait>O<wait> ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/esxi/ks.cfg<enter>"
+      ],
+      "communicator": "ssh",
+      "cpus": "{{ user `CPUS` }}",
+      "disk_adapter_type": "pvscsi",
+      "disk_size": "{{ user `disk_size` }}",
+      "disk_type_id": 0,
+      "guest_os_type": "{{ user `guest_os_type` }}",
+      "http_directory": "{{ template_dir }}/http",
+      "iso_checksum": "{{ user `iso_checksum` }}",
+      "iso_urls": ["{{ user `iso_url` }}"],
+      "memory": "{{ user `RAM` }}",
+      "pause_before_connecting": "10m",
+      "shutdown_command": "{{ user `shutdown_command` }}",
+      "ssh_password": "{{ user `ssh_password` }}",
+      "ssh_timeout": "60m",
+      "ssh_username": "{{ user `ssh_username` }}",
+      "type": "vmware-iso",
+      "version": "{{ user `vm_version` }}",
+      "vm_name": "{{ user `vm_name` }}-{{ timestamp }}",
+      "vmx_data": {
+        "vhv.enable": true
+      },
+      "vmx_remove_ethernet_interfaces": false
+    },
+    {
+      "CPUS": "{{ user `CPUS` }}",
+      "NestedHV": true,
+      "RAM": "{{ user `RAM` }}",
+      "boot_command": [
+        "<enter><wait>O<wait> ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/esxi/ks.cfg<enter>"
+      ],
+      "boot_order": "disk,cdrom",
+      "cluster": "{{ user `cluster` }}",
+      "communicator": "ssh",
+      "convert_to_template": true,
+      "datacenter": "{{ user `datacenter` }}",
+      "datastore": "{{ user `datastore` }}",
+      "disk_controller_type": "pvscsi",
+      "folder": "{{ user `folder` }}",
+      "guest_os_type": "{{ user `guest_os_type` }}",
+      "http_directory": "{{ template_dir }}/http",
+      "insecure_connection": "{{ user `insecure_connection` }}",
+      "iso_checksum": "{{ user `iso_checksum` }}",
+      "iso_urls": ["{{ user `iso_url` }}"],
+      "network_adapters": [
+        {
+          "network": "{{ user `network` }}",
+          "network_card": "vmxnet3"
+        }
+      ],
+      "password": "{{ user `password` }}",
+      "pause_before_connecting": "10m",
+      "resource_pool": "",
+      "shutdown_command": "{{ user `shutdown_command` }}",
+      "ssh_password": "{{ user `ssh_password` }}",
+      "ssh_timeout": "60m",
+      "ssh_username": "{{ user `ssh_username` }}",
+      "storage": [
+        {
+          "disk_size": "{{ user `disk_size` }}",
+          "disk_thin_provisioned": true
+        },
+        {
+          "disk_size": "{{ user `disk_size` }}",
+          "disk_thin_provisioned": true
+        }
+      ],
+      "type": "vsphere-iso",
+      "username": "{{ user `username` }}",
+      "vcenter_server": "{{ user `vcenter_server` }}",
+      "vm_name": "{{ user `vm_name` }}-{{ timestamp }}",
+      "vm_version": "{{ user `vm_version` }}"
+    }
+  ],
+  "post-processors": [
+    {
+      "output": "{{ template_dir }}/packer-manifest.json",
+      "strip_path": true,
+      "type": "manifest"
+    }
+  ],
+  "provisioners": [
+    {
+      "inline": [
+        "esxcli system settings advanced set -o /Net/FollowHardwareMac -i 1",
+        "sed -i '/\\/system\\/uuid/d' /etc/vmware/esx.conf",
+        "sed -i '/\\/net\\/pnic\\/child\\[0000\\]\\/mac/d' /etc/vmware/esx.conf",
+        "sed -i '/\\/net\\/vmkernelnic\\/child\\[0000\\]\\/mac/d' /etc/vmware/esx.conf",
+        "/sbin/auto-backup.sh"
+      ],
+      "type": "shell"
+    }
+  ],
+  "variables": {
+    "CPUS": "2",
+    "RAM": "4096",
+    "cluster": "",
+    "datacenter": "",
+    "datastore": "",
+    "disk_size": "8192",
+    "folder": "",
+    "guest_os_type": "vmkernel5Guest",
+    "insecure_connection": "true",
+    "iso_checksum": "",
+    "iso_url": "",
+    "network": "",
+    "password": "",
+    "shutdown_command": "esxcli system maintenanceMode set -e true -t 0; esxcli system shutdown poweroff -d 10 -r \"Packer Shutdown\"; esxcli system maintenanceMode set -e false -t 0",
+    "ssh_password": "VMware123",
+    "ssh_username": "root",
+    "username": "",
+    "vcenter_server": "",
+    "vm_name": "",
+    "vm_version": "10"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "auto_build": "False",
+  "box_name": "wily64",
+  "box_tag": "dettonville/wily64",
+  "description": "Ubuntu 15.10 (Wily Werewolf) Server",
+  "private": "False",
+  "short_description": "Ubuntu Wily Server"
+}

@@ -1,0 +1,8 @@
+{
+  "auto_build": "False",
+  "box_name": "fedora29-desktop",
+  "box_tag": "dettonville/fedora29-desktop",
+  "description": "Fedora 29 Desktop",
+  "private": "False",
+  "short_description": "Fedora 29 Desktop"
+}

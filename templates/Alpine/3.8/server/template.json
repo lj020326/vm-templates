@@ -1,0 +1,9 @@
+{
+  "alpine_system_part": "/dev/sda2",
+  "alpine_version": "3.8",
+  "boot_command_prefix": "",
+  "iso_checksum": "77a609dd710ba0d3b0806a314f5c4ef1718ce140b522bf7c7ca081eba664db2c",
+  "iso_checksum_type": "sha256",
+  "iso_url": "http://dl-cdn.alpinelinux.org/alpine/v3.8/releases/x86_64/alpine-virt-3.8.2-x86_64.iso",
+  "vm_name": "alpine38-server-packer-template"
+}

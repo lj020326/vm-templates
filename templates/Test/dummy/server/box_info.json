@@ -1,0 +1,8 @@
+{
+  "auto_build": "False",
+  "box_name": "test",
+  "box_tag": "dettonville/test",
+  "description": "Just a box for testing",
+  "private": "False",
+  "short_description": "Test box"
+}

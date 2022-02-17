@@ -1,0 +1,86 @@
+{
+  "builds": [
+    {
+      "name": "virtualbox-iso",
+      "builder_type": "virtualbox-iso",
+      "build_time": 1543781530,
+      "files": null,
+      "artifact_id": "",
+      "packer_run_uuid": "74828fd5-11b3-88fa-ce40-677127175b4b",
+      "custom_data": null
+    },
+    {
+      "name": "virtualbox-iso",
+      "builder_type": "virtualbox-iso",
+      "build_time": 1547884562,
+      "files": null,
+      "artifact_id": "",
+      "packer_run_uuid": "5fc69ea3-df10-c251-9523-67c52c1e6168",
+      "custom_data": null
+    },
+    {
+      "name": "virtualbox-iso",
+      "builder_type": "virtualbox-iso",
+      "build_time": 1551758986,
+      "files": null,
+      "artifact_id": "",
+      "packer_run_uuid": "66b56fb0-2d32-e168-b4b0-6bf0b0900353",
+      "custom_data": null
+    },
+    {
+      "name": "virtualbox-iso",
+      "builder_type": "virtualbox-iso",
+      "build_time": 1554858002,
+      "files": null,
+      "artifact_id": "",
+      "packer_run_uuid": "af35848d-a7dc-5360-62e2-ac114b0d032b",
+      "custom_data": null
+    },
+    {
+      "name": "virtualbox-iso",
+      "builder_type": "virtualbox-iso",
+      "build_time": 1558024108,
+      "files": null,
+      "artifact_id": "",
+      "packer_run_uuid": "92ea6b4f-68da-d395-18da-ca88001f4f63",
+      "custom_data": null
+    },
+    {
+      "name": "virtualbox-iso",
+      "builder_type": "virtualbox-iso",
+      "build_time": 1561622306,
+      "files": null,
+      "artifact_id": "",
+      "packer_run_uuid": "568232f0-a446-6a9d-f9fb-a373be30be78",
+      "custom_data": null
+    },
+    {
+      "name": "virtualbox-iso",
+      "builder_type": "virtualbox-iso",
+      "build_time": 1566714334,
+      "files": null,
+      "artifact_id": "",
+      "packer_run_uuid": "ee374fe1-f5f9-91ff-c395-6bce0a9c37d1",
+      "custom_data": null
+    },
+    {
+      "name": "virtualbox-iso",
+      "builder_type": "virtualbox-iso",
+      "build_time": 1574786783,
+      "files": null,
+      "artifact_id": "",
+      "packer_run_uuid": "2d13d1ca-439d-e8f0-9b61-b32734b436a4",
+      "custom_data": null
+    },
+    {
+      "name": "vmware-iso",
+      "builder_type": "vmware-iso",
+      "build_time": 1580856995,
+      "files": null,
+      "artifact_id": "",
+      "packer_run_uuid": "e35ea06c-9676-0ba1-c2f4-1fc487539938",
+      "custom_data": null
+    }
+  ],
+  "last_run_uuid": "e35ea06c-9676-0ba1-c2f4-1fc487539938"
+}

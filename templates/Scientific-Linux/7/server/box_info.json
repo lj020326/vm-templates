@@ -1,0 +1,8 @@
+{
+  "auto_build": "False",
+  "box_name": "sl7",
+  "box_tag": "dettonville/sl7",
+  "description": "Scientific Linux 7",
+  "private": "False",
+  "short_description": "Scientific Linux 7"
+}

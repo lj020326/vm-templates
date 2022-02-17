@@ -1,0 +1,68 @@
+{
+  "builds": [
+    {
+      "name": "virtualbox-iso",
+      "builder_type": "virtualbox-iso",
+      "build_time": 1543776796,
+      "files": null,
+      "artifact_id": "",
+      "packer_run_uuid": "95b5be2d-7316-e652-7b9b-63be4a77e1c1",
+      "custom_data": null
+    },
+    {
+      "name": "virtualbox-iso",
+      "builder_type": "virtualbox-iso",
+      "build_time": 1547877642,
+      "files": null,
+      "artifact_id": "",
+      "packer_run_uuid": "97885fba-3bc4-fcef-8657-1cbd5e963ba5",
+      "custom_data": null
+    },
+    {
+      "name": "virtualbox-iso",
+      "builder_type": "virtualbox-iso",
+      "build_time": 1551750246,
+      "files": null,
+      "artifact_id": "",
+      "packer_run_uuid": "6a4e556e-19f0-b6d9-3c5d-b117841ac4ac",
+      "custom_data": null
+    },
+    {
+      "name": "virtualbox-iso",
+      "builder_type": "virtualbox-iso",
+      "build_time": 1555965979,
+      "files": null,
+      "artifact_id": "",
+      "packer_run_uuid": "585fe34c-da7b-2c79-18ac-f692a8d9c559",
+      "custom_data": null
+    },
+    {
+      "name": "virtualbox-iso",
+      "builder_type": "virtualbox-iso",
+      "build_time": 1557725257,
+      "files": null,
+      "artifact_id": "",
+      "packer_run_uuid": "eb54950e-9a1b-59a0-b2d8-78f45b49dc29",
+      "custom_data": null
+    },
+    {
+      "name": "virtualbox-iso",
+      "builder_type": "virtualbox-iso",
+      "build_time": 1561625122,
+      "files": null,
+      "artifact_id": "",
+      "packer_run_uuid": "c21c8001-9624-dc60-2613-6242d8b9407f",
+      "custom_data": null
+    },
+    {
+      "name": "virtualbox-iso",
+      "builder_type": "virtualbox-iso",
+      "build_time": 1574790230,
+      "files": null,
+      "artifact_id": "",
+      "packer_run_uuid": "2fd3350f-0f7f-adc5-e9ca-5db9f981ff73",
+      "custom_data": null
+    }
+  ],
+  "last_run_uuid": "2fd3350f-0f7f-adc5-e9ca-5db9f981ff73"
+}
