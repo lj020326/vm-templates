@@ -1,0 +1,16 @@
+{
+  "vm_cpu_num": "1",
+  "vm_mem_size": "4096",
+  "vm_disk_type": "lsilogic-sas",
+  "vm_disk_size": "40000",
+  "vm_disk_thin_provisioned": "true",
+  "vm_network": "BridgedNetwork",
+  "vm_network_card_e1000": "e1000",
+  "vm_network_card": "vmxnet3",
+  "vm_network_mgt": "VM Network",
+  "vm_guest_os_type": "windows9Server64Guest",
+  "ip_settle_timeout": "1m",
+  "ip_settle_timeout_bad": "1m",
+  "unattended_file_path": "autounattend.xml",
+  "winadmin_password": "success123"
+}
