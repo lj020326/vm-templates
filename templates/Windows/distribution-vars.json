@@ -1,16 +1,22 @@
 {
-  "vm_cpu_num": "1",
+  "vm_cpu_num": "2",
   "vm_mem_size": "4096",
   "vm_disk_type": "lsilogic-sas",
-  "vm_disk_size": "40000",
+  "vm_disk_size": "50000",
   "vm_disk_thin_provisioned": "true",
   "vm_network": "BridgedNetwork",
   "vm_network_card_e1000": "e1000",
   "vm_network_card": "vmxnet3",
   "vm_network_mgt": "VM Network",
   "vm_guest_os_type": "windows9Server64Guest",
+  "vm_firmware_alt": "efi",
+  "vm_firmware": "bios",
+  "win_guest_username": "administrator",
+  "win_guest_password": "{{ env `VM_ROOT_PASSWORD` }}",
+  "winrm_username_orig": "packer",
+  "winrm_password_orig": "{{ env `PACKER_SSH_PASSWORD` }}",
+  "boot_command": "<spacebar>",
   "ip_settle_timeout": "1m",
   "ip_settle_timeout_bad": "1m",
-  "unattended_file_path": "autounattend.xml",
-  "winadmin_password": "success123"
+  "ansible_inventory_groups_save": "vm_template,windows,ca_domain"
 }

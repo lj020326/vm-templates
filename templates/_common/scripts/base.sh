@@ -33,40 +33,21 @@ elif [[ $id == "arch" ]]; then
         python2-pyopenssl
 
 elif [[ $id == "centos" || $id == "ol" ]]; then
-    if [[ $os_version_id_short -eq 5 ]]; then
-        for F in /etc/yum.repos.d/*.repo; do
-            sudo bash -c "echo '# EOL DISTRO' > $F"
-        done
-        cat <<_EOF_ | sudo bash -c "cat > /etc/yum.repos.d/Vault.repo"
-[base]
-name=CentOS-5.11 - Base
-baseurl=http://vault.centos.org/5.11/os/\$basearch/
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-5
-enabled=1
-[updates]
-name=CentOS-5.11 - Updates
-baseurl=http://vault.centos.org/5.11/updates/\$basearch/
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-5
-enabled=1
-[extras]
-name=CentOS-5.11 - Extras
-baseurl=http://vault.centos.org/5.11/extras/\$basearch/
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-5
-enabled=1
-[centosplus]
-name=CentOS-5.11 - Plus
-baseurl=http://vault.centos.org/5.11/centosplus/\$basearch/
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-5
-enabled=1
-_EOF_
-    fi
 
-    if [[ $id != "ol" ]]; then
-        sudo yum -y install epel-release
+    if [[ $id == "centos" ]]; then
+      ## ref: https://techglimpse.com/failed-metadata-repo-appstream-centos-8/
+      ## ref: https://forums.centos.org/viewtopic.php?t=78708
+      ## ref: https://gist.github.com/forevergenin/4bf75a5396183b83121fa971e54d7b04
+      sudo sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Linux*
+      sudo sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux*
+
+      sudo dnf clean all
+      sudo dnf swap -y centos-linux-repos centos-stream-repos
+      sudo dnf swap -y centos-linux-repos centos-stream-repos
+
+      sudo dnf -y update
+      sudo systemctl daemon-reload
+      sudo dnf -y install epel-release
     else
         if [[ $os_version_id_short -eq 7 ]]; then
             sudo rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
