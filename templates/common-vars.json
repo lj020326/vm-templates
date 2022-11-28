@@ -1,7 +1,7 @@
 {
   "build_type": "vsphere-iso",
   "skip_packer_build": "false",
-  "vcenter_host": "vcenter.dettonville.int",
+  "vcenter_host": "vcenter7.dettonville.int",
   "vcenter_username": "administrator@vsphere.local",
   "vcenter_password": "{{ env `VMWARE_VCENTER_PASSWORD` }}",
   "vcenter_datacenter_orig": "johnsondc",

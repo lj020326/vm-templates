@@ -71,3 +71,14 @@ This job will launch all of the VM template build jobs defined in [runAllBuilds.
 ## Notes, Considerations & Final Thoughts...
 
 If defining the ansible playbooks as a submodule the same way done in this repo, make sure that the git repo option to "Recursively update submodules" is set/checked.
+
+## Reference
+
+* https://github.com/chef/bento
+* https://github.com/burkeazbill/ubuntu-22-04-packer-fusion-workstation/blob/master/http/user-data
+* https://github.com/williamsanmartin/packer-template-ubuntu/blob/main/http/user-data
+* [vagrant-box-templates](https://github.com/mrlesmithjr/vagrant-box-templates)
+* https://github.com/mwrock/packer-templates
+* https://github.com/jacqinthebox/packer-templates
+* https://github.com/geerlingguy/packer-boxes
+* 

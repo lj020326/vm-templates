@@ -144,6 +144,15 @@ building, you can execute the [cleanup_builds.sh](cleanup_builds.sh) script.
 
 ### Using pre-built and ready for consumption Vagrant templates
 
-The majority of these templates are used to populate my [vagrant-box-templates](https://github.com/mrlesmithjr/vagrant-box-templates) repo. I would highly
-recommend leveraging this repo for testing and etc.
+The majority of these templates are used to test [ansible-datacenter VM provisioning playbooks](https://github.com/lj020326/ansible-datacenter) using the [packer-box-templates](https://github.com/lj020326/packer-templates) repo. I would highly recommend leveraging this repo for testing ansible playbook and etc.
 
+## Reference
+
+* https://github.com/chef/bento
+* https://github.com/burkeazbill/ubuntu-22-04-packer-fusion-workstation/blob/master/http/user-data
+* https://github.com/williamsanmartin/packer-template-ubuntu/blob/main/http/user-data
+* [vagrant-box-templates](https://github.com/mrlesmithjr/vagrant-box-templates)
+* https://github.com/mwrock/packer-templates
+* https://github.com/jacqinthebox/packer-templates
+* https://github.com/geerlingguy/packer-boxes
+* 

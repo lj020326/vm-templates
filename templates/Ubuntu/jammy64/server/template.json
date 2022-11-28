@@ -4,6 +4,7 @@
   "iso_url": "https://releases.ubuntu.com/22.04/ubuntu-22.04-live-server-amd64.iso",
   "vm_name": "packer-template-ubuntu22",
   "vm_boot_keygroup_interval": "200ms",
+  "temporary_key_pair_type": "ed25519",
   "boot_command_prefix": "<esc><wait>e<wait><down><down><down><end><bs><bs><bs><bs><wait>",
   "boot_command": "autoinstall quiet ds=nocloud-net\\;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ubuntu/22.04/ ---<wait><f10><wait>"
 }
