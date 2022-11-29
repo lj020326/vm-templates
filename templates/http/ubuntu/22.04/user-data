@@ -14,7 +14,7 @@ autoinstall:
 #    - iptables -A INPUT -p tcp --dport 22 -j DROP
   ssh:
     # For now we install openssh-server during package installs
-    install-server: true
+    install-server: no
     allow-pw: true
   storage:
     layout:
@@ -23,7 +23,7 @@ autoinstall:
     - open-vm-tools
     - openssh-server
     - cloud-init
-    - bc
+#    - bc
     - lsb-release
     - wget
     - curl

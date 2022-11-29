@@ -4,7 +4,6 @@
   "vcenter_host": "vcenter7.dettonville.int",
   "vcenter_username": "administrator@vsphere.local",
   "vcenter_password": "{{ env `VMWARE_VCENTER_PASSWORD` }}",
-  "vcenter_datacenter_orig": "johnsondc",
   "vcenter_datacenter": "dettonville-dc-01",
   "vcenter_cluster": "Management",
   "vcenter_folder": "templates",
@@ -73,8 +72,8 @@
   "ansible_vault_password": "{{ env `ANSIBLE_VAULT_PASSWORD` }}",
   "ansible_python_interpreter_save": "/usr/bin/python3",
   "ansible_inventory_group_vars": "../ansible/inventory/group_vars",
-  "ansible_inventory_file": "../ansible/inventory/vm_template.ini",
+  "ansible_inventory_file": "../ansible/inventory/vm_template.yml",
   "ansible_galaxy_req_file": "../ansible/roles/requirements.packer.yml",
   "ansible_playbook_dir": "../ansible",
-  "ansible_playbook_file": "../ansible/vm_template.yml"
+  "ansible_playbook_file": "../ansible/bootstrap_vm_template.yml"
 }

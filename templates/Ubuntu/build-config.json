@@ -230,7 +230,7 @@
       "execute_command": "echo '{{user `ssh_username`}}' | {{.Vars}} sudo -H -S -E bash '{{.Path}}'",
       "scripts": [
         "_common/scripts/cleanup.sh",
-        "_common/scripts/zerodisk.sh"
+        "_common/scripts/minimize.sh"
       ]
     }
   ],
