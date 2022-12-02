@@ -71,7 +71,11 @@ history -c
 
 ## Fix machine-id issue with duplicate IP addresses being assigned
 ## ref: https://jaylacroix.com/fixing-ubuntu-18-04-virtual-machines-that-fight-over-the-same-ip-address/
+## ref: https://kb.vmware.com/s/article/82229
 if [ -f /etc/machine-id ]; then
   echo "==> Clearing machine-id"
-  sudo truncate -s 0 /etc/machine-id
+#  sudo truncate -s 0 /etc/machine-id
+  sudo echo -n > /etc/machine-id
+  sudo rm /var/lib/dbus/machine-id
+  sudo ln -s /etc/machine-id /var/lib/dbus/machine-id
 fi
