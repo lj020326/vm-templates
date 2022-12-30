@@ -62,6 +62,7 @@ pip3 install --upgrade netaddr
 #chmod 600 ~/.vault_pass
 
 #echo "export PATH=$PATH:~/.local/bin" >> ~/.bash_profile
+export PATH=$PATH:/usr/local/bin
 
-echo "==> Install latest ansible collections"
+echo "==> Install upgraded ansible collections"
 ansible-galaxy collection install -U ansible.utils
