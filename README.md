@@ -68,6 +68,29 @@ Then setup a pipeline job at the top level folder to run the [runAllBuilds.groov
 This job will launch all of the VM template build jobs defined in [runAllBuilds.groovy](./runAllBuilds.groovy) with output similar to below.
 ![Job Console Output](./docs/screenshots/packer-templates-2b-run-all-builds-output.png)
 
+## To repair submodule
+
+### for public/github branch
+
+```shell
+$ git switch github
+$ git submodule deinit -f .
+#git submodule add --name ansible-github https://github.com/lj020326/ansible-datacenter.git ansible/
+$ git submodule add --force --name ansible-github https://github.com/lj020326/ansible-datacenter.git ansible/
+$ git submodule update --init --recursive --remote
+$ git add . && git commit -m 'update submodule' && git push
+```
+
+## for master branch
+```shell
+$ git switch master
+$ git submodule deinit -f .
+#$ git submodule add --name ansible git@bitbucket.org:lj020326/ansible-datacenter.git
+$ git submodule add --force --name ansible git@bitbucket.org:lj020326/ansible-datacenter.git ansible/
+$ git submodule update --init --recursive --remote
+$ git add . && git commit -m 'update submodule' && git push
+```
+
 ## Notes, Considerations & Final Thoughts...
 
 If defining the ansible playbooks as a submodule the same way done in this repo, make sure that the git repo option to "Recursively update submodules" is set/checked.
