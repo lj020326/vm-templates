@@ -8,7 +8,6 @@ You can also fork this repository and customize a build configuration with your 
 
 [![Template Validation](https://github.com/lj020326/packer-templates/actions/workflows/main.yml/badge.svg)](https://github.com/lj020326/packer-templates/actions/workflows/main.yml)
 [![License](https://img.shields.io/badge/license-GPLv3-brightgreen.svg?style=flat)](LICENSE)
-[![Linkedin](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/leejjohnson/)
 
 ## Requirements
 
@@ -118,4 +117,8 @@ If defining the ansible playbooks as a submodule the same way done in this repo,
 * https://github.com/mwrock/packer-templates
 * https://github.com/jacqinthebox/packer-templates
 * https://github.com/geerlingguy/packer-boxes
-* 
+
+## Contact
+
+[![Linkedin](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/leejjohnson/)
+
