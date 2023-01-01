@@ -1,6 +1,6 @@
 # Dettonville Packer Builds
 
-This project contains the Packer build configurations for all of Dettonville Boxes. Each box builds a minimal base box for use with Vsphere. Available boxes include:
+This project contains the Packer build configurations for all of Dettonville Boxes. Each box builds a minimal base box for use with Vsphere. 
 
 You can also fork this repository and customize a build configuration with your own Ansible roles and playbooks to build a fully custom box using Packer. 
 
