@@ -91,6 +91,20 @@ $ git submodule update --init --recursive --remote
 $ git add . && git commit -m 'update submodule' && git push
 ```
 
+### To run/debug a script provisioner
+
+```shell
+sudo -S -E bash /tmp/script_4278.sh
+```
+
+### To run/debug the VM template create playbook on packer created VM
+
+```shell
+# find the temp dir used for the ansible-local provisioner from the packer log 
+$ cd /tmp/packer-provisioner-ansible-local/63b193ab-d1c4-b355-f4cf-9e9153570896
+$ ansible-playbook bootstrap_vm_template.yml --vault-password-file=~/.vault_pass -c local -i vm_template.yml
+```
+
 ## Notes, Considerations & Final Thoughts...
 
 If defining the ansible playbooks as a submodule the same way done in this repo, make sure that the git repo option to "Recursively update submodules" is set/checked.

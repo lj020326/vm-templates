@@ -60,10 +60,10 @@ elif [[ $id == "centos" || $id == "ol" ]]; then
         fi
     fi
 
-    if [[ $os_version_id_short < 8 ]]; then
+    if [[ $os_version_id_short -lt 8 ]]; then
         sudo yum -y install cloud-utils-growpart python-devel
     else
-        sudo yum -y install cloud-utils-growpart platform-python-devel
+        sudo dnf -y install cloud-utils-growpart platform-python-devel
     fi
 
 elif [[ $id == "debian" ]]; then

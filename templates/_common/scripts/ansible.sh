@@ -40,16 +40,12 @@ sudo echo "TCPKeepAlive yes" >> /etc/ssh/sshd_config
 sudo service sshd restart
 
 echo "==> Install latest ansible"
-#pip3 install --upgrade pip ansible virtualenv
-#pip3 install --upgrade pip ansible
+export PATH=$PATH:/usr/local/bin
+
 ## ref: https://github.com/pyca/pyopenssl/issues/559
-#pip3 install --upgrade pip ansible virtualenv cryptography pyopenssl
-#pip3 install --upgrade pip ansible cryptography pyopenssl
+#pip3 install --upgrade pip ansible virtualenv cryptography pyopenssl netaddr
 pip3 install --upgrade pip
 pip3 install --upgrade ansible
-#pip3 install --upgrade cryptography pyopenssl
-
-pip3 install --upgrade netaddr
 
 #ln -s /usr/local/bin/ansible /usr/bin/ansible
 #ln -s /usr/local/bin/ansible-galaxy /usr/bin/ansible-galaxy
@@ -62,7 +58,6 @@ pip3 install --upgrade netaddr
 #chmod 600 ~/.vault_pass
 
 #echo "export PATH=$PATH:~/.local/bin" >> ~/.bash_profile
-export PATH=$PATH:/usr/local/bin
 
 echo "==> Install upgraded ansible collections"
 ansible-galaxy collection install -U ansible.utils
