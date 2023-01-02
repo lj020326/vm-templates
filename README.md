@@ -74,7 +74,6 @@ This job will launch all of the VM template build jobs defined in [runAllBuilds.
 ```shell
 $ git switch github
 $ git submodule deinit -f .
-#git submodule add --name ansible-github https://github.com/lj020326/ansible-datacenter.git ansible/
 $ git submodule add --force --name ansible-github https://github.com/lj020326/ansible-datacenter.git ansible/
 $ git submodule update --init --recursive --remote
 $ git add . && git commit -m 'update submodule' && git push
@@ -84,7 +83,6 @@ $ git add . && git commit -m 'update submodule' && git push
 ```shell
 $ git switch master
 $ git submodule deinit -f .
-#$ git submodule add --name ansible git@bitbucket.org:lj020326/ansible-datacenter.git
 $ git submodule add --force --name ansible git@bitbucket.org:lj020326/ansible-datacenter.git ansible/
 $ git submodule update --init --recursive --remote
 $ git add . && git commit -m 'update submodule' && git push
