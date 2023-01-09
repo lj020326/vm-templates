@@ -46,6 +46,9 @@ export PATH=$PATH:/usr/local/bin
 #pip3 install --upgrade pip ansible virtualenv cryptography pyopenssl netaddr
 pip3 install --upgrade pip
 pip3 install --upgrade ansible
+pip3 install --upgrade netaddr
+
+pip install netaddr || true
 
 #ln -s /usr/local/bin/ansible /usr/bin/ansible
 #ln -s /usr/local/bin/ansible-galaxy /usr/bin/ansible-galaxy

@@ -76,6 +76,8 @@ if [ -f /etc/machine-id ]; then
   echo "==> Clearing machine-id"
 #  sudo truncate -s 0 /etc/machine-id
   sudo echo -n > /etc/machine-id
+fi
+if [ -f /var/lib/dbus/machine-id ]; then
   sudo rm /var/lib/dbus/machine-id
   sudo ln -s /etc/machine-id /var/lib/dbus/machine-id
 fi
