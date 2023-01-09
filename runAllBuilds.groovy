@@ -22,13 +22,13 @@ logLevel: DEBUG
 jobList: 
 - stage: Build Templates
   jobs: 
-    - job: "${jobFolder}/Debian/buster64"
-    - job: "${jobFolder}/Debian/stretch64"
+    - job: "${jobFolder}/Debian/9"
+    - job: "${jobFolder}/Debian/10"
     - job: "${jobFolder}/CentOS/7"
     - job: "${jobFolder}/CentOS/8"
     - job: "${jobFolder}/CentOS/8-stream"
-    - job: "${jobFolder}/Ubuntu/bionic64"
-    - job: "${jobFolder}/Ubuntu/focal64"
+    - job: "${jobFolder}/Ubuntu/20.04"
+    - job: "${jobFolder}/Ubuntu/22.04"
     - job: "${jobFolder}/Windows/2016"
     - job: "${jobFolder}/Windows/2019"
 """
