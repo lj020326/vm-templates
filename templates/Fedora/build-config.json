@@ -94,6 +94,7 @@
     {
       "scripts": [
         "_common/scripts/base.sh",
+        "_common/scripts/systemd.sh",
         "_common/scripts/vagrant.sh",
         "_common/scripts/virtualbox.sh",
         "_common/scripts/vmware.sh",
