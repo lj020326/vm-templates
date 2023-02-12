@@ -42,8 +42,8 @@
       "ssh_username": "core",
       "storage": [
         {
-          "disk_size": "{{user `vm_disksize`}}",
-          "disk_thin_provisioned": true
+          "disk_size": "{{ user `vm_disk_size` }}",
+          "disk_thin_provisioned": "{{ user `vm_disk_thin_provisioned` }}"
         }
       ],
       "type": "vsphere-iso",
@@ -94,8 +94,8 @@
       "ssh_username": "core",
       "storage": [
         {
-          "disk_size": "{{user `vm_disksize`}}",
-          "disk_thin_provisioned": true
+          "disk_size": "{{ user `vm_disk_size` }}",
+          "disk_thin_provisioned": "{{ user `vm_disk_thin_provisioned` }}"
         }
       ],
       "type": "vsphere-iso",
@@ -146,8 +146,8 @@
       "ssh_username": "core",
       "storage": [
         {
-          "disk_size": "{{user `vm_disksize`}}",
-          "disk_thin_provisioned": true
+          "disk_size": "{{ user `vm_disk_size` }}",
+          "disk_thin_provisioned": "{{ user `vm_disk_thin_provisioned` }}"
         }
       ],
       "type": "vsphere-iso",
@@ -198,8 +198,8 @@
       "ssh_username": "core",
       "storage": [
         {
-          "disk_size": "{{user `vm_disksize`}}",
-          "disk_thin_provisioned": true
+          "disk_size": "{{ user `vm_disk_size` }}",
+          "disk_thin_provisioned": "{{ user `vm_disk_thin_provisioned` }}"
         }
       ],
       "type": "vsphere-iso",

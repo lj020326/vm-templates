@@ -26,8 +26,8 @@
 
       "storage": [
         {
-          "disk_size": "{{user `vm_disk_size`}}",
-          "disk_thin_provisioned": "{{user `vm_disk_thin_provisioned`}}"
+          "disk_size": "{{ user `vm_disk_size` }}",
+          "disk_thin_provisioned": "{{ user `vm_disk_thin_provisioned` }}"
         }
       ],
       "disk_controller_type": "{{user `vm_disk_type`}}",
@@ -82,7 +82,7 @@
       "boot_wait": "{{user `vm_boot_wait`}}",
       "cpus": "{{ user `vm_cpu_num` }}",
       "disk_interface": "virtio",
-      "disk_size": "{{ user `disk_size` }}",
+      "disk_size": "{{ user `vm_disk_size` }}",
       "format": "qcow2",
       "headless": true,
       "http_directory": "{{user `vm_boot_http_directory`}}",
@@ -106,7 +106,7 @@
       ],
       "boot_wait": "{{user `vm_boot_wait`}}",
       "cpus": "{{ user `vm_cpu_num` }}",
-      "disk_size": "{{ user `disk_size` }}",
+      "disk_size": "{{ user `vm_disk_size` }}",
       "guest_os_type": "Ubuntu_64",
       "hard_drive_interface": "{{ user `disk_adapter_type` }}",
       "headless": true,
@@ -132,7 +132,7 @@
       "boot_wait": "{{user `vm_boot_wait`}}",
       "cpus": "{{ user `vm_cpu_num` }}",
       "disk_adapter_type": "{{ user `disk_adapter_type` }}",
-      "disk_size": "{{ user `disk_size` }}",
+      "disk_size": "{{ user `vm_disk_size` }}",
       "disk_type_id": 0,
       "guest_os_type": "ubuntu-64",
       "headless": true,
@@ -242,6 +242,8 @@
     "disk_adapter_type": "scsi",
     "disk_size": "36864",
     "inspec_timeout": "50m",
+    "ip_wait_timeout": "60m",
+    "ip_settle_timeout": "5s",
     "iso_checksum": "",
     "iso_checksum_type": "sha256",
     "iso_url": "",
@@ -253,6 +255,7 @@
     "qemu_accelerator": "hvf",
     "ssh_password": "vagrant",
     "ssh_username": "vagrant",
+    "ssh_timeout": "60m",
     "vagrant_cloud_token": "",
     "vagrant_cloud_username": "",
     "vm_cpu_num": "1",

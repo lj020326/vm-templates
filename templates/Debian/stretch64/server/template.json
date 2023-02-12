@@ -5,7 +5,6 @@
   "iso_url_old": "https://cdimage.debian.org/cdimage/archive/9.9.0/amd64/iso-cd/debian-9.9.0-amd64-netinst.iso",
   "iso_url_jigdo": "https://cdimage.debian.org/cdimage/archive/9.9.0/amd64/jigdo-cd/debian-9.9.0-amd64-netinst.jigdo",
   "iso_url": "http://cdimage.debian.org/cdimage/archive/9.13.0/amd64/iso-cd/debian-9.13.0-amd64-netinst.iso",
-  "vm_name_orig": "stretch64-server-packer-template",
   "vm_name": "packer-template-debian9",
   "vm_guest_os_type": "debian9_64Guest"
 }

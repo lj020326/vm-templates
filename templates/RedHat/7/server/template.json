@@ -6,7 +6,7 @@
       ],
       "boot_wait": "10s",
       "cpus": "{{ user `vm_cpu_num` }}",
-      "disk_size": "{{user `disk_size`}}",
+      "disk_size": "{{ user `vm_disk_size` }}",
       "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
       "guest_os_type": "{{user `guest_os_type`}}",
       "hard_drive_interface": "{{user `hard_drive_interface`}}",
@@ -58,7 +58,7 @@
   ],
   "variables": {
     "compression_level": "6",
-    "disk_size": "36864",
+    "vm_disk_size": "36864",
     "guest_os_type": "RedHat_64",
     "hard_drive_interface": "sata",
     "headless": "false",

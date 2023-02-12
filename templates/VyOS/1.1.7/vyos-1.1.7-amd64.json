@@ -8,7 +8,7 @@
       "iso_checksum_type": "{{user `iso_checksum_type`}}",
       "output_directory": "output-vyos-1.1.7-amd64-{{build_type}}",
       "vm_name": "packer-vyos-1.1.7-amd64",
-      "disk_size": "{{user `disk_size`}}",
+      "disk_size": "{{ user `vm_disk_size` }}",
       "headless": "{{user `headless`}}",
       "boot_wait": "5s",
       "boot_command": [

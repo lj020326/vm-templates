@@ -8,7 +8,7 @@
       "iso_checksum_type": "{{user `iso_checksum_type`}}",
       "output_directory": "output-vyos-1.1.8-amd64-{{build_type}}",
       "vm_name": "packer-vyos-1.1.8-amd64",
-      "disk_size": "{{user `disk_size`}}",
+      "disk_size": "{{ user `vm_disk_size` }}",
       "headless": "{{user `headless`}}",
       "boot_wait": "5s",
       "boot_command": [
@@ -97,7 +97,7 @@
   "variables": {
     "compression_level": "6",
     "cpus": "1",
-    "disk_size": "40000",
+    "vm_disk_size": "40000",
     "headless": "false",
     "iso_checksum": "ff4c8e1822e653d8d85f4a90f30c6d2ac047514c",
     "iso_checksum_type": "sha1",

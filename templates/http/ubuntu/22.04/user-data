@@ -8,7 +8,7 @@ autoinstall:
     layout: us
   early-commands:
     # otherwise packer tries to connect and exceed max attempts
-    - sudo systemctl stop ssh
+    - systemctl stop ssh
 #    # Block inbound SSH to stop Packer trying to connect during initial install
 #    - iptables -A INPUT -p tcp --dport 22 -j DROP
   ssh:
@@ -22,13 +22,13 @@ autoinstall:
     - open-vm-tools
     - openssh-server
     - cloud-init
-#    - bc
+    - bc
     - lsb-release
     - wget
     - curl
     - rsync
     - git
-#    - jq
+    - jq
     - python3
     - python3-pip
     - python3-apt

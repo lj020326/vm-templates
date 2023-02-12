@@ -47,8 +47,8 @@
       "disk_controller_type": "{{user `vm_disk_type`}}",
       "storage": [
         {
-          "disk_size": "{{user `vm_disk_size`}}",
-          "disk_thin_provisioned": "{{user `vm_disk_thin_provisioned`}}"
+          "disk_size": "{{ user `vm_disk_size` }}",
+          "disk_thin_provisioned": "{{ user `vm_disk_thin_provisioned` }}"
         }
       ],
       "network_adapters": [
@@ -66,7 +66,7 @@
       "boot_wait": "{{user `vm_boot_wait`}}",
       "cpus": "{{ user `vm_cpu_num` }}",
       "disk_interface": "virtio",
-      "disk_size": "{{ user `disk_size` }}",
+      "disk_size": "{{ user `vm_disk_size` }}",
       "format": "qcow2",
       "headless": true,
       "http_directory": "{{user `vm_boot_http_directory`}}",
@@ -88,7 +88,7 @@
       ],
       "boot_wait": "{{user `vm_boot_wait`}}",
       "cpus": "{{ user `vm_cpu_num` }}",
-      "disk_size": "{{ user `disk_size` }}",
+      "disk_size": "{{ user `vm_disk_size` }}",
       "guest_os_type": "RedHat_64",
       "hard_drive_interface": "{{ user `disk_adapter_type` }}",
       "headless": true,
@@ -112,7 +112,7 @@
       "boot_wait": "{{user `vm_boot_wait`}}",
       "cpus": "{{ user `vm_cpu_num` }}",
       "disk_adapter_type": "{{ user `disk_adapter_type` }}",
-      "disk_size": "{{ user `disk_size` }}",
+      "disk_size": "{{ user `vm_disk_size` }}",
       "disk_type_id": 0,
       "guest_os_type": "centos-64",
       "headless": true,

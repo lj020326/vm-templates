@@ -3,9 +3,29 @@
 
 ## when packer fails in the ansible provisioner
 
+Assuming the packer option to abort `-on-error=abort` is enabled, upon failing the pre-template VM instance will remain running for debugging purposes:
+
+Example launch for debian9 template:
+```shell
+$ packer build -only vsphere-iso -on-error=abort \
+  -var-file=common-vars.json \
+  -var-file=Debian/distribution-vars.json \
+  -var-file=Debian/9/server/box_info.json \
+  -var-file=Debian/9/server/template.json \
+  -var vm_build_id=packer-templates-debian-9-0040 \
+  -var iso_dir=Debian/9 \
+  -var iso_file=debian-9.13.0-amd64-netinst.iso \
+  -debug /workspace/dettonville/infra/packer-templates/Debian/9/templates/Debian/build-config.json
+```
+
 ```shell
 $ ssh packer@10.10.100.95
 ```
+
+```shell
+packer@localhost:~$ ansible-playbook -vv bootstrap_vm_template.yml --vault-password-file=~/.vault_pass -c local -i vm_template.yml
+```
+
 
 ```shell
 packer@localhost:~$ 

@@ -35,8 +35,8 @@
 
       "storage": [
         {
-          "disk_size": "{{user `vm_disk_size`}}",
-          "disk_thin_provisioned": "{{user `vm_disk_thin_provisioned`}}"
+          "disk_size": "{{ user `vm_disk_size` }}",
+          "disk_thin_provisioned": "{{ user `vm_disk_thin_provisioned` }}"
         }
       ],
       "disk_controller_type": ["{{user `vm_disk_type`}}"],
