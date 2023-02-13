@@ -2,6 +2,7 @@
     "ansible_staging_directory": "/var/tmp/packer-provisioner-ansible-local",
     "vm_cpu_num": "1",
     "vm_mem_size": "1024",
+    "vm_disk_type": "scsi",
     "vm_network": "BridgedNetwork",
     "vm_network_card_e1000": "e1000",
     "vm_network_card": "vmxnet3",
