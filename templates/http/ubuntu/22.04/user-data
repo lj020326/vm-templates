@@ -1,6 +1,8 @@
 #cloud-config
+## ref: https://ubuntu.com/server/docs/install/autoinstall-reference
 ## ref: https://github.com/burkeazbill/ubuntu-22-04-packer-fusion-workstation/blob/master/http/user-data
 ## ref: https://github.com/williamsanmartin/packer-template-ubuntu/blob/main/http/user-data
+
 autoinstall:
   version: 1
   locale: en_US
@@ -18,6 +20,17 @@ autoinstall:
   storage:
     layout:
       name: lvm
+
+  ## ref: https://ubuntu.com/server/docs/install/autoinstall-reference
+  updates: security
+
+  ## ref: https://askubuntu.com/questions/1290700/disable-auto-update-at-end-of-autoinstall-cloud-init
+  ## ref: https://stackoverflow.com/questions/63858073/cloud-init-wont-update-ubuntu-packages-at-the-end-of-autoinstall
+  ## ref: https://askubuntu.com/questions/1410553/how-to-disable-unattended-upgrades-during-autoinstall-user-data-cloud-config/1410679#1410679
+  apt:
+     package_update: false
+     package_upgrade: false
+
   packages:
     - open-vm-tools
     - openssh-server
@@ -33,11 +46,6 @@ autoinstall:
     - python3-pip
     - python3-apt
     - python3-virtualenv
-#  identity:
-#    hostname: ubuntu-server
-#    username: packer
-#    # Generated via: printf ${password} | mkpasswd -s -m sha-512
-#    password: "$6$rounds=656000$MHGZkhSNI.8YWvX9$uDPTAoPNIJ7dHkMYxSfr6IjK7zsRMB26o/8Tbd5yIBG.cv6j9Xe0oRKjAVM8SbU7Hgm9UUdy2Ek4mbP7f7M7I."
   user-data:
     disable_root: false
     timezone: UTC

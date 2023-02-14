@@ -7,6 +7,7 @@
     "vm_network_card": "vmxnet3",
     "vm_network_mgt": "VM Network",
     "vm_guest_os_type": "debian10_64Guest",
+    "vm_firmware": "bios",
     "ip_settle_timeout": "1m",
     "ip_settle_timeout_bad": "1m",
     "vm_boot_wait": "5s",

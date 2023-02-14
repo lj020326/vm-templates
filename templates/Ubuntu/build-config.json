@@ -175,7 +175,6 @@
       "execute_command": "echo '{{user `ssh_username`}}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
       "scripts": [
         "_common/scripts/base.sh",
-        "_common/scripts/systemd.sh",
         "_common/scripts/vmware.sh",
         "_common/scripts/sshd.sh"
       ]
