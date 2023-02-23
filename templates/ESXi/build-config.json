@@ -21,7 +21,7 @@
       "ssh_username": "{{ user `ssh_username` }}",
       "type": "vmware-iso",
       "version": "{{ user `vm_version` }}",
-      "vm_name": "{{user `vm_build_id`}}",
+      "vm_name": "{{ user `vm_build_id` }}",
       "vmx_data": {
         "vhv.enable": true
       },
@@ -73,7 +73,7 @@
       "type": "vsphere-iso",
       "username": "{{ user `username` }}",
       "vcenter_server": "{{ user `vcenter_server` }}",
-      "vm_name": "{{user `vm_build_id`}}",
+      "vm_name": "{{ user `vm_build_id` }}",
       "vm_version": "{{ user `vm_version` }}"
     }
   ],

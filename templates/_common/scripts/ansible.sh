@@ -43,9 +43,12 @@ echo "==> Install latest ansible"
 export PATH=$PATH:/usr/local/bin
 
 ## ref: https://github.com/pyca/pyopenssl/issues/559
-#pip3 install --upgrade pip ansible virtualenv cryptography pyopenssl netaddr
+#pip3 install --upgrade pip ansible virtualenv cryptography pyopenssl
+#pip3 install --upgrade pip ansible cryptography pyopenssl
 pip3 install --upgrade pip
 pip3 install --upgrade ansible
+#pip3 install --upgrade cryptography pyopenssl
+
 pip3 install --upgrade netaddr
 
 pip install netaddr || true

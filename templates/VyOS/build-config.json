@@ -65,7 +65,7 @@
       "ssh_timeout": "60m",
       "ssh_username": "{{ user `ssh_username` }}",
       "type": "virtualbox-iso",
-      "vm_name": "{{user `vm_build_id`}}"
+      "vm_name": "{{ user `vm_build_id` }}"
     },
     {
       "boot_command": [
@@ -133,7 +133,7 @@
       "ssh_timeout": "60m",
       "ssh_username": "{{ user `ssh_username` }}",
       "type": "vmware-iso",
-      "vm_name": "{{user `vm_build_id`}}",
+      "vm_name": "{{ user `vm_build_id` }}",
       "vmx_data": {
         "ethernet0.pciSlotNumber": "32"
       },

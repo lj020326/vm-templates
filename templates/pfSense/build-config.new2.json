@@ -4,26 +4,26 @@
       "name": "vsphere-iso",
       "type": "vsphere-iso",
 
-      "vcenter_server": "{{user `vcenter_host`}}",
-      "username": "{{user `vcenter_username`}}",
-      "password": "{{user `vcenter_password`}}",
+      "vcenter_server": "{{ user `vcenter_host` }}",
+      "username": "{{ user `vcenter_username` }}",
+      "password": "{{ user `vcenter_password` }}",
       "insecure_connection": "true",
 
-      "cluster": "{{user `vcenter_cluster`}}",
-      "datastore": "{{user `vm_datastore`}}",
-      "folder": "{{user `vcenter_folder`}}",
+      "cluster": "{{ user `vcenter_cluster` }}",
+      "datastore": "{{ user `vm_datastore` }}",
+      "folder": "{{ user `vcenter_folder` }}",
 
       "communicator": "ssh",
 
       "convert_to_template": false,
 
-      "vm_name": "{{user `vm_build_id`}}",
-      "guest_os_type": "{{user `vm_guest_os_type`}}",
+      "vm_name": "{{ user `vm_build_id` }}",
+      "guest_os_type": "{{ user `vm_guest_os_type` }}",
 
-      "CPUs": "{{user `vm_cpu_num`}}",
-      "RAM": "{{user `vm_mem_size`}}",
+      "CPUs": "{{ user `vm_cpu_num` }}",
+      "RAM": "{{ user `vm_mem_size` }}",
       "RAM_reserve_all": false,
-      "firmware": "{{user `vm_firmware`}}",
+      "firmware": "{{ user `vm_firmware` }}",
 
       "storage": [
         {
@@ -31,19 +31,19 @@
           "disk_thin_provisioned": "{{ user `vm_disk_thin_provisioned` }}"
         }
       ],
-      "disk_controller_type": "{{user `vm_disk_type`}}",
+      "disk_controller_type": "{{ user `vm_disk_type` }}",
 
       "network_adapters": [
         {
-          "network": "{{user `vm_network_mgt`}}",
-          "network_card": "{{user `vm_network_card`}}"
+          "network": "{{ user `vm_network_mgt` }}",
+          "network_card": "{{ user `vm_network_card` }}"
         }
       ],
 
-      "shutdown_command": "echo '{{user `ssh_password`}}'| sudo shutdown -p now",
+      "shutdown_command": "echo '{{ user `ssh_password` }}'| sudo shutdown -p now",
 
       "iso_paths": [
-        "[{{user `vm_remote_cache_datastore`}}] {{user `iso_base_dir`}}/{{user `iso_dir`}}/{{user `iso_file`}}"
+        "[{{ user `vm_remote_cache_datastore` }}] {{ user `iso_base_dir` }}/{{user `iso_dir` }}/{{user `iso_file` }}"
       ],
 
       "boot_command": [
@@ -63,25 +63,25 @@
         "reboot", "<enter>",
         "<wait10><wait10>"
       ],
-      "boot_wait": "{{user `vm_boot_wait`}}",
-      "boot_order": "{{user `vm_boot_order_install`}}",
-      "boot_keygroup_interval": "{{user `vm_boot_keygroup_interval`}}",
-      "http_directory": "{{user `vm_boot_http_directory`}}",
-      "ip_wait_timeout": "{{user `ip_wait_timeout`}}",
-      "ip_settle_timeout": "{{user `ip_settle_timeout`}}",
-      "datacenter": "{{user `vcenter_datacenter`}}",
-      "host": "{{user `vm_host`}}",
-      "notes": "{{user `vm_build_notes`}}",
+      "boot_wait": "{{ user `vm_boot_wait` }}",
+      "boot_order": "{{ user `vm_boot_order_install` }}",
+      "boot_keygroup_interval": "{{ user `vm_boot_keygroup_interval` }}",
+      "http_directory": "{{ user `vm_boot_http_directory` }}",
+      "ip_wait_timeout": "{{ user `ip_wait_timeout` }}",
+      "ip_settle_timeout": "{{ user `ip_settle_timeout` }}",
+      "datacenter": "{{ user `vcenter_datacenter` }}",
+      "host": "{{ user `vm_host` }}",
+      "notes": "{{ user `vm_build_notes` }}",
       "configuration_parameters": {
         "bios.bootDelay": "5000",
-        "bootOrder": "{{user `vm_boot_order`}}"
+        "bootOrder": "{{ user `vm_boot_order` }}"
       },
-      "iso_checksum": "{{user `iso_checksum_type`}}:{{user `iso_checksum`}}",
-      "ssh_handshake_attempts": "{{user `ssh_handshake_attempts`}}",
-      "ssh_username": "{{user `ssh_username`}}",
-      "ssh_password": "{{user `ssh_password`}}",
-      "ssh_timeout": "{{user `ssh_timeout`}}",
-      "ssh_pty": "{{user `ssh_pty`}}",
+      "iso_checksum": "{{ user `iso_checksum_type` }}:{{user `iso_checksum` }}",
+      "ssh_handshake_attempts": "{{ user `ssh_handshake_attempts` }}",
+      "ssh_username": "{{ user `ssh_username` }}",
+      "ssh_password": "{{ user `ssh_password` }}",
+      "ssh_timeout": "{{ user `ssh_timeout` }}",
+      "ssh_pty": "{{ user `ssh_pty` }}",
       "ssh_port": 22,
       "ssh_wait_timeout": "10000s"
   }

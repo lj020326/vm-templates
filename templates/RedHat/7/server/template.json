@@ -8,12 +8,12 @@
       "cpus": "{{ user `vm_cpu_num` }}",
       "disk_size": "{{ user `vm_disk_size` }}",
       "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
-      "guest_os_type": "{{user `guest_os_type`}}",
-      "hard_drive_interface": "{{user `hard_drive_interface`}}",
-      "headless": "{{user `headless`}}",
+      "guest_os_type": "{{ user `guest_os_type` }}",
+      "hard_drive_interface": "{{ user `hard_drive_interface` }}",
+      "headless": "{{ user `headless` }}",
       "http_directory": "http",
-      "iso_checksum": "{{user `iso_checksum_type`}}:{{user `iso_checksum`}}",
-      "iso_url": "{{user `iso_url`}}",
+      "iso_checksum": "{{ user `iso_checksum_type` }}:{{user `iso_checksum` }}",
+      "iso_url": "{{ user `iso_url` }}",
       "memory": "{{ user `memory` }}",
       "shutdown_command": "echo '/sbin/halt -h -p' > shutdown.sh; echo 'vagrant'|sudo -S bash 'shutdown.sh'",
       "ssh_password": "vagrant",
@@ -23,13 +23,13 @@
       "ssh_username": "vagrant",
       "type": "virtualbox-iso",
       "virtualbox_version_file": ".vbox_version",
-      "vm_name": "{{user `vm_build_id`}}"
+      "vm_name": "{{ user `vm_build_id` }}"
     }
   ],
   "post-processors": [
     [
       {
-        "compression_level": "{{user `compression_level`}}",
+        "compression_level": "{{ user `compression_level` }}",
         "type": "vagrant"
       },
       {

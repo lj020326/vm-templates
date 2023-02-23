@@ -3,35 +3,35 @@
     {
       "type": "vsphere-iso",
 
-      "vcenter_server": "{{user `vcenter_host`}}",
-      "username": "{{user `vcenter_username`}}",
-      "password": "{{user `vcenter_password`}}",
+      "vcenter_server": "{{ user `vcenter_host` }}",
+      "username": "{{ user `vcenter_username` }}",
+      "password": "{{ user `vcenter_password` }}",
       "insecure_connection": "true",
 
-      "datacenter": "{{user `vcenter_datacenter`}}",
-      "host": "{{user `vm_host`}}",
-      "cluster": "{{user `vcenter_cluster`}}",
-      "datastore": "{{user `vm_datastore`}}",
-      "folder": "{{user `vcenter_folder`}}",
+      "datacenter": "{{ user `vcenter_datacenter` }}",
+      "host": "{{ user `vm_host` }}",
+      "cluster": "{{ user `vcenter_cluster` }}",
+      "datastore": "{{ user `vm_datastore` }}",
+      "folder": "{{ user `vcenter_folder` }}",
 
       "communicator": "winrm",
-      "winrm_username": "{{user `winrm_username`}}",
-      "winrm_password": "{{user `winrm_password`}}",
+      "winrm_username": "{{ user `winrm_username` }}",
+      "winrm_password": "{{ user `winrm_password` }}",
       "winrm_timeout": "8h",
 
       "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Build Complete\"",
       "shutdown_timeout": "1h",
 
-      "remove_cdrom": "{{user `vm_cdrom_remove`}}",
+      "remove_cdrom": "{{ user `vm_cdrom_remove` }}",
       "convert_to_template": "true",
 
-      "vm_name": "{{user `vm_build_id`}}",
-      "guest_os_type": "{{user `vm_guest_os_type`}}",
+      "vm_name": "{{ user `vm_build_id` }}",
+      "guest_os_type": "{{ user `vm_guest_os_type` }}",
 
-      "CPUs": "{{user `vm_cpu_num`}}",
-      "RAM": "{{user `vm_mem_size`}}",
+      "CPUs": "{{ user `vm_cpu_num` }}",
+      "RAM": "{{ user `vm_mem_size` }}",
       "RAM_reserve_all": true,
-      "firmware": "{{user `vm_firmware`}}",
+      "firmware": "{{ user `vm_firmware` }}",
 
       "storage": [
         {
@@ -39,17 +39,17 @@
           "disk_thin_provisioned": "{{ user `vm_disk_thin_provisioned` }}"
         }
       ],
-      "disk_controller_type": ["{{user `vm_disk_type`}}"],
+      "disk_controller_type": ["{{ user `vm_disk_type` }}"],
 
       "network_adapters": [
         {
-          "network": "{{user `vm_network_mgt`}}",
-          "network_card": "{{user `vm_network_card`}}"
+          "network": "{{ user `vm_network_mgt` }}",
+          "network_card": "{{ user `vm_network_card` }}"
         }
       ],
 
       "iso_paths": [
-        "[{{user `vm_remote_cache_datastore`}}] {{user `iso_base_dir`}}/{{user `iso_dir`}}/{{user `iso_file`}}",
+        "[{{ user `vm_remote_cache_datastore` }}] {{ user `iso_base_dir` }}/{{user `iso_dir` }}/{{user `iso_file` }}",
         "[] /vmimages/tools-isoimages/windows.iso"
       ],
 
@@ -88,12 +88,12 @@
       "boot_command": [
         "{{ user `boot_command` }}"
       ],
-      "boot_wait": "{{user `vm_boot_wait`}}",
+      "boot_wait": "{{ user `vm_boot_wait` }}",
 
-      "boot_order": "{{user `vm_boot_order_install`}}",
-      "ip_wait_timeout": "{{user `ip_wait_timeout`}}",
-      "ip_settle_timeout": "{{user `ip_settle_timeout`}}",
-      "notes": "{{user `vm_build_notes`}}",
+      "boot_order": "{{ user `vm_boot_order_install` }}",
+      "ip_wait_timeout": "{{ user `ip_wait_timeout` }}",
+      "ip_settle_timeout": "{{ user `ip_settle_timeout` }}",
+      "notes": "{{ user `vm_build_notes` }}",
       "configuration_parameters": {
         "devices.hotplug": "false",
         "guestInfo.svga.wddm.modeset": "false",
@@ -102,7 +102,7 @@
         "guestInfo.svga.wddm.modesetLegacyMulti": "false"
       },
 
-      "iso_checksum": "{{user `iso_checksum_type`}}:{{user `iso_checksum`}}"
+      "iso_checksum": "{{ user `iso_checksum_type` }}:{{user `iso_checksum` }}"
     },
     {
       "boot_wait": "2m",
@@ -124,7 +124,7 @@
       "output_directory": "output-{{ user `vm_name` }}-{{ build_type }}-{{ timestamp }}",
       "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
       "type": "virtualbox-iso",
-      "vm_name": "{{user `vm_build_id`}}",
+      "vm_name": "{{ user `vm_build_id` }}",
       "winrm_insecure": true,
       "winrm_password": "{{ user `winrm_password` }}",
       "winrm_timeout": "8h",
@@ -154,7 +154,7 @@
       "tools_upload_path": "c:/Windows/Temp/windows.iso",
       "type": "vmware-iso",
       "version": 11,
-      "vm_name": "{{user `vm_build_id`}}",
+      "vm_name": "{{ user `vm_build_id` }}",
       "vmx_data": {
         "scsi0.virtualDev": "lsisas1068"
       },

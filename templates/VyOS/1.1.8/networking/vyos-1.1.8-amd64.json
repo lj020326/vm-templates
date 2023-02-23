@@ -3,13 +3,13 @@
     {
       "type": "virtualbox-iso",
       "guest_os_type": "Debian_64",
-      "iso_url": "{{user `mirror`}}/release/1.1.8/vyos-1.1.8-amd64.iso",
-      "iso_checksum": "{{user `iso_checksum`}}",
-      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_url": "{{ user `mirror` }}/release/1.1.8/vyos-1.1.8-amd64.iso",
+      "iso_checksum": "{{ user `iso_checksum` }}",
+      "iso_checksum_type": "{{ user `iso_checksum_type` }}",
       "output_directory": "output-vyos-1.1.8-amd64-{{build_type}}",
       "vm_name": "packer-vyos-1.1.8-amd64",
       "disk_size": "{{ user `vm_disk_size` }}",
-      "headless": "{{user `headless`}}",
+      "headless": "{{ user `headless` }}",
       "boot_wait": "5s",
       "boot_command": [
         "<enter><wait10><wait10>",
@@ -56,13 +56,13 @@
           "modifyvm",
           "{{.Name}}",
           "--memory",
-          "{{user `memory`}}"
+          "{{ user `memory` }}"
         ],
         [
           "modifyvm",
           "{{.Name}}",
           "--cpus",
-          "{{user `cpus`}}"
+          "{{ user `cpus` }}"
         ]
       ]
     }
@@ -85,7 +85,7 @@
   "post-processors": [
     {
       "type": "vagrant",
-      "compression_level": "{{user `compression_level`}}",
+      "compression_level": "{{ user `compression_level` }}",
       "output": "vyos-1.1.8-amd64-{{.Provider}}.box"
     },
     {
