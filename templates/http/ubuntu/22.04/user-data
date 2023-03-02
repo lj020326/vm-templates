@@ -14,23 +14,11 @@ autoinstall:
     # Block inbound SSH to stop Packer trying to connect during initial install
     - iptables -A INPUT -p tcp --dport 22 -j DROP
   ssh:
-    # For now we install openssh-server during package installs
-    install-server: no
+    install-server: true
     allow-pw: true
   storage:
     layout:
       name: lvm
-
-  ## ref: https://ubuntu.com/server/docs/install/autoinstall-reference
-  updates: security
-
-  ## ref: https://askubuntu.com/questions/1290700/disable-auto-update-at-end-of-autoinstall-cloud-init
-  ## ref: https://stackoverflow.com/questions/63858073/cloud-init-wont-update-ubuntu-packages-at-the-end-of-autoinstall
-  ## ref: https://askubuntu.com/questions/1410553/how-to-disable-unattended-upgrades-during-autoinstall-user-data-cloud-config/1410679#1410679
-  apt:
-     package_update: false
-     package_upgrade: false
-
   packages:
     - open-vm-tools
     - openssh-server

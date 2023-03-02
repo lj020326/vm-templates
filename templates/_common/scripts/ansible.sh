@@ -67,3 +67,4 @@ pip install netaddr || true
 
 echo "==> Install upgraded ansible collections"
 ansible-galaxy collection install -U ansible.utils
+ansible-galaxy collection install -U community.general
