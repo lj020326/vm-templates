@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+GIT_DEFAULT_BRANCH=main
+
 ## ref: https://intoli.com/blog/exit-on-errors-in-bash-scripts/
 # exit when any command fails
 set -e
@@ -35,7 +37,7 @@ function gitresetpublicsub() {
 }
 
 ## https://www.pixelstech.net/article/1577768087-Create-temp-file-in-Bash-using-mktemp-and-trap
-TMP_DIR="$(mktemp -d -p ~)"
+TMP_DIR=$(mktemp -d -p ~)
 
 # keep track of the last executed command
 trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
@@ -43,13 +45,16 @@ trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
 trap 'echo "\"${last_command}\" command filed with exit code $?."' EXIT
 trap 'rm -fr "$TMP_DIR"' EXIT
 
+GIT_REMOVE_CACHED_FILES=0
+
 CONFIRM=0
 SCRIPT_DIR="$( cd "$( dirname "$0" )" && pwd )"
 
 #PROJECT_DIR="$( cd "$SCRIPT_DIR/../../../" && pwd )"
 #PROJECT_DIR="$( pwd . )"
 #PROJECT_DIR=$(git rev-parse --show-toplevel)
-PROJECT_DIR="$( cd "$SCRIPT_DIR/" && git rev-parse --show-toplevel )"
+#PROJECT_DIR="$( cd "$SCRIPT_DIR/" && git rev-parse --show-toplevel )"
+PROJECT_DIR="$( git rev-parse --show-toplevel )"
 
 PUBLIC_GITIGNORE=pub.gitignore
 PUBLIC_GITMODULES=pub.gitmodules
@@ -73,13 +78,10 @@ echo "SCRIPT_DIR=[${SCRIPT_DIR}]"
 echo "PROJECT_DIR=${PROJECT_DIR}"
 echo "TMP_DIR=${TMP_DIR}"
 
-#exit 0
-
 ## https://serverfault.com/questions/219013/showing-total-progress-in-rsync-is-it-possible
 ## https://www.studytonight.com/linux-guide/how-to-exclude-files-and-directory-using-rsync
 RSYNC_OPTS_GIT_MIRROR=(
     -dar
-    --info=progress2
     --links
     --delete-excluded
     --exclude={"${EXCLUDES}"}
@@ -91,7 +93,7 @@ RSYNC_OPTS_GIT_UPDATE=(
 )
 
 git fetch --all
-git checkout master
+git checkout ${GIT_DEFAULT_BRANCH}
 
 #RSYNC_OPTS=${RSYNC_OPTS_GIT_MIRROR[@]}
 
@@ -101,20 +103,18 @@ rsync_cmd="rsync ${RSYNC_OPTS_GIT_MIRROR[@]} ${PROJECT_DIR}/ ${TMP_DIR}/"
 echo "${rsync_cmd}"
 eval $rsync_cmd
 
-#exit 0
-
 echo "Checkout public branch"
 git checkout public
+
+if [ $GIT_REMOVE_CACHED_FILES -eq 1 ]; then
+  echo "Removing files cached in git"
+  git rm -r --cached .
+fi
 
 #echo "Removing existing non-dot files for clean sync"
 #rm -fr *
 
-#gitresetpublicsub
-
-#echo "Removing files cached in git"
-#git rm -r --cached .
-
-echo "Mirror ${TMP_DIR} to project dir $PROJECT_DIR"
+echo "Copy ${TMP_DIR} to project dir $PROJECT_DIR"
 #echo "rsync ${RSYNC_OPTS_GIT_UPDATE[@]} ${TMP_DIR}/ ${PROJECT_DIR}/"
 rsync_cmd="rsync ${RSYNC_OPTS_GIT_UPDATE[@]} ${TMP_DIR}/ ${PROJECT_DIR}/"
 echo "${rsync_cmd}"
@@ -153,7 +153,7 @@ git status
 #exit 0
 
 ## https://stackoverflow.com/questions/5989592/git-cannot-checkout-branch-error-pathspec-did-not-match-any-files-kn
-## git diff --name-only public master --
+## git diff --name-only public ${GIT_DEFAULT_BRANCH} --
 
 if [ $CONFIRM -eq 0 ]; then
   ## https://www.shellhacks.com/yes-no-bash-script-prompt-confirmation/
@@ -178,8 +178,8 @@ echo "Pushing branch '${LOCAL_BRANCH}' to remote origin branch '${LOCAL_BRANCH}'
 git push -f origin ${LOCAL_BRANCH} || true && \
 echo "Pushing branch '${LOCAL_BRANCH}' to remote '${REMOTE}' branch '${REMOTE_BRANCH}':" && \
 git push -f -u ${REMOTE} ${LOCAL_BRANCH}:${REMOTE_BRANCH} || true && \
-echo "Finally, checkout master branch:" && \
-git checkout master
+echo "Finally, checkout ${GIT_DEFAULT_BRANCH} branch:" && \
+git checkout ${GIT_DEFAULT_BRANCH}
 
 echo "Resetting ansible submodule for private"
 git submodule deinit -f . && \
