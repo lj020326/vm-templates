@@ -184,9 +184,7 @@
       "inventory_file": "{{ user `ansible_inventory_file` }}",
       "group_vars": "{{ user `ansible_inventory_group_vars` }}",
       "extra_arguments": [
-        "--limit", "vm_template",
-        "--vault-password-file=~/.vault_pass",
-        "-e", "@./vars/vault.yml"
+        "--vault-password-file=~/.vault_pass"
       ]
     },
     {
