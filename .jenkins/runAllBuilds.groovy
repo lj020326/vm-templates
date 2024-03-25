@@ -14,7 +14,7 @@ log.info("jobBaseFolder=${jobBaseFolder}")
 
 Map config = readYaml text: configYmlStr
 
-config.configFile = "jenkins.vm-templates.${JENKINS_ENV}.yml"
+config.configFile = ".jenkins/vm-templates.${JENKINS_ENV}.yml"
 config.jobBaseFolder = jobBaseFolder
 
 log.info("config=${JsonUtils.printToJsonString(config)}")

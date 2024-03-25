@@ -117,6 +117,7 @@ eval $rsync_cmd
 
 mirrorDirList="
 .github
+.jenkins
 docs
 inspec
 templates
