@@ -199,7 +199,7 @@
       "clean_staging_directory": "false",
       "playbook_dir": "{{ user `ansible_playbook_dir` }}",
       "playbook_file": "{{ user `ansible_playbook_file` }}",
-      "galaxy_command": "ansible-galaxy collection",
+      "galaxy_command": "{{ user `ansible_galaxy_command` }}",
       "galaxy_file": "{{ user `ansible_galaxy_req_file` }}",
       "inventory_file": "{{ user `ansible_inventory_file` }}",
       "group_vars": "{{ user `ansible_inventory_group_vars` }}",
