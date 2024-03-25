@@ -6,19 +6,45 @@
 autoinstall:
   version: 1
   locale: en_US
-  keyboard:
-    layout: us
+#  keyboard:
+#    layout: us
   early-commands:
 #    # otherwise packer tries to connect and exceed max attempts
 #    - systemctl stop ssh
     # Block inbound SSH to stop Packer trying to connect during initial install
     - iptables -A INPUT -p tcp --dport 22 -j DROP
+#  network:
+#    network:
+#      version: 2
+#      renderer: networkd
+#      ethernets:
+#        ens160:
+#          dhcp4: yes
+#          dhcp6: no
+#          ## ref: https://www.oxcrag.net/2019/02/07/creating-a-working-ubuntu-18-04-vmware-template/
+#          dhcp-identifier: mac
   ssh:
-    install-server: true
+    install-server: false
     allow-pw: true
   storage:
     layout:
       name: lvm
+#  apt:
+##    geoip: true
+#    disable_components: []
+#    preserve_sources_list: false
+#    package_update: false
+#    package_upgrade: false
+#    primary:
+#      - arches: [amd64, i386]
+#        uri: http://us.archive.ubuntu.com/ubuntu
+#      - arches: [default]
+#        uri: http://ports.ubuntu.com/ubuntu-ports
+##  apt:
+##    preserve_sources_list: false
+##    primary:
+##      - arches: [amd64]
+##        uri: "http://archive.ubuntu.com/ubuntu/"
   packages:
     - open-vm-tools
     - openssh-server
@@ -29,19 +55,21 @@ autoinstall:
     - curl
     - rsync
     - git
-    - jq
     - python3
     - python3-pip
     - python3-apt
     - python3-virtualenv
+    - python3-venv
   user-data:
     disable_root: false
     timezone: UTC
     users:
       - name: packer
         uid: 300
-        # Generated via: printf ${password} | mkpasswd -s -m sha-512
-        passwd: "$6$rounds=656000$MHGZkhSNI.8YWvX9$uDPTAoPNIJ7dHkMYxSfr6IjK7zsRMB26o/8Tbd5yIBG.cv6j9Xe0oRKjAVM8SbU7Hgm9UUdy2Ek4mbP7f7M7I."
+        # Old: Generated via: printf ${password} | mkpasswd -s -m sha-512
+        # New: Generated via:
+        #   python3 -c 'import crypt; print(crypt.crypt("password here", "$6$rounds=656000$jF.sJku8iq0nuuvL"))'
+        passwd: "$6$rounds=656000$jF.sJku8iq0nuuvL$3phypuBaMg0WE1dNMGSIhWEJK66Cn5JeLnjjCdhN8L6F1jSP7PGjS2T/KzjMZwa7f4TJAWc8xoWfjBE2NroMi/"
         groups: [adm, cdrom, dip, plugdev, lxd, sudo]
         lock-passwd: false
         sudo: ALL=(ALL) NOPASSWD:ALL

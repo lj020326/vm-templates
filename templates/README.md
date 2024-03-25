@@ -144,7 +144,70 @@ building, you can execute the [cleanup_builds.sh](cleanup_builds.sh) script.
 
 ### Using pre-built and ready for consumption Vagrant templates
 
-The majority of these templates are used to test [ansible-datacenter VM provisioning playbooks](https://github.com/lj020326/ansible-datacenter) using the [packer-box-templates](https://github.com/lj020326/packer-templates) repo. I would highly recommend leveraging this repo for testing ansible playbook and etc.
+The majority of these templates are used to test [ansible-datacenter VM provisioning playbooks](https://github.com/lj020326/ansible-datacenter) using the [packer-box-templates](https://github.com/lj020326/vm-templates) repo. I would highly recommend leveraging this repo for testing ansible playbook and etc.
+
+## Commands
+
+```shell
+build_vm_template.sh
+build_vm_template.json.sh
+
+## upgrading json formatted inputs to new HCL2 format
+packer hcl2_upgrade -with-annotations common-vars.vars.json 
+packer hcl2_upgrade common-vars.json
+packer hcl2_upgrade test-vars.json 
+
+VARS_JSON=$(jq --argjson varInfo "$(<common-vars.json)" '.variables += $varInfo' -n '{variables: $varInfo }')
+echo $VARS_JSON | packer hcl2_upgrade -with-annotations
+echo $VARS_JSON | packer hcl2_upgrade -with-annotations -output-file=foo
+
+## Running packer build for CentOS
+env PACKER_LOG=1 BUILD_TAG=build_vm_template.json.sh-test packer build \
+    -only vsphere-iso \
+    -on-error=ask \
+    -var-file=common-vars.json \
+    -var-file=CentOS/distribution-vars.json \
+    -var-file=CentOS/8/server/box_info.json \
+    -var-file=CentOS/8/server/template.json \
+    -var vm_name=vm-template-CentOS-8-test \
+    -var iso_dir=CentOS/8 \
+    -var iso_file=CentOS-8.5.2111-x86_64-dvd1.iso \
+    -force \
+    CentOS/build-config.json
+
+## Running packer build for CentOS
+packer validate \
+    -only vsphere-iso.* \
+    -var-file=CentOS/distribution-vars.json.pkrvars.hcl \
+    -var-file=CentOS/8/server/box_info.json.pkrvars.hcl \
+    -var-file=CentOS/8/server/template.json.pkrvars.hcl \
+    -var vm_name=vm-template-centos8 \
+    -var iso_dir=CentOS/8 \
+    -var iso_file=CentOS-8.5.2111-x86_64-dvd1.iso \
+    CentOS/
+
+packer validate \
+    -only vsphere-iso.* \
+    -var-file=CentOS/distribution-vars.json.pkrvars.hcl \
+    -var-file=CentOS/8/server/server/box_info.json.pkrvars.hcl \
+    -var-file=CentOS/8/server/server/template.json.pkrvars.hcl \
+    -var vm_name=vm-template-centos8 \
+    -var iso_dir=CentOS/8 \
+    -var iso_file=CentOS-8.5.2111-x86_64-dvd1.iso \
+    CentOS/
+
+packer validate \
+    -only vsphere-iso.* \
+    -var-file=Ubuntu/distribution-vars.json.pkrvars.hcl \
+    -var-file=Ubuntu/22.04/server/box_info.json.pkrvars.hcl \
+    -var-file=Ubuntu/22.04/server/template.json.pkrvars.hcl \
+    -var vm_name=vm-templates-ubuntu-22.04-0001 \
+    -var iso_dir=Ubuntu/22.04 \
+    -var iso_file=ubuntu-22.04-live-server-amd64.iso \
+    Ubuntu/
+ssh packer@10.10.100.173
+ssh packer@10.10.100.73
+```
 
 ## Reference
 

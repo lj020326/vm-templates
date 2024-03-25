@@ -1,17 +1,6 @@
 {
-    "vm_cpu_num": "1",
-    "vm_mem_size": "1024",
-    "vm_disk_type": "lsilogic",
-    "vm_network": "BridgedNetwork",
-    "vm_network_card_e1000": "e1000",
-    "vm_network_card": "vmxnet3",
-    "vm_network_mgt": "VM Network",
-    "vm_guest_os_type": "ubuntu64Guest",
-    "vm_firmware": "bios",
-    "ip_settle_timeout": "1m",
-    "ip_settle_timeout_bad": "1m",
-    "vm_boot_wait": "5s",
-    "vm_boot_keygroup_interval": "200ms",
     "boot_command_prefix": "<esc><esc><esc><enter><wait>",
-    "boot_command": "/casper/vmlinuz root=/dev/sr0 initrd=/casper/initrd autoinstall ds=nocloud-net;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ubuntu/"
+    "boot_command": "/casper/vmlinuz root=/dev/sr0 initrd=/casper/initrd autoinstall ds=nocloud-net\\;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ubuntu/",
+    "vm_guest_os_type": "ubuntu64Guest",
+    "vm_disk_type": "pvscsi"
 }

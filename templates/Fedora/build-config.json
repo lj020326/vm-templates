@@ -1,69 +1,137 @@
 {
   "builders": [
     {
+      "name": "vsphere-iso",
+      "type": "vsphere-iso",
+      "boot_command": [
+        "{{ user `boot_command_prefix` }}=http://{{ .HTTPIP }}:{{ .HTTPPort }}/fedora/{{ user `kickstart_cfg` }}<enter><wait>"
+      ],
+      "boot_wait": "{{ user `vm_boot_wait` }}",
+      "boot_order": "{{ user `vm_boot_order_install` }}",
+      "boot_keygroup_interval": "{{ user `vm_boot_keygroup_interval` }}",
+      "http_directory": "{{ user `vm_boot_http_directory` }}",
+      "ip_wait_timeout": "{{ user `ip_wait_timeout` }}",
+      "ip_settle_timeout": "{{ user `ip_settle_timeout` }}",
+      "vcenter_server": "{{ user `vcenter_host` }}",
+      "username": "{{ user `vcenter_username` }}",
+      "password": "{{ user `vcenter_password` }}",
+      "insecure_connection": "true",
+      "datacenter": "{{ user `vcenter_datacenter` }}",
+      "cluster": "{{ user `vcenter_cluster` }}",
+      "datastore": "{{ user `vm_datastore` }}",
+      "folder": "{{ user `vm_build_folder` }}",
+      "vm_name": "{{ user `vm_template_build_name` }}",
+      "host": "{{ user `vm_host` }}",
+      "notes": "Build via Packer - date: {{ isotime }} build tag: {{ user `vm_build_tag` }}",
+      "convert_to_template": true,
+      "communicator": "ssh",
+      "configuration_parameters": {
+        "bios.bootDelay": "5000",
+        "bootOrder": "{{ user `vm_boot_order` }}"
+      },
+      "iso_paths": [
+        "[{{ user `vm_iso_datastore` }}] {{ user `iso_base_dir` }}/{{user `iso_dir` }}/{{user `iso_file` }}"
+      ],
+      "iso_checksum": "{{ user `iso_checksum_type` }}:{{user `iso_checksum` }}",
+      "shutdown_command": "echo '{{ user `ssh_password` }}'| sudo -S /sbin/halt -h -p",
+      "shutdown_timeout": "15m",
+      "ssh_handshake_attempts": "{{ user `ssh_handshake_attempts` }}",
+      "ssh_username": "{{ user `ssh_username` }}",
+      "ssh_password": "{{ user `ssh_password` }}",
+      "ssh_timeout": "{{ user `ssh_timeout` }}",
+      "ssh_pty": "{{ user `ssh_pty` }}",
+      "guest_os_type": "{{ user `vm_guest_os_type` }}",
+      "CPUs": "{{ user `vm_cpu_num` }}",
+      "RAM": "{{ user `vm_mem_size` }}",
+      "RAM_reserve_all": false,
+      "firmware": "{{ user `vm_firmware` }}",
+      "disk_controller_type": [
+        "{{ user `vm_disk_type` }}"
+      ],
+      "storage": [
+        {
+          "disk_size": "{{ user `vm_disk_size` }}",
+          "disk_thin_provisioned": "{{ user `vm_disk_thin_provisioned` }}"
+        }
+      ],
+      "network_adapters": [
+        {
+          "network": "{{ user `vm_network_mgt` }}",
+          "network_card": "{{ user `vm_network_card` }}"
+        }
+      ]
+    },
+    {
+      "type": "qemu",
       "accelerator": "{{ user `qemu_accelerator` }}",
       "boot_command": [
         "<tab> {{ user `boot_command_prefix` }}=http://{{ .HTTPIP }}:{{ .HTTPPort }}/fedora/ks.cfg <enter><wait>"
       ],
+      "boot_wait": "{{ user `vm_boot_wait` }}",
       "cpus": "{{ user `vm_cpu_num` }}",
       "disk_interface": "virtio",
       "disk_size": "{{ user `vm_disk_size` }}",
       "format": "qcow2",
       "headless": true,
-      "http_directory": "http",
+      "http_directory": "{{ user `vm_boot_http_directory` }}",
       "iso_checksum": "{{ user `iso_checksum_type` }}:{{ user `iso_checksum` }}",
       "iso_url": "{{ user `iso_url` }}",
-      "memory": "{{ user `memory` }}",
-      "output_directory": "output-{{ user `vm_name` }}-{{ build_type }}-{{ timestamp }}",
-      "shutdown_command": "echo '/sbin/halt -h -p' > shutdown.sh; echo 'packer'|sudo -S bash 'shutdown.sh'",
+      "memory": "{{ user `vm_mem_size` }}",
+      "output_directory": "output-{{ user `vm_template_build_name` }}-{{ build_type }}-{{ timestamp }}",
+      "shutdown_command": "echo '{{ user `ssh_password` }}'| sudo -S /sbin/halt -h -p",
+      "ssh_handshake_attempts": "20",
       "ssh_password": "{{ user `ssh_password` }}",
-      "ssh_timeout": "60m",
+      "ssh_timeout": "{{ user `ssh_timeout` }}",
       "ssh_username": "{{ user `ssh_username` }}",
-      "type": "qemu",
-      "vm_name": "{{ user `vm_build_id` }}"
+      "vm_name": "{{ user `vm_template_build_name` }}"
     },
     {
+      "type": "virtualbox-iso",
       "boot_command": [
         "<tab> {{ user `boot_command_prefix` }}=http://{{ .HTTPIP }}:{{ .HTTPPort }}/fedora/ks.cfg <enter><wait>"
       ],
+      "boot_wait": "{{ user `vm_boot_wait` }}",
       "cpus": "{{ user `vm_cpu_num` }}",
       "disk_size": "{{ user `vm_disk_size` }}",
       "guest_os_type": "Fedora_64",
       "hard_drive_interface": "{{ user `disk_adapter_type` }}",
       "headless": true,
-      "http_directory": "http",
+      "http_directory": "{{ user `vm_boot_http_directory` }}",
       "iso_checksum": "{{ user `iso_checksum_type` }}:{{ user `iso_checksum` }}",
       "iso_url": "{{ user `iso_url` }}",
-      "memory": "{{ user `memory` }}",
-      "output_directory": "output-{{ user `vm_name` }}-{{ build_type }}-{{ timestamp }}",
-      "shutdown_command": "echo '/sbin/halt -h -p' > shutdown.sh; echo 'packer'|sudo -S bash 'shutdown.sh'",
+      "memory": "{{ user `vm_mem_size` }}",
+      "output_directory": "output-{{ user `vm_template_build_name` }}-{{ build_type }}-{{ timestamp }}",
+      "shutdown_command": "echo '{{ user `ssh_password` }}'| sudo -S /sbin/halt -h -p",
+      "ssh_handshake_attempts": "20",
       "ssh_password": "{{ user `ssh_password` }}",
-      "ssh_timeout": "60m",
+      "ssh_timeout": "{{ user `ssh_timeout` }}",
       "ssh_username": "{{ user `ssh_username` }}",
-      "type": "virtualbox-iso",
-      "vm_name": "{{ user `vm_build_id` }}"
+      "vm_name": "{{ user `vm_template_build_name` }}"
     },
     {
+      "type": "vmware-iso",
       "boot_command": [
         "<tab> {{ user `boot_command_prefix` }}=http://{{ .HTTPIP }}:{{ .HTTPPort }}/fedora/ks.cfg <enter><wait>"
       ],
+      "boot_wait": "{{ user `vm_boot_wait` }}",
       "cpus": "{{ user `vm_cpu_num` }}",
       "disk_adapter_type": "{{ user `disk_adapter_type` }}",
       "disk_size": "{{ user `vm_disk_size` }}",
       "disk_type_id": 0,
       "guest_os_type": "fedora-64",
       "headless": true,
-      "http_directory": "http",
+      "http_directory": "{{ user `vm_boot_http_directory` }}",
       "iso_checksum": "{{ user `iso_checksum_type` }}:{{ user `iso_checksum` }}",
       "iso_url": "{{ user `iso_url` }}",
-      "memory": "{{ user `memory` }}",
-      "output_directory": "output-{{ user `vm_name` }}-{{ build_type }}-{{ timestamp }}",
-      "shutdown_command": "echo '/sbin/halt -h -p' > shutdown.sh; echo 'packer'|sudo -S bash 'shutdown.sh'",
+      "memory": "{{ user `vm_mem_size` }}",
+      "output_directory": "output-{{ user `vm_template_build_name` }}-{{ build_type }}-{{ timestamp }}",
+      "shutdown_command": "echo '{{ user `ssh_password` }}'| sudo -S /sbin/halt -h -p",
+      "ssh_handshake_attempts": "20",
       "ssh_password": "{{ user `ssh_password` }}",
-      "ssh_timeout": "60m",
+      "ssh_timeout": "{{ user `ssh_timeout` }}",
       "ssh_username": "{{ user `ssh_username` }}",
-      "type": "vmware-iso",
-      "vm_name": "{{ user `vm_build_id` }}",
+      "tools_upload_flavor": "linux",
+      "vm_name": "{{ user `vm_template_build_name` }}",
       "vmx_data": {
         "ethernet0.pciSlotNumber": "32"
       },
@@ -74,7 +142,7 @@
     [
       {
         "compression_level": "{{ user `compression_level` }}",
-        "output": "{{ user `vm_name` }}-{{.Provider}}-{{ timestamp }}.box",
+        "output": "{{ user `vm_template_build_name` }}-{{.Provider}}-{{ timestamp }}.box",
         "type": "vagrant"
       },
       {
@@ -92,6 +160,15 @@
   ],
   "provisioners": [
     {
+      "type": "shell",
+      "execute_command": "echo '{{ user `ssh_username` }}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "scripts": [
+        "_common/scripts/install_site_cacerts.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo '{{ user `ssh_username` }}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
       "scripts": [
         "_common/scripts/base.sh",
         "_common/scripts/vagrant.sh",
@@ -100,26 +177,63 @@
         "_common/scripts/sshd.sh",
         "_common/scripts/cleanup.sh",
         "_common/scripts/zerodisk.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "PIP_NSTALL_VERSION={{user `pip_version`}}",
+        "VENV_DIR={{user `python_venv_dir`}}",
+        "ANSIBLE_VAULT_PASS={{ user `ansible_vault_password` }}"
       ],
-      "type": "shell"
+      "execute_command": "echo '{{ user `ssh_username` }}' | {{.Vars}} bash '{{.Path}}'",
+      "scripts": [
+        "_common/scripts/ansible.sh"
+      ]
+    },
+    {
+      "type": "ansible-local",
+      "staging_directory": "{{ user `ansible_staging_directory` }}",
+      "clean_staging_directory": "false",
+      "playbook_dir": "{{ user `ansible_playbook_dir` }}",
+      "playbook_file": "{{ user `ansible_playbook_file` }}",
+      "command": "{{ user `ansible_command` }}",
+      "galaxy_command": "{{ user `ansible_galaxy_command` }}",
+      "galaxy_file": "{{ user `ansible_galaxy_req_file` }}",
+      "inventory_file": "{{ user `ansible_inventory_file` }}",
+      "group_vars": "{{ user `ansible_inventory_group_vars` }}",
+      "extra_arguments": [
+        "--tag", "{{ user `ansible_playbook_tag` }}",
+        "--vault-password-file={{ user `ansible_playbook_vault_password_file` }}",
+        "-e", "@{{ user `ansible_playbook_vault` }}"
+      ]
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo '{{ user `ssh_username` }}' | {{.Vars}} sudo -H -S -E bash '{{.Path}}'",
+      "skip_clean": "true",
+      "expect_disconnect": "true",
+      "script": "_common/scripts/reboot.sh"
+    },
+    {
+      "type": "inspec",
+      "pause_before": "60s",
+      "timeout": "60m",
+      "extra_arguments": [
+        "--no-distinct-exit"
+      ],
+      "inspec_env_vars": [
+        "CHEF_LICENSE=accept"
+      ],
+      "profile": "../inspec"
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo '{{ user `ssh_username` }}' | {{.Vars}} sudo -H -S -E bash '{{.Path}}'",
+      "scripts": [
+        "_common/scripts/cleanup.sh",
+        "_common/scripts/zerodisk.sh"
+      ]
     }
-  ],
-  "variables": {
-    "boot_command_prefix": "",
-    "box_tag": "",
-    "compression_level": "6",
-    "disk_adapter_type": "scsi",
-    "disk_size": "36864",
-    "iso_checksum_type": "",
-    "iso_checksum": "",
-    "iso_url": "",
-    "memory": "1024",
-    "qemu_accelerator": "kvm",
-    "ssh_password": "vagrant",
-    "ssh_username": "vagrant",
-    "vagrant_cloud_token": "",
-    "vagrant_cloud_username": "",
-    "vm_cpu_num": "1",
-    "vm_name": ""
-  }
+  ]
 }

@@ -1,0 +1,6 @@
+auto_build="True"
+box_name="centos7"
+box_tag="dettonville/centos7"
+description="CentOS 7"
+private="False"
+short_description="CentOS 7"

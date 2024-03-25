@@ -1,0 +1,10 @@
+{
+  "vm_mem_size": "64000",
+  "vm_disk_size": "140000",
+  "vm_cpu_num": "4",
+  "vm_cpu_cores_num": "2",
+  "vm_template_type": "large",
+  "box_name": "redhat9-large",
+  "box_tag": "dettonville/redhat9-large",
+  "description": "RedHat 9 - large template"
+}

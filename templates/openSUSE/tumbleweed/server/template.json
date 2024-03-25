@@ -3,5 +3,5 @@
   "iso_checksum": "b8a5c7f9ca86bab6071db754347f302504ae318c474333b2b1c1d09405928641",
   "iso_checksum_type": "sha256",
   "iso_url": "http://mirror.us.leaseweb.net/opensuse/tumbleweed/iso/openSUSE-Tumbleweed-NET-x86_64-Current.iso",
-  "vm_name": "tumbleweed-server-packer-template"
+  "vm_template_build_name": "tumbleweed-server-packer-template"
 }

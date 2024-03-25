@@ -1,8 +1,0 @@
-{
-  "auto_build": "True",
-  "box_name": "windows2016",
-  "box_tag": "dettonville/windows2016",
-  "description": "Windows 2016 Server",
-  "private": "False",
-  "short_description": "Windows 2016 Server"
-}

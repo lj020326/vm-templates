@@ -1,0 +1,12 @@
+{
+  "vm_inst_os_image": "Windows Server 2022 SERVERSTANDARDCORE",
+  "vm_inst_os_kms_key": "VDYBN-27WPP-V4HQT-9VMD4-VMK7H",
+  "vm_mem_size": "2000",
+  "vm_disk_size": "20000",
+  "vm_cpu_num": "2",
+  "vm_cpu_cores_num": "1",
+  "auto_build": "True",
+  "box_name": "windows2022",
+  "box_tag": "dettonville/windows2022",
+  "description": "Windows 2022 Server"
+}

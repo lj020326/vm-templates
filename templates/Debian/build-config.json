@@ -3,49 +3,6 @@
     {
       "name": "vsphere-iso",
       "type": "vsphere-iso",
-
-      "vcenter_server": "{{ user `vcenter_host` }}",
-      "username": "{{ user `vcenter_username` }}",
-      "password": "{{ user `vcenter_password` }}",
-      "insecure_connection": "true",
-      "cluster": "{{ user `vcenter_cluster` }}",
-      "datastore": "{{ user `vm_datastore` }}",
-      "folder": "{{ user `vcenter_folder` }}",
-
-      "communicator": "ssh",
-
-      "convert_to_template": true,
-
-      "vm_name": "{{ user `vm_build_id` }}",
-      "guest_os_type": "{{ user `vm_guest_os_type` }}",
-
-      "CPUs": "{{ user `vm_cpu_num` }}",
-      "RAM": "{{ user `vm_mem_size` }}",
-      "RAM_reserve_all": false,
-      "firmware": "{{ user `vm_firmware` }}",
-
-      "storage": [
-        {
-          "disk_size": "{{ user `vm_disk_size` }}",
-          "disk_thin_provisioned": "{{ user `vm_disk_thin_provisioned` }}"
-        }
-      ],
-      "disk_controller_type": "{{ user `vm_disk_type` }}",
-
-      "network_adapters": [
-        {
-          "network": "{{ user `vm_network_mgt` }}",
-          "network_card": "{{ user `vm_network_card` }}"
-        }
-      ],
-
-      "shutdown_command": "echo '{{ user `ssh_password` }}'| sudo -S /sbin/halt -h -p",
-      "shutdown_timeout": "15m",
-
-      "iso_paths": [
-        "[{{ user `vm_remote_cache_datastore` }}] {{ user `iso_base_dir` }}/{{user `iso_dir` }}/{{user `iso_file` }}"
-      ],
-
       "boot_command": [
         "{{ user `boot_command_prefix` }}",
         "{{ user `boot_command` }}",
@@ -57,19 +14,54 @@
       "http_directory": "{{ user `vm_boot_http_directory` }}",
       "ip_wait_timeout": "{{ user `ip_wait_timeout` }}",
       "ip_settle_timeout": "{{ user `ip_settle_timeout` }}",
+      "vcenter_server": "{{ user `vcenter_host` }}",
+      "username": "{{ user `vcenter_username` }}",
+      "password": "{{ user `vcenter_password` }}",
+      "insecure_connection": "true",
       "datacenter": "{{ user `vcenter_datacenter` }}",
+      "cluster": "{{ user `vcenter_cluster` }}",
+      "datastore": "{{ user `vm_datastore` }}",
+      "folder": "{{ user `vm_build_folder` }}",
+      "vm_name": "{{ user `vm_template_build_name` }}",
       "host": "{{ user `vm_host` }}",
-      "notes": "{{ user `vm_build_notes` }}",
+      "notes": "Build via Packer - date: {{ isotime }} build tag: {{ user `vm_build_tag` }}",
+      "convert_to_template": true,
+      "communicator": "ssh",
       "configuration_parameters": {
         "bios.bootDelay": "5000",
         "bootOrder": "{{ user `vm_boot_order` }}"
       },
+      "iso_paths": [
+        "[{{ user `vm_iso_datastore` }}] {{ user `iso_base_dir` }}/{{user `iso_dir` }}/{{user `iso_file` }}"
+      ],
       "iso_checksum": "{{ user `iso_checksum_type` }}:{{user `iso_checksum` }}",
+      "shutdown_command": "echo '{{ user `ssh_password` }}'| sudo -S /sbin/halt -h -p",
+      "shutdown_timeout": "15m",
       "ssh_handshake_attempts": "{{ user `ssh_handshake_attempts` }}",
       "ssh_username": "{{ user `ssh_username` }}",
       "ssh_password": "{{ user `ssh_password` }}",
       "ssh_timeout": "{{ user `ssh_timeout` }}",
-      "ssh_pty": "{{ user `ssh_pty` }}"
+      "ssh_pty": "{{ user `ssh_pty` }}",
+      "guest_os_type": "{{ user `vm_guest_os_type` }}",
+      "CPUs": "{{ user `vm_cpu_num` }}",
+      "RAM": "{{ user `vm_mem_size` }}",
+      "RAM_reserve_all": false,
+      "firmware": "{{ user `vm_firmware` }}",
+      "disk_controller_type": [
+        "{{ user `vm_disk_type` }}"
+      ],
+      "storage": [
+        {
+          "disk_size": "{{ user `vm_disk_size` }}",
+          "disk_thin_provisioned": "{{ user `vm_disk_thin_provisioned` }}"
+        }
+      ],
+      "network_adapters": [
+        {
+          "network": "{{ user `vm_network_mgt` }}",
+          "network_card": "{{ user `vm_network_card` }}"
+        }
+      ]
     },
     {
       "type": "qemu",
@@ -89,13 +81,13 @@
       "iso_checksum": "{{ user `iso_checksum_type` }}:{{ user `iso_checksum` }}",
       "iso_url": "{{ user `iso_url` }}",
       "memory": "{{ user `vm_mem_size` }}",
-      "output_directory": "output-{{ user `vm_name` }}-{{ build_type }}-{{ timestamp }}",
+      "output_directory": "output-{{ user `vm_template_build_name` }}-{{ build_type }}-{{ timestamp }}",
       "shutdown_command": "echo '{{ user `ssh_password` }}'| sudo -S /sbin/halt -h -p",
       "ssh_handshake_attempts": "20",
       "ssh_password": "{{ user `ssh_password` }}",
       "ssh_timeout": "{{ user `ssh_timeout` }}",
       "ssh_username": "{{ user `ssh_username` }}",
-      "vm_name": "{{ user `vm_build_id` }}"
+      "vm_name": "{{ user `vm_template_build_name` }}"
     },
     {
       "type": "virtualbox-iso",
@@ -114,13 +106,13 @@
       "iso_checksum": "{{ user `iso_checksum_type` }}:{{ user `iso_checksum` }}",
       "iso_url": "{{ user `iso_url` }}",
       "memory": "{{ user `vm_mem_size` }}",
-      "output_directory": "output-{{ user `vm_name` }}-{{ build_type }}-{{ timestamp }}",
+      "output_directory": "output-{{ user `vm_template_build_name` }}-{{ build_type }}-{{ timestamp }}",
       "shutdown_command": "echo '{{ user `ssh_password` }}'| sudo -S /sbin/halt -h -p",
       "ssh_handshake_attempts": "20",
       "ssh_password": "{{ user `ssh_password` }}",
       "ssh_timeout": "{{ user `ssh_timeout` }}",
       "ssh_username": "{{ user `ssh_username` }}",
-      "vm_name": "{{ user `vm_build_id` }}"
+      "vm_name": "{{ user `vm_template_build_name` }}"
     },
     {
       "type": "vmware-iso",
@@ -140,14 +132,14 @@
       "iso_checksum": "{{ user `iso_checksum_type` }}:{{ user `iso_checksum` }}",
       "iso_url": "{{ user `iso_url` }}",
       "memory": "{{ user `vm_mem_size` }}",
-      "output_directory": "output-{{ user `vm_name` }}-{{ build_type }}-{{ timestamp }}",
+      "output_directory": "output-{{ user `vm_template_build_name` }}-{{ build_type }}-{{ timestamp }}",
       "shutdown_command": "echo '{{ user `ssh_password` }}'| sudo -S /sbin/halt -h -p",
       "ssh_handshake_attempts": "20",
       "ssh_password": "{{ user `ssh_password` }}",
       "ssh_timeout": "{{ user `ssh_timeout` }}",
       "ssh_username": "{{ user `ssh_username` }}",
       "tools_upload_flavor": "linux",
-      "vm_name": "{{ user `vm_build_id` }}",
+      "vm_name": "{{ user `vm_template_build_name` }}",
       "vmx_data": {
         "ethernet0.pciSlotNumber": "32"
       },
@@ -156,12 +148,6 @@
   ],
   "post-processors": [
     [
-      {
-        "compression_level": "{{ user `compression_level` }}",
-        "output": "{{ user `vm_name` }}-{{.Provider}}-{{ timestamp }}.box",
-        "type": "vagrant",
-        "except": ["vsphere-iso"]
-      },
       {
         "output": "manifest.json",
         "strip_path": true,
@@ -174,6 +160,13 @@
       "type": "shell",
       "execute_command": "echo '{{ user `ssh_username` }}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
       "scripts": [
+        "_common/scripts/install_site_cacerts.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo '{{ user `ssh_username` }}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "scripts": [
         "_common/scripts/base.sh",
         "_common/scripts/vmware.sh",
         "_common/scripts/sshd.sh"
@@ -181,16 +174,14 @@
     },
     {
       "type": "shell",
-      "execute_command": "echo '{{ user `ssh_username` }}' | {{.Vars}} sudo -H -S -E bash '{{.Path}}'",
+      "environment_vars": [
+        "PIP_NSTALL_VERSION={{user `pip_version`}}",
+        "VENV_DIR={{user `python_venv_dir`}}",
+        "ANSIBLE_VAULT_PASS={{ user `ansible_vault_password` }}"
+      ],
+      "execute_command": "echo '{{ user `ssh_username` }}' | {{.Vars}} bash '{{.Path}}'",
       "scripts": [
         "_common/scripts/ansible.sh"
-      ]
-    },
-    {
-      "type": "shell",
-      "inline": [
-        "echo '{{ user `ansible_vault_password` }}' > ~/.vault_pass",
-        "chmod 600 ~/.vault_pass"
       ]
     },
     {
@@ -199,12 +190,15 @@
       "clean_staging_directory": "false",
       "playbook_dir": "{{ user `ansible_playbook_dir` }}",
       "playbook_file": "{{ user `ansible_playbook_file` }}",
+      "command": "{{ user `ansible_command` }}",
       "galaxy_command": "{{ user `ansible_galaxy_command` }}",
       "galaxy_file": "{{ user `ansible_galaxy_req_file` }}",
       "inventory_file": "{{ user `ansible_inventory_file` }}",
       "group_vars": "{{ user `ansible_inventory_group_vars` }}",
       "extra_arguments": [
-        "--vault-password-file=~/.vault_pass"
+        "--tag", "{{ user `ansible_playbook_tag` }}",
+        "--vault-password-file={{ user `ansible_playbook_vault_password_file` }}",
+        "-e", "@{{ user `ansible_playbook_vault` }}"
       ]
     },
     {
@@ -216,7 +210,7 @@
     },
     {
       "type": "inspec",
-      "pause_before": "360s",
+      "pause_before": "60s",
       "timeout": "60m",
       "extra_arguments": [
         "--no-distinct-exit"
@@ -234,32 +228,5 @@
         "_common/scripts/minimize.sh"
       ]
     }
-  ],
-  "variables": {
-    "boot_command_prefix": "",
-    "box_tag": "",
-    "compression_level": "6",
-    "disk_adapter_type": "scsi",
-    "disk_size": "36864",
-    "inspec_timeout": "50m",
-    "ip_wait_timeout": "60m",
-    "ip_settle_timeout": "5s",
-    "iso_checksum": "",
-    "iso_checksum_type": "sha256",
-    "iso_url": "",
-    "iso_base_dir": "iso-repos/linux",
-    "iso_dir": "",
-    "iso_file": "",
-    "vm_mem_size": "1024",
-    "pause_before_inspec": "360s",
-    "qemu_accelerator": "hvf",
-    "ssh_password": "vagrant",
-    "ssh_username": "vagrant",
-    "ssh_timeout": "60m",
-    "vagrant_cloud_token": "",
-    "vagrant_cloud_username": "",
-    "vm_cpu_num": "1",
-    "vm_firmware": "bios",
-    "vm_name": ""
-  }
+  ]
 }

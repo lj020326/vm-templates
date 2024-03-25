@@ -1,0 +1,6 @@
+auto_build="True"
+box_name="stretch64"
+box_tag="dettonville/stretch64"
+description="Debian Stretch"
+private="False"
+short_description="Debian Stretch"

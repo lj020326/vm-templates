@@ -3,5 +3,5 @@
   "iso_checksum": "d4a22c81c76a66558fb92e690ef70a5d67c685a08216701b15746586520f6e8e",
   "iso_checksum_type": "sha256",
   "iso_url": "https://cdimage.debian.org/cdimage/archive/9.9.0/amd64/iso-cd/debian-9.9.0-amd64-netinst.iso",
-  "vm_name": "stretch64-desktop-packer-template"
+  "vm_template_build_name": "stretch64-desktop-packer-template"
 }

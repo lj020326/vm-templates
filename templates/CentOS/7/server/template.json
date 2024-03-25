@@ -4,6 +4,6 @@
   "iso_url_orig": "http://centos.mirror.constant.com/7/isos/x86_64/CentOS-7-x86_64-Minimal-2003.iso",
   "iso_url": "https://mirrors.edge.kernel.org/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-2009.iso",
   "kickstart_cfg": "ks.7.cfg",
-  "vm_name": "packer-template-centos7",
+  "vm_template_build_name": "vm-template-centos7",
   "vm_guest_os_type": "centos7_64Guest"
 }

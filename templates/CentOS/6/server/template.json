@@ -4,5 +4,5 @@
   "iso_checksum_type": "sha256",
   "iso_url": "http://centos.mirror.constant.com/6.10/isos/x86_64/CentOS-6.10-x86_64-minimal.iso",
   "kickstart_cfg": "ks.6.cfg",
-  "vm_name": "centos6-server-packer-template"
+  "vm_template_build_name": "centos6-server-packer-template"
 }

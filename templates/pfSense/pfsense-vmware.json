@@ -68,7 +68,7 @@
       "ssh_password": "vagrant",
       "ssh_username": "vagrant",
       "ssh_wait_timeout": "10000s",
-      "vm_name": "pfSense",
+      "vm_template_build_name": "pfSense",
       "vmx_data": {
         "memsize": "1024",
         "numvcpus": "1"

@@ -39,7 +39,7 @@ source "virtualbox-iso" "vbox" {
   ssh_timeout             = "5m"
   ssh_username            = "root"
   virtualbox_version_file = ""
-  vm_name                  = "packer-pfsense-2.5.2-amd64"
+  vm_template_build_name                  = "packer-pfsense-2.5.2-amd64"
 }
 
 build {

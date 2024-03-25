@@ -1,0 +1,6 @@
+answerfile_file_path="./templates/ks8.cfg.pkrtpl.hcl"
+iso_checksum_type="sha256"
+iso_url="https://developers.redhat.com/content-gateway/file/rhel/8.8.0/rhel-8.8-x86_64-dvd.iso"
+iso_checksum="517abcc67ee3b7212f57e180f5d30be3e8269e7a99e127a3399b7935c7e00a09"
+vm_boot_command_prefix="<up><wait><tab>"
+vm_guest_os_type="rhel8_64Guest"

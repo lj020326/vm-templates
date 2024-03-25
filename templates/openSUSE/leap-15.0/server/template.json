@@ -3,5 +3,5 @@
   "iso_checksum": "1a322de7c215da96fdbad4c247d218eb79073c5620a332a759c0291b44746fbc",
   "iso_checksum_type": "sha256",
   "iso_url": "http://mirror.us.leaseweb.net/opensuse/distribution/openSUSE-current/iso/openSUSE-Leap-15.0-NET-x86_64.iso",
-  "vm_name": "leap150-server-packer-template"
+  "vm_template_build_name": "leap150-server-packer-template"
 }

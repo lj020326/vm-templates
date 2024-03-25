@@ -4,7 +4,7 @@
     "vagrant_name": "pfsense",
     "version": "1.1",
     "cloud_token": "{{ env `VAGRANT_CLOUD_TOKEN` }}",
-    "vm_name": "pfsense_vbox",
+    "vm_template_build_name": "pfsense_vbox",
     "cpu": "2",
     "guest_os_type": "FreeBSD_64",
     "ram_size": "2048",
@@ -35,7 +35,7 @@
   "builders": [
     {
       "type": "virtualbox-iso",
-      "vm_name": "{{ user `vm_name` }}",
+      "vm_name": "{{ user `vm_template_build_name` }}",
       "format": "ova",
       "guest_os_type": "{{ user `guest_os_type` }}",
       "headless": true,

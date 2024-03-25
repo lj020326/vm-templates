@@ -1,0 +1,7 @@
+answerfile_file_path="./11/templates/autounattend.xml.pkrtpl.hcl"
+answerfile_file_path_orig="./11/templates/autounattend.xml.pkrtpl.hcl"
+iso_checksum_type="sha1"
+iso_checksum="5caaad8e9d4f36caa7a61633ea572bddc88fa1bd"
+iso_url="https://archiva.admin.dettonville.int/repository/internal/org/dettonville/infra/windows/windows11.iso"
+vm_inst_os_image="Windows 11 Enterprise"
+vm_guest_os_type="windows9_64Guest"

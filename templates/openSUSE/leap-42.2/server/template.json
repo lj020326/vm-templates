@@ -3,5 +3,5 @@
   "iso_checksum": "750434ff041b9e7baf31217fcfab41df0560e8e8a39d508c196eb19c151f265c",
   "iso_checksum_type": "sha256",
   "iso_url": "http://mirror.us.leaseweb.net/opensuse/distribution/leap/42.2/iso/openSUSE-Leap-42.2-NET-x86_64.iso",
-  "vm_name": "leap422-server-packer-template"
+  "vm_template_build_name": "leap422-server-packer-template"
 }

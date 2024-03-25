@@ -21,7 +21,7 @@
       "datacenter": "{{ user `vcenter_datacenter` }}",
       "datastore": "{{ user `vcenter_datastore_vm` }}",
       "disk_controller_type": "pvscsi",
-      "folder": "{{ user `vcenter_folderpath` }}",
+      "folder": "{{ user `vm_build_folder` }}",
       "guest_os_type": "rhel7_64Guest",
       "host": "{{ user `vcenter_host` }}",
       "insecure_connection": "true",
@@ -49,7 +49,7 @@
       "type": "vsphere-iso",
       "username": "{{ user `vcenter_username` }}",
       "vcenter_server": "{{ user `vcenter_server` }}",
-      "vm_name": "{{user `ocp_clustername` }}-bootstrap",
+      "vm_template_build_name": "{{user `ocp_clustername` }}-bootstrap",
       "vm_version": 13
     },
     {
@@ -73,7 +73,7 @@
       "datacenter": "{{ user `vcenter_datacenter` }}",
       "datastore": "{{ user `vcenter_datastore_vm` }}",
       "disk_controller_type": "pvscsi",
-      "folder": "{{ user `vcenter_folderpath` }}",
+      "folder": "{{ user `vm_build_folder` }}",
       "guest_os_type": "rhel7_64Guest",
       "host": "{{ user `vcenter_host` }}",
       "insecure_connection": "true",
@@ -101,7 +101,7 @@
       "type": "vsphere-iso",
       "username": "{{ user `vcenter_username` }}",
       "vcenter_server": "{{ user `vcenter_server` }}",
-      "vm_name": "{{ user `ocp_clustername` }}-{{user `ocp_nodename` }}-1",
+      "vm_template_build_name": "{{ user `ocp_clustername` }}-{{user `ocp_nodename` }}-1",
       "vm_version": 13
     },
     {
@@ -125,7 +125,7 @@
       "datacenter": "{{ user `vcenter_datacenter` }}",
       "datastore": "{{ user `vcenter_datastore_vm` }}",
       "disk_controller_type": "pvscsi",
-      "folder": "{{ user `vcenter_folderpath` }}",
+      "folder": "{{ user `vm_build_folder` }}",
       "guest_os_type": "rhel7_64Guest",
       "host": "{{ user `vcenter_host` }}",
       "insecure_connection": "true",
@@ -153,7 +153,7 @@
       "type": "vsphere-iso",
       "username": "{{ user `vcenter_username` }}",
       "vcenter_server": "{{ user `vcenter_server` }}",
-      "vm_name": "{{ user `ocp_clustername` }}-{{user `ocp_nodename` }}-2",
+      "vm_template_build_name": "{{ user `ocp_clustername` }}-{{user `ocp_nodename` }}-2",
       "vm_version": 13
     },
     {
@@ -177,7 +177,7 @@
       "datacenter": "{{ user `vcenter_datacenter` }}",
       "datastore": "{{ user `vcenter_datastore_vm` }}",
       "disk_controller_type": "pvscsi",
-      "folder": "{{ user `vcenter_folderpath` }}",
+      "folder": "{{ user `vm_build_folder` }}",
       "guest_os_type": "rhel7_64Guest",
       "host": "{{ user `vcenter_host` }}",
       "insecure_connection": "true",
@@ -205,7 +205,7 @@
       "type": "vsphere-iso",
       "username": "{{ user `vcenter_username` }}",
       "vcenter_server": "{{ user `vcenter_server` }}",
-      "vm_name": "{{ user `ocp_clustername` }}-{{user `ocp_nodename` }}-3",
+      "vm_template_build_name": "{{ user `ocp_clustername` }}-{{user `ocp_nodename` }}-3",
       "vm_version": 13
     }
   ],
@@ -220,10 +220,9 @@
     "vcenter_datacenter": "GXR",
     "vcenter_datastore_iso": "esx_WC_NFS",
     "vcenter_datastore_vm": "esx2_vms_nvme1",
-    "vcenter_folderpath": "",
     "vcenter_host": "esx2.gxr.me",
     "vcenter_iso_path": "ISO/rhcos-live.x86_64.iso",
-    "vcenter_password": "{{ env `VSPHERE_PASS` }}",
+    "vcenter_password": "{{ user `vcenter_password` }}",
     "vcenter_server": "vcsa.gxr.me",
     "vcenter_username": "administrator@vsphere.local",
     "vm_disksize": "61440",

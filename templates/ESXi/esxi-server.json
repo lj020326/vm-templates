@@ -21,7 +21,7 @@
       "ssh_username": "{{ user `ssh_username` }}",
       "type": "vmware-iso",
       "version": "{{ user `vm_version` }}",
-      "vm_name": "{{ user `vm_name` }}-{{ timestamp }}",
+      "vm_template_build_name": "{{ user `vm_template_build_name` }}-{{ timestamp }}",
       "vmx_data": {
         "vhv.enable": true
       },
@@ -73,7 +73,7 @@
       "type": "vsphere-iso",
       "username": "{{ user `username` }}",
       "vcenter_server": "{{ user `vcenter_server` }}",
-      "vm_name": "{{ user `vm_name` }}-{{ timestamp }}",
+      "vm_template_build_name": "{{ user `vm_template_build_name` }}-{{ timestamp }}",
       "vm_version": "{{ user `vm_version` }}"
     }
   ],
@@ -115,7 +115,7 @@
     "ssh_username": "root",
     "username": "",
     "vcenter_server": "",
-    "vm_name": "",
+    "vm_template_build_name": "",
     "vm_version": "10"
   }
 }

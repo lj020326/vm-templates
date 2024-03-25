@@ -1,0 +1,4 @@
+boot_command_prefix="<esc><esc><esc><enter><wait>"
+boot_command="/casper/vmlinuz root=/dev/sr0 initrd=/casper/initrd autoinstall ds=nocloud-net\\;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ubuntu/"
+vm_guest_os_type="ubuntu64Guest"
+vm_disk_type="pvscsi"

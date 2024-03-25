@@ -1,0 +1,6 @@
+auto_build="True"
+box_name="buster64"
+box_tag="dettonville/buster64"
+description="Debian Buster"
+private="False"
+short_description="Debian Buster"

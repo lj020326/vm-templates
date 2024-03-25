@@ -1,0 +1,7 @@
+boot_command_prefix="<up><wait><tab>inst.text inst.ks"
+iso_checksum_type="sha256"
+iso_url="https://vault.centos.org/8.5.2111/isos/x86_64/CentOS-8.5.2111-x86_64-dvd1.iso"
+iso_checksum="3b795863001461d4f670b0dedd02d25296b6d64683faceb8f2b60c53ac5ebb3e"
+kickstart_cfg="ks.8.cfg"
+vm_template_build_name="vm-template-centos8"
+vm_guest_os_type="centos8_64Guest"

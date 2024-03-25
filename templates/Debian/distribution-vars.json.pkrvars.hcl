@@ -1,0 +1,3 @@
+boot_command_prefix="<esc><wait>"
+boot_command="install auto=true priority=critical url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/debian/preseed.cfg"
+vm_guest_os_type="debian10_64Guest"

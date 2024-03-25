@@ -1,0 +1,7 @@
+answerfile_file_path="./2016/templates/autounattend.xml.pkrtpl.hcl"
+answerfile_file_path_orig="./2016/templates/autounattend.xml.pkrtpl.hcl"
+iso_checksum_type="sha1"
+iso_checksum="bd1ce529842fbbe87cc36a51400a8ecde2de6023"
+iso_url="https://archiva.admin.dettonville.int/repository/internal/org/dettonville/infra/windows/SRV2016.ENU.JUL2017.14393-1532/windows-SRV2016.ENU.JUL2017.14393-1532.iso"
+vm_inst_os_image="Windows Server 2016 SERVERSTANDARD"
+vm_guest_os_type="windows8Server64Guest"

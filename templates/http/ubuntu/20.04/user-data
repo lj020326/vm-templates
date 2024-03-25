@@ -33,7 +33,7 @@ autoinstall:
         uri: "http://archive.ubuntu.com/ubuntu/"
   ssh:
     # For now we install openssh-server during package installs
-    install-server: no
+    install-server: true
     allow-pw: true
   storage:
     layout:

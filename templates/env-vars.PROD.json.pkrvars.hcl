@@ -1,0 +1,2 @@
+vm_deploy_folder="TemplateBuildAutomation/PROD"
+vm_template_deploy_folder="/dettonville-dc-01/vm/TemplateBuildAutomation/PROD"

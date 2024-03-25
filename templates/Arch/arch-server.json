@@ -16,14 +16,14 @@
       "http_directory": "http",
       "iso_checksum": "{{ user `iso_checksum_type` }}:{{ user `iso_checksum` }}",
       "iso_url": "{{ user `iso_url` }}",
-      "memory": "{{ user `memory` }}",
-      "output_directory": "output-{{ user `vm_name` }}-{{ build_type }}-{{ timestamp }}",
+      "memory": "{{ user `vm_mem_size` }}",
+      "output_directory": "output-{{ user `vm_template_build_name` }}-{{ build_type }}-{{ timestamp }}",
       "shutdown_command": "sudo systemctl isolate poweroff.target",
       "ssh_password": "{{ user `ssh_password` }}",
       "ssh_timeout": "60m",
       "ssh_username": "{{ user `ssh_username` }}",
       "type": "qemu",
-      "vm_name": "{{ user `vm_name` }}-{{ timestamp }}"
+      "vm_template_build_name": "{{ user `vm_template_build_name` }}-{{ timestamp }}"
     },
     {
       "boot_command": [
@@ -40,14 +40,14 @@
       "http_directory": "http",
       "iso_checksum": "{{ user `iso_checksum_type` }}:{{ user `iso_checksum` }}",
       "iso_url": "{{ user `iso_url` }}",
-      "memory": "{{ user `memory` }}",
-      "output_directory": "output-{{ user `vm_name` }}-{{ build_type }}-{{ timestamp }}",
+      "memory": "{{ user `vm_mem_size` }}",
+      "output_directory": "output-{{ user `vm_template_build_name` }}-{{ build_type }}-{{ timestamp }}",
       "shutdown_command": "sudo systemctl isolate poweroff.target",
       "ssh_password": "{{ user `ssh_password` }}",
       "ssh_timeout": "60m",
       "ssh_username": "{{ user `ssh_username` }}",
       "type": "virtualbox-iso",
-      "vm_name": "{{ user `vm_name` }}-{{ timestamp }}"
+      "vm_template_build_name": "{{ user `vm_template_build_name` }}-{{ timestamp }}"
     },
     {
       "boot_command": [
@@ -65,14 +65,14 @@
       "http_directory": "http",
       "iso_checksum": "{{ user `iso_checksum_type` }}:{{ user `iso_checksum` }}",
       "iso_url": "{{ user `iso_url` }}",
-      "memory": "{{ user `memory` }}",
-      "output_directory": "output-{{ user `vm_name` }}-{{ build_type }}-{{ timestamp }}",
+      "memory": "{{ user `vm_mem_size` }}",
+      "output_directory": "output-{{ user `vm_template_build_name` }}-{{ build_type }}-{{ timestamp }}",
       "shutdown_command": "sudo systemctl isolate poweroff.target",
       "ssh_password": "{{ user `ssh_password` }}",
       "ssh_timeout": "60m",
       "ssh_username": "{{ user `ssh_username` }}",
       "type": "vmware-iso",
-      "vm_name": "{{ user `vm_name` }}-{{ timestamp }}",
+      "vm_template_build_name": "{{ user `vm_template_build_name` }}-{{ timestamp }}",
       "vmx_data": {
         "ethernet0.pciSlotNumber": "32"
       },
@@ -83,7 +83,7 @@
     [
       {
         "compression_level": "{{ user `compression_level` }}",
-        "output": "{{ user `vm_name` }}-{{.Provider}}-{{ timestamp }}.box",
+        "output": "{{ user `vm_template_build_name` }}-{{.Provider}}-{{ timestamp }}.box",
         "type": "vagrant"
       },
       {
@@ -122,13 +122,13 @@
     "iso_checksum_type": "",
     "iso_checksum": "",
     "iso_url": "",
-    "memory": "512",
+    "vm_mem_size": "512",
     "qemu_accelerator": "kvm",
     "ssh_password": "vagrant",
     "ssh_username": "vagrant",
     "vagrant_cloud_token": "",
     "vagrant_cloud_username": "",
     "vm_cpu_num": "1",
-    "vm_name": ""
+    "vm_template_build_name": ""
   }
 }

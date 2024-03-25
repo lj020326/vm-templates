@@ -1,0 +1,151 @@
+# Red Hat Enterprise Linux Server 8
+# ref: https://github.com/vmware-samples/packer-examples-for-vsphere/blob/main/builds/linux/rhel/8/data/ks.pkrtpl.hcl
+
+### Installs from the first attached CD-ROM/DVD on the system.
+cdrom
+
+### Performs the kickstart installation in text mode.
+### By default, kickstart installations are performed in graphical mode.
+text
+
+### Accepts the End User License Agreement.
+eula --agreed
+
+### Sets the language to use during installation and the default language to use on the installed system.
+lang ${vm_guest_os_language}
+
+### Sets the default keyboard type for the system.
+keyboard ${vm_guest_os_keyboard}
+
+### Configure network information for target system and activate network devices in the installer environment (optional)
+### ref: https://www.golinuxcloud.com/wp-content/uploads/2020/04/Red_Hat_CentOS_8_Kickstart_Example.txt
+### --onboot	  enable device at a boot time
+### --device	  device to be activated and / or configured with the network command
+### --bootproto	  method to obtain networking configuration for device (default dhcp)
+### --noipv6	  disable IPv6 on this device
+###
+### network  --bootproto=static --ip=172.16.11.200 --netmask=255.255.255.0 --gateway=172.16.11.200 --nameserver=172.16.11.4 --hostname centos-linux-8
+#network --bootproto=dhcp --hostname=${vm_template_name}
+network --bootproto=dhcp
+
+### Lock the root account.
+rootpw --lock
+
+### The selected profile will restrict root login.
+### Add a user that can login and escalate privileges.
+user --name=${build_username} --iscrypted --password=${build_password_encrypted} --groups=wheel
+
+### Configure firewall settings for the system.
+### --enabled	reject incoming connections that are not in response to outbound requests
+### --ssh		allow sshd service through the firewall
+firewall --enabled --ssh
+
+### Sets up the authentication options for the system.
+### The SSDD profile sets sha512 to hash passwords. Passwords are shadowed by default
+### See the manual page for authselect-profile for a complete list of possible options.
+authselect select sssd
+
+### Sets the state of SELinux on the installed system.
+### Defaults to enforcing.
+selinux --enforcing
+
+### Sets the system time zone.
+timezone ${vm_guest_os_timezone}
+
+### Sets how the boot loader should be installed.
+bootloader --location=mbr
+#bootloader --timeout=1 --location=mbr --append="net.ifnames=0 biosdevname=0"
+
+### Initialize any invalid partition tables found on disks.
+zerombr
+
+### Removes partitions from the system, prior to creation of new partitions.
+### By default, no partitions are removed.
+### ref: https://forums.centos.org/viewtopic.php?t=61446
+### ref: https://unix.stackexchange.com/questions/594614/kickstart-install-rhel-storage-configuration-failed-not-enough-space-in
+### --linux	erases all Linux partitions.
+### --initlabel Initializes a disk (or disks) by creating a default disk label for all disks in their respective architecture.
+clearpart --all --initlabel
+#clearpart --all --initlabel --drives=sda,sdb
+#clearpart --all --initlabel --drives=sda
+#clearpart --all --initlabel
+##ignoredisk --only-use=sda
+
+##########################
+### Disk partitioning information
+### ref: https://docs.centos.org/en-US/centos/install-guide/Kickstart2/
+### ref: https://www.golinuxhub.com/2018/05/sample-kickstart-partition-example-raid/
+### ref: https://community.spiceworks.com/topic/2339397-create-lvm-partition-with-kickstart
+### ref: https://serverfault.com/questions/826006/centos-rhel-7-lvm-partitioning-in-kickstart
+### ref: https://github.com/vinceskahan/docs/blob/master/files/kickstart/lvm-partitioning-in-ks.md
+### ref: https://gainanov.pro/eng-blog/linux/centos-installation-with-kickstart/
+### ref: https://serverfault.com/questions/1049693/oel8-kickstart-install-on-esxi-hangs-at-reached-target-basic-system-why
+### ref: https://stackoverflow.com/questions/68007540/terraform-conditionally-execute-some-lines-of-code-in-template-file
+### ref: https://developer.hashicorp.com/packer/docs/templates/hcl_templates/functions/file/templatefile
+
+### Modify partition sizes for the virtual machine hardware.
+### Create primary system partitions.
+%{ if vm_disk_partition_auto=="true" }
+#autopart --nohome --nolvm --noboot
+autopart --nolvm
+
+%{ else }
+
+#########################
+## disk partitions
+%{ for partition_config in vm_disk_partition_configs[vm_disk_partition_flavor].vm_disk_partition_list ~}
+part ${partition_config}
+%{ endfor ~}
+
+#########################
+## volume groups
+%{ for volume_group_config in vm_disk_partition_configs[vm_disk_partition_flavor].vm_disk_volgroup_list ~}
+volgroup ${volume_group_config}
+%{ endfor ~}
+
+#########################
+## logical volumes
+%{ for logical_volume_config in vm_disk_partition_configs[vm_disk_partition_flavor].vm_disk_lvm_list ~}
+logvol ${logical_volume_config}
+%{ endfor ~}
+
+%{ endif }
+
+### Modifies the default set of services that will run under the default runlevel.
+services --enabled=NetworkManager,sshd
+
+### Do not configure X on the installed system.
+skipx
+
+#########################
+### Packages selection.
+### package groups ref: https://access.redhat.com/solutions/10549
+%packages --ignoremissing --excludedocs
+@core
+virt-who
+python3
+## unnecessary firmware
+-iwl*firmware
+-microcode_ctl
+%end
+
+### Post-installation commands.
+%post
+echo
+echo "################################"
+echo "# Running Post Configuration   #"
+echo "################################"
+#dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+dnf makecache
+dnf install -y sudo open-vm-tools perl
+dnf clean all
+echo "${build_username} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers.d/${build_username}
+sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers
+%end
+
+#########################
+### Reboot after the installation is complete.
+### Run the Setup Agent on first boot
+### --eject attempt to eject the media before rebooting.
+#firstboot --disabled
+reboot --eject

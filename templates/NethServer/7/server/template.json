@@ -4,5 +4,5 @@
   "iso_checksum_type": "sha1",
   "iso_url": "https://sourceforge.net/projects/nethserver/files/nethserver-7.6.1810-x86_64.iso/download",
   "kickstart_cfg": "ks.cfg",
-  "vm_name": "nethserver7-server-packer-template"
+  "vm_template_build_name": "nethserver7-server-packer-template"
 }

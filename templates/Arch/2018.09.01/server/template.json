@@ -4,5 +4,5 @@
   "iso_checksum": "1649fa7e68a2c5dcc4e48b36ecbb8e318272e746",
   "iso_checksum_type": "sha1",
   "iso_url": "https://arch.mirror.constant.com/iso/2018.09.01/archlinux-2018.09.01-x86_64.iso",
-  "vm_name": "arch20180901-server-packer-template"
+  "vm_template_build_name": "arch20180901-server-packer-template"
 }

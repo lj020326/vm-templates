@@ -7,7 +7,7 @@
       "iso_checksum": "{{ user `iso_checksum` }}",
       "iso_checksum_type": "{{ user `iso_checksum_type` }}",
       "output_directory": "output-vyos-1.1.7-amd64-{{build_type}}",
-      "vm_name": "packer-vyos-1.1.7-amd64",
+      "vm_template_build_name": "packer-vyos-1.1.7-amd64",
       "disk_size": "{{ user `vm_disk_size` }}",
       "headless": "{{ user `headless` }}",
       "boot_wait": "5s",
@@ -56,7 +56,7 @@
           "modifyvm",
           "{{.Name}}",
           "--memory",
-          "{{ user `memory` }}"
+          "{{ user `vm_mem_size` }}"
         ],
         [
           "modifyvm",
@@ -101,7 +101,7 @@
     "headless": "false",
     "iso_checksum": "c40a889469e0eea43d92c73149f1058e3650863b",
     "iso_checksum_type": "sha1",
-    "memory": "512",
+    "vm_mem_size": "512",
     "mirror": "https://downloads.vyos.io",
     "ssh_timeout": "60m"
   }

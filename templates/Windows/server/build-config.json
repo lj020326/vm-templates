@@ -1,0 +1,131 @@
+{
+  "builders": [
+    {
+      "name": "vsphere-iso",
+      "type": "vsphere-iso",
+      "boot_command": "%%local.boot_command",
+      "boot_wait": "%%var.vm_boot_wait",
+      "boot_order": "%%var.vm_boot_order_install",
+      "http_content": "%%var.common_data_source == \"http\" ? local.data_source_content : null",
+      "cd_content": "%%var.common_data_source == \"disk\" ? local.data_source_content : null",
+      "cd_files": [
+        "_common/scripts/${var.vm_guest_os_family}/"
+      ],
+      "iso_paths": "%%local.iso_paths",
+      "iso_checksum": "%%local.iso_checksum",
+      "ip_wait_timeout": "%%var.ip_wait_timeout",
+      "ip_settle_timeout": "%%var.ip_settle_timeout",
+      "vcenter_server": "%%var.vcenter_host",
+      "username": "%%var.vcenter_username",
+      "password": "%%var.vcenter_password",
+      "insecure_connection": "true",
+      "datacenter": "%%var.vcenter_datacenter",
+      "cluster": "%%var.vcenter_cluster",
+      "datastore": "%%var.vm_datastore",
+      "folder": "%%var.vm_build_folder",
+      "vm_name": "%%var.vm_template_build_name",
+      "vm_version": "%%var.common_vm_version",
+      "host": "%%var.vm_host",
+      "notes": "%%local.build_notes",
+      "convert_to_template": "true",
+      "communicator": "%%var.vm_communicator",
+      "configuration_parameters": {
+        "bios.bootDelay": "5000",
+        "bootOrder": "%%var.vm_boot_order"
+      },
+      "shutdown_command": "%%var.vm_shutdown_command",
+      "shutdown_timeout": "%%var.vm_shutdown_timeout",
+      "winrm_username": "%%local.winrm_username",
+      "winrm_password": "%%local.winrm_password",
+      "winrm_timeout": "8h",
+      "remove_cdrom": "%%var.vm_cdrom_remove",
+      "guest_os_type": "%%var.vm_guest_os_type",
+      "CPUs": "%%var.vm_cpu_num",
+      "cpu_cores": "%%var.vm_cpu_cores_num",
+      "CPU_hot_plug": "%%var.vm_cpu_hot_plug",
+      "RAM": "%%var.vm_mem_size",
+      "RAM_hot_plug": "%%var.vm_mem_hot_plug",
+      "RAM_reserve_all": "%%var.vm_mem_reserve_all",
+      "firmware": "%%var.vm_firmware",
+      "disk_controller_type": [
+        "%%var.vm_disk_controller_type"
+      ],
+      "storage": [
+        {
+          "disk_size": "%%var.vm_disk_size",
+          "disk_thin_provisioned": "%%var.vm_disk_thin_provisioned"
+        }
+      ],
+      "network_adapters": [
+        {
+          "network": "%%var.vm_network_mgt",
+          "network_card": "%%var.vm_network_card"
+        }
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "powershell",
+      "environment_vars": [
+        "BUILD_USERNAME=${var.build_username}",
+        "BUILD_PASSWORD=${var.build_password}",
+        "BUILD_JOB_URL=${var.build_job_url}",
+        "BUILD_JOB_ID=${var.build_job_id}",
+        "BUILD_GIT_COMMIT_HASH=${var.build_git_commit_hash}",
+        "CERT_URL_ENDPOINT=${var.cert_url_endpoint}"
+      ],
+      "elevated_user": "%%var.build_username",
+      "elevated_password": "%%var.build_password",
+      "scripts": "%%local.scripts"
+    },
+    {
+      "type": "powershell",
+      "elevated_user": "%%var.build_username",
+      "elevated_password": "%%var.build_password",
+      "inline": "%%local.inline"
+    },
+    {
+      "type": "windows-update",
+      "pause_before": "30s",
+      "search_criteria": "IsInstalled=0",
+      "filters": [
+        "exclude:$_.Title -like '*VMware*'",
+        "exclude:$_.Title -like '*Preview*'",
+        "exclude:$_.Title -like '*Defender*'",
+        "exclude:$_.InstallationBehavior.CanRequestUserInput",
+        "include:$true"
+      ],
+      "restart_timeout": "120m"
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "output": "manifest.json",
+        "strip_path": true,
+        "type": "manifest",
+        "custom_data": {
+          "build_username":           "%%var.build_username",
+          "build_date":               "%%local.build_date",
+          "build_version":            "%%local.build_version",
+          "common_data_source":       "%%var.common_data_source",
+          "common_vm_version":        "%%var.common_vm_version",
+          "vm_cpu_cores":             "%%var.vm_cpu_cores_num",
+          "vm_cpu_count":             "%%var.vm_cpu_num",
+          "vm_disk_size":             "%%var.vm_disk_size",
+          "vm_disk_thin_provisioned": "%%var.vm_disk_thin_provisioned",
+          "vm_firmware":              "%%var.vm_firmware",
+          "vm_guest_os_type":         "%%var.vm_guest_os_type",
+          "vm_mem_size":              "%%var.vm_mem_size",
+          "vm_network_card":          "%%var.vm_network_card",
+          "vsphere_cluster":          "%%var.vcenter_cluster",
+          "vsphere_host":             "%%var.vcenter_host",
+          "vsphere_datacenter":       "%%var.vcenter_datacenter",
+          "vsphere_datastore":        "%%var.vcenter_datacenter",
+          "vsphere_folder":           "%%var.vm_build_folder"
+        }
+      }
+    ]
+  ]
+}

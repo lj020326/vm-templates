@@ -7,30 +7,25 @@ GIT_DEFAULT_BRANCH=main
 set -e
 
 function gitcommitpush() {
-  LOCAL_BRANCH="$(git symbolic-ref --short HEAD)" && \
-  REMOTE_AND_BRANCH=$(git rev-parse --abbrev-ref ${LOCAL_BRANCH}@{upstream}) && \
+  local LOCAL_BRANCH="$(git symbolic-ref --short HEAD)" && \
+  local REMOTE_AND_BRANCH=$(git rev-parse --abbrev-ref ${LOCAL_BRANCH}@{upstream}) && \
   IFS=/ read REMOTE REMOTE_BRANCH <<< ${REMOTE_AND_BRANCH} && \
   echo "Staging changes:" && \
-  git add . || true && \
-  COMMENT_PREFIX=$(echo "${LOCAL_BRANCH}" | cut -d- -f1-2) && \
-  COMMENT_BODY="$(LANG=C git -c color.status=false status \
-      | sed -n -r -e '1,/Changes to be committed:/ d' \
-            -e '1,1 d' \
-            -e '/^Untracked files:/,$ d' \
-            -e 's/^\s*//' \
-            -e '/./p' \
-            | sed -e '/git restore/ d')" && \
+  git add -A || true && \
   echo "Committing changes:" && \
-  git commit -am "${COMMENT_PREFIX} - ${COMMENT_BODY}" || true && \
-  echo "Pushing local branch ${LOCAL_BRANCH} to remote ${REMOTE} branch ${REMOTE_BRANCH}:" && \
-  git push ${REMOTE} ${LOCAL_BRANCH}:${REMOTE_BRANCH}
+  git commit -am "group updates to public branch" || true && \
+  echo "Pushing branch '${LOCAL_BRANCH}' to remote origin branch '${LOCAL_BRANCH}':" && \
+  git push -f origin ${LOCAL_BRANCH} || true && \
+  echo "Pushing branch '${LOCAL_BRANCH}' to remote '${REMOTE}' branch '${REMOTE_BRANCH}':" && \
+  git push -f -u ${REMOTE} ${LOCAL_BRANCH}:${REMOTE_BRANCH} || true
 }
 
 function gitresetpublicsub() {
   echo "Resetting/re-initializing submodule for public branch" && \
   git submodule deinit -f . && \
   rm -fr ansible && \
-  git submodule add --force --name ansible-github https://github.com/lj020326/ansible-datacenter.git ansible && \
+  git submodule add -branch main --force --name ansible-github https://github.com/lj020326/ansible-datacenter.git ansible && \
+  git config -f .gitmodules submodule.ansible.branch main && \
   echo "Pull latest changes from submodules:" && \
   git submodule update --init --recursive --remote && \
   gitcommitpush
@@ -122,8 +117,10 @@ eval $rsync_cmd
 
 mirrorDirList="
 .github
+docs
 inspec
 templates
+tools
 "
 
 IFS=$'\n'
@@ -167,17 +164,8 @@ fi
 
 ## https://stackoverflow.com/questions/5738797/how-can-i-push-a-local-git-branch-to-a-remote-with-a-different-name-easily
 echo "Add all the files:"
-LOCAL_BRANCH="$(git symbolic-ref --short HEAD)" && \
-REMOTE_AND_BRANCH=$(git rev-parse --abbrev-ref ${LOCAL_BRANCH}@{upstream}) && \
-IFS=/ read REMOTE REMOTE_BRANCH <<< ${REMOTE_AND_BRANCH} && \
-echo "Staging changes:" && \
-git add -A || true && \
-echo "Committing changes:" && \
-git commit -am "group updates to public branch" || true && \
-echo "Pushing branch '${LOCAL_BRANCH}' to remote origin branch '${LOCAL_BRANCH}':" && \
-git push -f origin ${LOCAL_BRANCH} || true && \
-echo "Pushing branch '${LOCAL_BRANCH}' to remote '${REMOTE}' branch '${REMOTE_BRANCH}':" && \
-git push -f -u ${REMOTE} ${LOCAL_BRANCH}:${REMOTE_BRANCH} || true && \
+gitcommitpush
+
 echo "Finally, checkout ${GIT_DEFAULT_BRANCH} branch:" && \
 git checkout ${GIT_DEFAULT_BRANCH}
 

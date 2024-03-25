@@ -5,5 +5,5 @@
   "iso_checksum": "800d1739d952b3051914c9dfceb644fad5d4efea1764adcabb9efeff1a567ce3",
   "iso_checksum_type": "sha256",
   "iso_url": "http://dl-cdn.alpinelinux.org/alpine/v3.11/releases/x86_64/alpine-standard-3.11.6-x86_64.iso",
-  "vm_name": "alpine311-server-packer-template"
+  "vm_template_build_name": "alpine311-server-packer-template"
 }

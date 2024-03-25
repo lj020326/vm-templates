@@ -1,0 +1,6 @@
+boot_command_prefix="<tab> inst.text inst.ks"
+disk_adapter_type="sata"
+kickstart_cfg=""
+vm_disk_type="lsilogic"
+vm_guest_os_type="centos8_64Guest"
+vm_boot_wait="5s"

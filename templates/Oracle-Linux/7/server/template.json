@@ -4,5 +4,5 @@
   "iso_checksum_type": "sha256",
   "iso_url": "http://mirrors.kernel.org/oracle/OL7/u5/x86_64/OracleLinux-R7-U5-Server-x86_64-dvd.iso",
   "kickstart_cfg": "ks.7.cfg",
-  "vm_name": "ol7-server-packer-template"
+  "vm_template_build_name": "ol7-server-packer-template"
 }

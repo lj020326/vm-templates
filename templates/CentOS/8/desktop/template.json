@@ -4,5 +4,5 @@
   "iso_checksum_type": "sha256",
   "iso_url": "http://mirror.atl.genesisadaptive.com/centos/8.2.2004/isos/x86_64/CentOS-8.2.2004-x86_64-boot.iso",
   "kickstart_cfg": "ks.8.cfg",
-  "vm_name": "centos8-desktop-packer-template"
+  "vm_template_build_name": "centos8-desktop-packer-template"
 }
