@@ -1,6 +1,25 @@
 
 # Debugging a VM template
 
+## when kickstart fails
+
+### Open Web console in build VM
+
+[1 - Open vm web console to the build vm in vpshere](./img/vphere-web-console.png)
+
+[2 - Open anaconda shell in build VM](./img/vsphere-web-console.png)
+
+View the kickstart.cfg content:
+```shell
+# more /mnt/install/ks.cfg
+```
+[3 - More build VM kickstart.cfg](./img/vsphere-anaconda-more-kickstart.png)
+
+[4 - View build VM kickstart.cfg](./img/vsphere-anaconda-more-kickstart.png)
+
+
+and open the anaconda terminal shell:
+
 ## when packer fails in the ansible provisioner
 
 Assuming the packer option to abort `-on-error=abort` is enabled, upon failing the pre-template VM instance will remain running for debugging purposes:

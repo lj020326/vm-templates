@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 GIT_DEFAULT_BRANCH=main
+GIT_PUBLIC_BRANCH=public
 
 ## ref: https://intoli.com/blog/exit-on-errors-in-bash-scripts/
 # exit when any command fails
@@ -43,20 +44,28 @@ trap 'rm -fr "$TMP_DIR"' EXIT
 GIT_REMOVE_CACHED_FILES=0
 
 CONFIRM=0
-SCRIPT_DIR="$( cd "$( dirname "$0" )" && pwd )"
+#SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(dirname "$0")"
 
-#PROJECT_DIR="$( cd "$SCRIPT_DIR/../../../" && pwd )"
-#PROJECT_DIR="$( pwd . )"
-#PROJECT_DIR=$(git rev-parse --show-toplevel)
-#PROJECT_DIR="$( cd "$SCRIPT_DIR/" && git rev-parse --show-toplevel )"
-PROJECT_DIR="$( git rev-parse --show-toplevel )"
+## PURPOSE RELATED VARS
+#PROJECT_DIR=$( git rev-parse --show-toplevel )
+PROJECT_DIR="$(cd "${SCRIPT_DIR}" && git rev-parse --show-toplevel)"
+
+MIRROR_DIR_LIST="
+.github
+.jenkins
+docs
+inspec
+templates
+tools
+"
 
 PUBLIC_GITIGNORE=pub.gitignore
 PUBLIC_GITMODULES=pub.gitmodules
 
 ## ref: https://stackoverflow.com/questions/53839253/how-can-i-convert-an-array-into-a-comma-separated-string
 declare -a EXCLUDES_ARRAY
-EXCLUDES_ARRAY=('.git')
+EXCLUDES_ARRAY+=('.git')
 EXCLUDES_ARRAY+=('.gitmodule')
 EXCLUDES_ARRAY+=('.idea')
 EXCLUDES_ARRAY+=('.vscode')
@@ -67,11 +76,6 @@ EXCLUDES_ARRAY+=('ansible')
 
 printf -v EXCLUDES '%s,' "${EXCLUDES_ARRAY[@]}"
 EXCLUDES="${EXCLUDES%,}"
-echo "EXCLUDES=${EXCLUDES}"
-
-echo "SCRIPT_DIR=[${SCRIPT_DIR}]"
-echo "PROJECT_DIR=${PROJECT_DIR}"
-echo "TMP_DIR=${TMP_DIR}"
 
 ## https://serverfault.com/questions/219013/showing-total-progress-in-rsync-is-it-possible
 ## https://www.studytonight.com/linux-guide/how-to-exclude-files-and-directory-using-rsync
@@ -87,92 +91,212 @@ RSYNC_OPTS_GIT_UPDATE=(
     --links
 )
 
-git fetch --all
-git checkout ${GIT_DEFAULT_BRANCH}
+function isInstalled() {
+    command -v "${1}" >/dev/null 2>&1 || return 1
+}
 
-#RSYNC_OPTS=${RSYNC_OPTS_GIT_MIRROR[@]}
+function checkRequiredCommands() {
+    missingCommands=""
+    for currentCommand in "$@"
+    do
+        isInstalled "${currentCommand}" || missingCommands="${missingCommands} ${currentCommand}"
+    done
 
-echo "copy project to temporary dir $TMP_DIR"
-#rsync_cmd="rsync ${RSYNC_OPTS} ${PROJECT_DIR}/ ${TMP_DIR}/"
-rsync_cmd="rsync ${RSYNC_OPTS_GIT_MIRROR[@]} ${PROJECT_DIR}/ ${TMP_DIR}/"
-echo "${rsync_cmd}"
-eval $rsync_cmd
+    if [[ ! -z "${missingCommands}" ]]; then
+        fail "checkRequiredCommands(): Please install the following commands required by this script:${missingCommands}"
+    fi
+}
 
-echo "Checkout public branch"
-git checkout public
+function search_repo_keywords () {
+  local LOG_PREFIX="search_repo_keywords():"
 
-if [ $GIT_REMOVE_CACHED_FILES -eq 1 ]; then
-  echo "Removing files cached in git"
-  git rm -r --cached .
-fi
+  local REPO_EXCLUDE_DIR_LIST=(".git")
+  REPO_EXCLUDE_DIR_LIST+=(".idea")
+  REPO_EXCLUDE_DIR_LIST+=("venv")
+  REPO_EXCLUDE_DIR_LIST+=("private")
+  REPO_EXCLUDE_DIR_LIST+=("save")
 
-#echo "Removing existing non-dot files for clean sync"
-#rm -fr *
-
-echo "Copy ${TMP_DIR} to project dir $PROJECT_DIR"
-#echo "rsync ${RSYNC_OPTS_GIT_UPDATE[@]} ${TMP_DIR}/ ${PROJECT_DIR}/"
-rsync_cmd="rsync ${RSYNC_OPTS_GIT_UPDATE[@]} ${TMP_DIR}/ ${PROJECT_DIR}/"
-echo "${rsync_cmd}"
-eval $rsync_cmd
-
-mirrorDirList="
-.github
-.jenkins
-docs
-inspec
-templates
-tools
-"
-
-IFS=$'\n'
-for dir in ${mirrorDirList}
-do
-  echo "Mirror ${TMP_DIR}/${dir}/ to project dir $PROJECT_DIR/${dir}/"
-  rsync_cmd="rsync ${RSYNC_OPTS_GIT_UPDATE[@]} --delete --update --exclude=save ${TMP_DIR}/${dir}/ ${PROJECT_DIR}/${dir}/"
-  echo "${rsync_cmd}"
-  eval $rsync_cmd
-done
-
-if [ -e $PUBLIC_GITIGNORE ]; then
-  echo "Update public files:"
-  cp -p $PUBLIC_GITIGNORE .gitignore
-fi
-
-if [ -e $PUBLIC_GITMODULES ]; then
-  echo "Update public submodules:"
-  cp -p $PUBLIC_GITMODULES .gitmodules
-  git submodule deinit -f . && \
-  git submodule update --init --recursive --remote
-fi
-
-echo "Show changes before push:"
-git status
-
-#exit 0
-
-## https://stackoverflow.com/questions/5989592/git-cannot-checkout-branch-error-pathspec-did-not-match-any-files-kn
-## git diff --name-only public ${GIT_DEFAULT_BRANCH} --
-
-if [ $CONFIRM -eq 0 ]; then
-  ## https://www.shellhacks.com/yes-no-bash-script-prompt-confirmation/
-  read -p "Are you sure you want to merge the changes above to public branch ${TARGET_BRANCH}? " -n 1 -r
-  echo    # (optional) move to a new line
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
-  then
-      exit 1
+  #export -p | sed 's/declare -x //' | sed 's/export //'
+  if [ -z ${REPO_EXCLUDE_KEYWORDS+x} ]; then
+    echo "${LOG_PREFIX} REPO_EXCLUDE_KEYWORDS not set/defined"
+    exit 1
   fi
-fi
 
-## https://stackoverflow.com/questions/5738797/how-can-i-push-a-local-git-branch-to-a-remote-with-a-different-name-easily
-echo "Add all the files:"
-gitcommitpush
+  #echo "${LOG_PREFIX} REPO_EXCLUDE_KEYWORDS=${REPO_EXCLUDE_KEYWORDS}"
 
-echo "Finally, checkout ${GIT_DEFAULT_BRANCH} branch:" && \
-git checkout ${GIT_DEFAULT_BRANCH}
+  IFS=',' read -ra REPO_EXCLUDE_KEYWORDS_ARRAY <<< "$REPO_EXCLUDE_KEYWORDS"
 
-echo "Resetting ansible submodule for private"
-git submodule deinit -f . && \
-git submodule update --init --recursive --remote
-#gitcommitpush
+  #echo "${LOG_PREFIX} REPO_EXCLUDE_KEYWORDS_ARRAY=${REPO_EXCLUDE_KEYWORDS_ARRAY[*]}"
 
-chmod +x *.sh
+  # ref: https://superuser.com/questions/1371834/escaping-hyphens-with-printf-in-bash
+  #'-e' ==> '\055e'
+  GREP_DELIM=' \055e '
+  printf -v GREP_PATTERN_SEARCH "${GREP_DELIM}%s" "${REPO_EXCLUDE_KEYWORDS_ARRAY[@]}"
+
+  ## strip prefix
+  GREP_PATTERN_SEARCH=${GREP_PATTERN_SEARCH#"$GREP_DELIM"}
+  ## strip suffix
+  #GREP_PATTERN_SEARCH=${GREP_PATTERN_SEARCH%"$GREP_DELIM"}
+
+  #echo "${LOG_PREFIX} GREP_PATTERN_SEARCH=${GREP_PATTERN_SEARCH}"
+
+  GREP_COMMAND="grep ${GREP_PATTERN_SEARCH}"
+  #echo "${LOG_PREFIX} GREP_COMMAND=${GREP_COMMAND}"
+
+  local FIND_DELIM=' -o '
+#  printf -v FIND_EXCLUDE_DIRS "\055path %s${FIND_DELIM}" "${REPO_EXCLUDE_DIR_LIST[@]}"
+  printf -v FIND_EXCLUDE_DIRS "! -path %s${FIND_DELIM}" "${REPO_EXCLUDE_DIR_LIST[@]}"
+  FIND_EXCLUDE_DIRS=${FIND_EXCLUDE_DIRS%$FIND_DELIM}
+
+  #echo "${LOG_PREFIX} FIND_EXCLUDE_DIRS=${FIND_EXCLUDE_DIRS}"
+
+  ## ref: https://stackoverflow.com/questions/6565471/how-can-i-exclude-directories-from-grep-r#8692318
+  ## ref: https://unix.stackexchange.com/questions/342008/find-and-echo-file-names-only-with-pattern-found
+#  FIND_CMD="find ${PROJECT_DIR}/ -type f \( ${FIND_EXCLUDE_DIRS} \) -prune -o -exec ${GREP_COMMAND} {} 2>/dev/null \;"
+  FIND_CMD="find ${PROJECT_DIR}/ -type f \( ${FIND_EXCLUDE_DIRS} \) -prune -o -exec ${GREP_COMMAND} {} 2>/dev/null +"
+  #echo "${LOG_PREFIX} ${FIND_CMD}"
+
+  EXCEPTION_COUNT=$(eval "${FIND_CMD} | wc -l")
+  if [[ $EXCEPTION_COUNT -eq 0 ]]; then
+    echo "${LOG_PREFIX} SUCCESS => No exclusion keyword matches found!!"
+  else
+    echo "${LOG_PREFIX} There are [${EXCEPTION_COUNT}] exclusion keyword matches found:"
+    eval "${FIND_CMD}"
+    exit 1
+  fi
+  return "${EXCEPTION_COUNT}"
+}
+
+function sync_public_branch() {
+
+  git fetch --all
+  git checkout ${GIT_DEFAULT_BRANCH}
+  
+  #RSYNC_OPTS=${RSYNC_OPTS_GIT_MIRROR[@]}
+  
+  echo "copy project to temporary dir $TMP_DIR"
+  #RSYNC_CMD="rsync ${RSYNC_OPTS} ${PROJECT_DIR}/ ${TMP_DIR}/"
+  local RSYNC_CMD="rsync ${RSYNC_OPTS_GIT_MIRROR[@]} ${PROJECT_DIR}/ ${TMP_DIR}/"
+  echo "${RSYNC_CMD}"
+  eval $RSYNC_CMD
+  
+  echo "Checkout public branch"
+  git checkout ${GIT_PUBLIC_BRANCH}
+  
+  if [ $GIT_REMOVE_CACHED_FILES -eq 1 ]; then
+    echo "Removing files cached in git"
+    git rm -r --cached .
+  fi
+  
+  #echo "Removing existing non-dot files for clean sync"
+  #rm -fr *
+  
+  echo "Copy ${TMP_DIR} to project dir $PROJECT_DIR"
+  #echo "rsync ${RSYNC_OPTS_GIT_UPDATE[@]} ${TMP_DIR}/ ${PROJECT_DIR}/"
+  RSYNC_CMD="rsync ${RSYNC_OPTS_GIT_UPDATE[@]} ${TMP_DIR}/ ${PROJECT_DIR}/"
+  echo "${RSYNC_CMD}"
+  eval $RSYNC_CMD
+  
+  IFS=$'\n'
+  for dir in ${MIRROR_DIR_LIST}
+  do
+    echo "Mirror ${TMP_DIR}/${dir}/ to project dir $PROJECT_DIR/${dir}/"
+    RSYNC_CMD="rsync ${RSYNC_OPTS_GIT_UPDATE[@]} --delete --update --exclude=save ${TMP_DIR}/${dir}/ ${PROJECT_DIR}/${dir}/"
+    echo "${RSYNC_CMD}"
+    eval ${RSYNC_CMD}
+  done
+  
+  if [ -e $PUBLIC_GITIGNORE ]; then
+    echo "Update public files:"
+    cp -p $PUBLIC_GITIGNORE .gitignore
+  fi
+  
+  if [ -e $PUBLIC_GITMODULES ]; then
+    echo "Update public submodules:"
+    cp -p $PUBLIC_GITMODULES .gitmodules
+    git submodule deinit -f . && \
+    git submodule update --init --recursive --remote
+  fi
+  
+  echo "Show changes before push:"
+  git status
+
+  ## https://stackoverflow.com/questions/5989592/git-cannot-checkout-branch-error-pathspec-did-not-match-any-files-kn
+  ## git diff --name-only public ${GIT_DEFAULT_BRANCH} --
+  
+  if [ $CONFIRM -eq 0 ]; then
+    ## https://www.shellhacks.com/yes-no-bash-script-prompt-confirmation/
+    read -p "Are you sure you want to merge the changes above to public branch ${TARGET_BRANCH}? " -n 1 -r
+    echo    # (optional) move to a new line
+    if [[ ! $REPLY =~ ^[Yy]$ ]]
+    then
+        exit 1
+    fi
+  fi
+  
+  ## https://stackoverflow.com/questions/5738797/how-can-i-push-a-local-git-branch-to-a-remote-with-a-different-name-easily
+  echo "Add all the files:"
+  gitcommitpush
+  echo "Checkout ${GIT_DEFAULT_BRANCH} branch:" && \
+  git checkout ${GIT_DEFAULT_BRANCH}
+
+  echo "Resetting ansible submodule for private"
+  git submodule deinit -f . && \
+  git submodule update --init --recursive --remote && \
+  gitcommitpush
+  
+  cd ${PROJECT_DIR}
+  chmod +x *.sh
+}
+
+
+function usage() {
+  echo "Usage: ${0} [options]"
+  echo ""
+  echo "  Options:"
+  echo "       -L [ERROR|WARN|INFO|TRACE|DEBUG] : run with specified log level (default INFO)"
+  echo "       -v : show script version"
+  echo "       -h : help"
+  echo "     [TEST_CASES]"
+  echo ""
+  echo "  Examples:"
+	echo "       ${0} "
+	echo "       ${0} -L DEBUG"
+  echo "       ${0} -v"
+	[ -z "$1" ] || exit "$1"
+}
+
+
+function main() {
+
+  checkRequiredCommands rsync
+
+  while getopts "L:vh" opt; do
+      case "${opt}" in
+          L) setLogLevel "${OPTARG}" ;;
+          v) echo "${VERSION}" && exit ;;
+          h) usage 1 ;;
+          \?) usage 2 ;;
+          *) usage ;;
+      esac
+  done
+  shift $((OPTIND-1))
+
+  echo "EXCLUDES=${EXCLUDES}"
+
+  echo "PROJECT_DIR=${PROJECT_DIR}"
+  echo "TMP_DIR=${TMP_DIR}"
+
+#  search_repo_keywords
+  eval search_repo_keywords
+  local RETURN_STATUS=$?
+  if [[ $RETURN_STATUS -ne 0 ]]; then
+    logError "${LOG_PREFIX} search_repo_keywords: FAILED"
+    exit ${RETURN_STATUS}
+  fi
+
+  sync_public_branch
+
+}
+
+main "$@"
