@@ -77,6 +77,13 @@ EXCLUDES_ARRAY+=('ansible')
 printf -v EXCLUDES '%s,' "${EXCLUDES_ARRAY[@]}"
 EXCLUDES="${EXCLUDES%,}"
 
+REPO_EXCLUDE_DIR_LIST=(".git")
+REPO_EXCLUDE_DIR_LIST+=(".idea")
+REPO_EXCLUDE_DIR_LIST+=("venv")
+REPO_EXCLUDE_DIR_LIST+=("private")
+REPO_EXCLUDE_DIR_LIST+=("save")
+
+
 ## https://serverfault.com/questions/219013/showing-total-progress-in-rsync-is-it-possible
 ## https://www.studytonight.com/linux-guide/how-to-exclude-files-and-directory-using-rsync
 RSYNC_OPTS_GIT_MIRROR=(
@@ -109,12 +116,6 @@ function checkRequiredCommands() {
 
 function search_repo_keywords () {
   local LOG_PREFIX="search_repo_keywords():"
-
-  local REPO_EXCLUDE_DIR_LIST=(".git")
-  REPO_EXCLUDE_DIR_LIST+=(".idea")
-  REPO_EXCLUDE_DIR_LIST+=("venv")
-  REPO_EXCLUDE_DIR_LIST+=("private")
-  REPO_EXCLUDE_DIR_LIST+=("save")
 
   #export -p | sed 's/declare -x //' | sed 's/export //'
   if [ -z ${REPO_EXCLUDE_KEYWORDS+x} ]; then
