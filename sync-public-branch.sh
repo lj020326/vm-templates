@@ -176,8 +176,8 @@ function sync_public_branch() {
   #RSYNC_OPTS=${RSYNC_OPTS_GIT_MIRROR[@]}
   
   echo "copy project to temporary dir $TMP_DIR"
-  #RSYNC_CMD="rsync ${RSYNC_OPTS} ${PROJECT_DIR}/ ${TMP_DIR}/"
-  local RSYNC_CMD="rsync ${RSYNC_OPTS_GIT_MIRROR[@]} ${PROJECT_DIR}/ ${TMP_DIR}/"
+  #local RSYNC_CMD="rsync ${RSYNC_OPTS} ${PROJECT_DIR}/ ${TMP_DIR}/"
+  local RSYNC_CMD="rsync ${RSYNC_OPTS_GIT_MIRROR[*]} ${PROJECT_DIR}/ ${TMP_DIR}/"
   echo "${RSYNC_CMD}"
   eval $RSYNC_CMD
   
@@ -194,15 +194,16 @@ function sync_public_branch() {
   
   echo "Copy ${TMP_DIR} to project dir $PROJECT_DIR"
   #echo "rsync ${RSYNC_OPTS_GIT_UPDATE[@]} ${TMP_DIR}/ ${PROJECT_DIR}/"
-  RSYNC_CMD="rsync ${RSYNC_OPTS_GIT_UPDATE[@]} ${TMP_DIR}/ ${PROJECT_DIR}/"
+  RSYNC_CMD="rsync ${RSYNC_OPTS_GIT_UPDATE[*]} ${TMP_DIR}/ ${PROJECT_DIR}/"
   echo "${RSYNC_CMD}"
-  eval $RSYNC_CMD
-  
+  eval ${RSYNC_CMD}
+
   IFS=$'\n'
   for dir in ${MIRROR_DIR_LIST}
   do
     echo "Mirror ${TMP_DIR}/${dir}/ to project dir $PROJECT_DIR/${dir}/"
-    RSYNC_CMD="rsync ${RSYNC_OPTS_GIT_UPDATE[@]} --delete --update --exclude=save ${TMP_DIR}/${dir}/ ${PROJECT_DIR}/${dir}/"
+#    RSYNC_CMD="rsync ${RSYNC_OPTS_GIT_UPDATE[*]} --delete --update --exclude=save ${TMP_DIR}/${dir}/ ${PROJECT_DIR}/${dir}/"
+    RSYNC_CMD="rsync ${RSYNC_OPTS_GIT_MIRROR[*]} ${TMP_DIR}/${dir}/ ${PROJECT_DIR}/${dir}/"
     echo "${RSYNC_CMD}"
     eval ${RSYNC_CMD}
   done
@@ -292,7 +293,7 @@ function main() {
   eval search_repo_keywords
   local RETURN_STATUS=$?
   if [[ $RETURN_STATUS -ne 0 ]]; then
-    logError "${LOG_PREFIX} search_repo_keywords: FAILED"
+    echo "${LOG_PREFIX} search_repo_keywords: FAILED"
     exit ${RETURN_STATUS}
   fi
 
