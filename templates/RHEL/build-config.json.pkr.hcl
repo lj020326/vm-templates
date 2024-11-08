@@ -35,11 +35,13 @@ source "vsphere-iso" "RHEL" {
   RAM                    = var.vm_mem_size
   RAM_hot_plug           = var.vm_mem_hot_plug
   RAM_reserve_all        = var.vm_mem_reserve_all
-  boot_command           = local.boot_command
+  boot_command           = local.vm_boot_command
   boot_keygroup_interval = var.vm_boot_keygroup_interval
   boot_order             = var.vm_boot_order_install
   boot_wait              = var.vm_boot_wait
   cd_content             = var.common_data_source == "disk" ? local.data_source_content : null
+  cd_label               = var.common_data_source == "disk" ? "cidata" : null
+  cdrom_type             = var.vm_cdrom_type
   cluster                = var.vcenter_cluster
   communicator           = var.vm_communicator
   configuration_parameters = {
@@ -97,7 +99,7 @@ build {
   }
 
   provisioner "shell" {
-    environment_vars = ["BUILD_USERNAME=${var.build_username}"]
+    environment_vars = ["BUILD_USERNAME=${var.build_username}", "BUILD_USER_SSH_PUBLIC_KEY=${var.build_ssh_public_key}"]
     execute_command  = "echo '${var.build_username}' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'"
     scripts          = ["_common/scripts/${var.vm_guest_os_family}/base.sh", "_common/scripts/${var.vm_guest_os_family}/vmware.sh", "_common/scripts/${var.vm_guest_os_family}/sshd.sh"]
   }
@@ -111,7 +113,7 @@ build {
   provisioner "shell" {
     environment_vars = ["PIP_INSTALL_VERSION=${var.pip_version}", "ANSIBLE_VAULT_PASS=${var.ansible_vault_password}"]
     execute_command  = "echo '${var.build_username}' | {{ .Vars }} bash '{{ .Path }}'"
-    scripts          = ["_common/scripts/${var.vm_guest_os_family}/ansible.sh"]
+    scripts          = ["_common/scripts/${var.vm_guest_os_family}/${var.ansible_env_setup_script}"]
   }
 
   provisioner "shell" {
@@ -123,10 +125,18 @@ build {
     source      = "${var.ansible_galaxy_req_file}"
   }
 
+  provisioner "shell" {
+    environment_vars = ["ANSIBLE_STAGING_DIRECTORY=${var.ansible_staging_directory}"]
+    execute_command  = "echo '${var.build_username}' | {{ .Vars }} bash '{{ .Path }}'"
+    scripts          = ["_common/scripts/${var.vm_guest_os_family}/ansible-collections.sh"]
+  }
+
   provisioner "ansible-local" {
     clean_staging_directory = "false"
     command                 = "${var.ansible_command}"
     extra_arguments         = ["--tag", "${var.ansible_playbook_tag}", "--vault-password-file=${var.ansible_playbook_vault_password_file}", "-e", "@${var.ansible_playbook_vault}"]
+    galaxy_command          = "${var.ansible_galaxy_command}"
+    galaxy_file             = "${var.ansible_galaxy_req_file}"
     group_vars              = "${var.ansible_inventory_group_vars}"
     inventory_file          = "${var.ansible_inventory_file}"
     playbook_dir            = "${var.ansible_playbook_dir}"
@@ -137,16 +147,9 @@ build {
   provisioner "shell" {
     execute_command   = "echo '${var.build_username}' | {{ .Vars }} sudo -H -S -E bash '{{ .Path }}'"
     expect_disconnect = "true"
+    pause_after       = "120s"
     script            = "_common/scripts/${var.vm_guest_os_family}/reboot.sh"
     skip_clean        = "true"
-  }
-
-  provisioner "inspec" {
-    extra_arguments = ["--no-distinct-exit"]
-    inspec_env_vars = ["CHEF_LICENSE=accept"]
-    pause_before    = "2m0s"
-    profile         = "../inspec"
-    timeout         = "1h0m0s"
   }
 
   provisioner "shell" {

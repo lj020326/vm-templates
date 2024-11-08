@@ -56,7 +56,8 @@ skipx
 #########################
 ### Packages selection.
 ### package groups ref: https://access.redhat.com/solutions/10549
-%packages --ignoremissing --excludedocs
+#%packages --ignoremissing --excludedocs
+%packages --excludedocs
 @core
 virt-who
 python3
@@ -95,6 +96,9 @@ sed -e "s,^.*SplitMode=.*$,SplitMode=none,g" -i /etc/systemd/journald.conf
 sed -e "s,^.*RuntimeMaxUse=.*$,RuntimeMaxUse=2M,g" -i /etc/systemd/journald.conf
 sed -e "s,^.*RuntimeMaxFileSize=.*$,RuntimeMaxFileSize=128K,g" -i /etc/systemd/journald.conf
 sed -e "s,^.*SystemMaxUse=.*$,SystemMaxUse=10M,g" -i /etc/systemd/journald.conf
+
+## ref: https://github.com/canonical/packer-maas/issues/108
+cp -vr /boot/efi/EFI/rocky /boot/efi/EFI/rhel
 
 %end
 

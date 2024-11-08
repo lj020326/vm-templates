@@ -1,0 +1,8 @@
+vm_mem_size="64000"
+vm_disk_size="140000"
+vm_cpu_num="4"
+vm_cpu_cores_num="2"
+vm_template_type="large"
+box_name="ubuntu20-large"
+box_tag="dettonville/ubuntu20-large"
+description="Ubuntu 20.04 Server[large]"

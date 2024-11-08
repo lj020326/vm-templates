@@ -4,7 +4,7 @@
       "name": "vsphere-iso",
       "type": "vsphere-iso",
       "boot_command": [
-        "{{ user `boot_command_prefix` }}=http://{{ .HTTPIP }}:{{ .HTTPPort }}/fedora/{{ user `kickstart_cfg` }}<enter><wait>"
+        "{{ user `vm_boot_command_prefix` }}=http://{{ .HTTPIP }}:{{ .HTTPPort }}/fedora/{{ user `kickstart_cfg` }}<enter><wait>"
       ],
       "boot_wait": "{{ user `vm_boot_wait` }}",
       "boot_order": "{{ user `vm_boot_order_install` }}",

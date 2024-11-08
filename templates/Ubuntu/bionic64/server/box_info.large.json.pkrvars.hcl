@@ -1,0 +1,8 @@
+vm_mem_size="64000"
+vm_disk_size="140000"
+vm_cpu_num="4"
+vm_cpu_cores_num="2"
+vm_template_type="large"
+box_name="ubuntu18-large"
+box_tag="dettonville/ubuntu18-large"
+description="Ubuntu 18.04 Server[large]"

@@ -1,6 +1,6 @@
 {
   "variables": {
-    "boot_command_prefix": "",
+    "vm_boot_command_prefix": "",
     "box_tag": "",
     "compression_level": "6",
     "disk_adapter_type": "scsi",
@@ -19,7 +19,7 @@
   "builders": [
     {
       "boot_command": [
-        "{{ user `boot_command_prefix` }}",
+        "${var.vm_boot_command_prefix}",
         "/install/vmlinuz <wait>",
         "auto <wait>",
         "console-setup/ask_detect=false <wait>",
@@ -41,27 +41,27 @@
         "-- <wait>",
         "<enter><wait>"
       ],
-      "cpus": "{{ user `vm_cpu_num` }}",
-      "disk_size": "{{ user `vm_disk_size` }}",
+      "cpus": "${var.vm_cpu_num}",
+      "disk_size": "${var.vm_disk_size}",
       "guest_os_type": "Ubuntu_64",
-      "hard_drive_interface": "{{ user `disk_adapter_type` }}",
+      "hard_drive_interface": "${var.disk_adapter_type}",
       "headless": true,
       "http_directory": "http",
-      "iso_checksum_type": "{{ user `iso_checksum_type` }}",
-      "iso_checksum": "{{ user `iso_checksum` }}",
-      "iso_url": "{{ user `iso_url` }}",
-      "memory": "{{ user `vm_mem_size` }}",
-      "output_directory": "output-{{ user `vm_template_build_name` }}-{{ build_type }}-{{ timestamp }}",
+      "iso_checksum_type": "${var.iso_checksum_type}",
+      "iso_checksum": "${var.iso_checksum}",
+      "iso_url": "${var.iso_url}",
+      "memory": "${var.vm_mem_size}",
+      "output_directory": "output-${var.vm_template_build_name}-{{ build_type }}-{{ timestamp }}",
       "shutdown_command": "echo '/sbin/halt -h -p' > shutdown.sh; echo 'packer'|sudo -S bash 'shutdown.sh'",
-      "ssh_password": "{{ user `ssh_password` }}",
-      "ssh_username": "{{ user `ssh_username` }}",
+      "ssh_password": "${var.ssh_password}",
+      "ssh_username": "${var.ssh_username}",
       "type": "virtualbox-iso",
-      "vm_template_build_name": "{{ user `vm_template_build_name` }}-{{ timestamp }}",
+      "vm_template_build_name": "${var.vm_template_build_name}-{{ timestamp }}",
       "ssh_timeout": "60m"
     },
     {
       "boot_command": [
-        "{{ user `boot_command_prefix` }}",
+        "${var.vm_boot_command_prefix}",
         "/install/vmlinuz <wait>",
         "auto <wait>",
         "console-setup/ask_detect=false <wait>",
@@ -83,8 +83,8 @@
         "-- <wait>",
         "<enter><wait>"
       ],
-      "cpus": "{{ user `vm_cpu_num` }}",
-      "disk_adapter_type": "{{ user `disk_adapter_type` }}",
+      "cpus": "${var.vm_cpu_num}",
+      "disk_adapter_type": "${var.disk_adapter_type}",
       "disk_size": "{{ user `vm_disk_size` }}",
       "disk_type_id": 0,
       "guest_os_type": "ubuntu-64",

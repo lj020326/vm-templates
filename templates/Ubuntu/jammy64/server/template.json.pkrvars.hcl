@@ -1,6 +1,0 @@
-iso_checksum="5e38b55d57d94ff029719342357325ed3bda38fa80054f9330dc789cd2d43931"
-iso_checksum_type="sha256"
-iso_url="https://releases.ubuntu.com/22.04/ubuntu-22.04.2-live-server-amd64.iso"
-vm_template_build_name="vm-template-ubuntu22"
-boot_command_prefix="<esc><wait>e<wait><down><down><down><end><bs><bs><bs><bs><wait>"
-boot_command="autoinstall ds=nocloud-net\\;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ubuntu/22.04/ ---<wait><f10><wait>"

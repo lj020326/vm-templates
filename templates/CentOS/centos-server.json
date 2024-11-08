@@ -3,7 +3,7 @@
     {
       "accelerator": "{{ user `qemu_accelerator` }}",
       "boot_command": [
-        "<tab> {{ user `boot_command_prefix` }}=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos/{{ user `kickstart_cfg` }}<enter><wait>"
+        "<tab> {{ user `vm_boot_command_prefix` }}=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos/{{ user `kickstart_cfg` }}<enter><wait>"
       ],
       "cpus": "{{ user `vm_cpu_num` }}",
       "disk_interface": "virtio",
@@ -24,7 +24,7 @@
     },
     {
       "boot_command": [
-        "<tab> {{ user `boot_command_prefix` }}=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos/{{ user `kickstart_cfg` }}<enter><wait>"
+        "<tab> {{ user `vm_boot_command_prefix` }}=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos/{{ user `kickstart_cfg` }}<enter><wait>"
       ],
       "cpus": "{{ user `vm_cpu_num` }}",
       "disk_size": "{{ user `vm_disk_size` }}",
@@ -45,7 +45,7 @@
     },
     {
       "boot_command": [
-        "<tab> {{ user `boot_command_prefix` }}=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos/{{ user `kickstart_cfg` }}<enter><wait>"
+        "<tab> {{ user `vm_boot_command_prefix` }}=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos/{{ user `kickstart_cfg` }}<enter><wait>"
       ],
       "cpus": "{{ user `vm_cpu_num` }}",
       "disk_adapter_type": "{{ user `disk_adapter_type` }}",
@@ -106,7 +106,7 @@
     }
   ],
   "variables": {
-    "boot_command_prefix": "",
+    "vm_boot_command_prefix": "",
     "box_tag": "",
     "compression_level": "6",
     "disk_adapter_type": "sata",

@@ -1,29 +1,29 @@
 {
   "builders": [
     {
-      "accelerator": "{{ user `qemu_accelerator` }}",
+      "accelerator": "${var.qemu_accelerator}",
       "boot_command": [
         "<enter><wait10><wait10><wait10>",
         "/usr/bin/curl -O http://{{ .HTTPIP }}:{{ .HTTPPort }}/arch/bootstrap.sh<enter><wait5>",
         "/usr/bin/bash ./bootstrap.sh<enter>"
       ],
       "boot_wait": "10s",
-      "cpus": "{{ user `vm_cpu_num` }}",
+      "cpus": "${var.vm_cpu_num}",
       "disk_interface": "virtio",
-      "disk_size": "{{ user `vm_disk_size` }}",
+      "disk_size": "${var.vm_disk_size}",
       "format": "qcow2",
       "headless": true,
       "http_directory": "http",
-      "iso_checksum": "{{ user `iso_checksum_type` }}:{{ user `iso_checksum` }}",
-      "iso_url": "{{ user `iso_url` }}",
-      "memory": "{{ user `vm_mem_size` }}",
-      "output_directory": "output-{{ user `vm_template_build_name` }}-{{ build_type }}-{{ timestamp }}",
+      "iso_checksum": "${var.iso_checksum_type}:${var.iso_checksum}",
+      "iso_url": "${var.iso_url}",
+      "memory": "${var.vm_mem_size}",
+      "output_directory": "output-${var.vm_template_build_name}-{{ build_type }}-{{ timestamp }}",
       "shutdown_command": "sudo systemctl isolate poweroff.target",
-      "ssh_password": "{{ user `ssh_password` }}",
+      "ssh_password": "${var.ssh_password}",
       "ssh_timeout": "60m",
-      "ssh_username": "{{ user `ssh_username` }}",
+      "ssh_username": "${var.ssh_username}",
       "type": "qemu",
-      "vm_template_build_name": "{{ user `vm_template_build_name` }}-{{ timestamp }}"
+      "vm_template_build_name": "${var.vm_template_build_name}-{{ timestamp }}"
     },
     {
       "boot_command": [
@@ -32,13 +32,13 @@
         "/usr/bin/bash ./bootstrap.sh<enter>"
       ],
       "boot_wait": "10s",
-      "cpus": "{{ user `vm_cpu_num` }}",
-      "disk_size": "{{ user `vm_disk_size` }}",
+      "cpus": "${var.vm_cpu_num}",
+      "disk_size": "${var.vm_disk_size}",
       "guest_os_type": "ArchLinux_64",
-      "hard_drive_interface": "{{ user `disk_adapter_type` }}",
+      "hard_drive_interface": "${var.disk_adapter_type}",
       "headless": true,
       "http_directory": "http",
-      "iso_checksum": "{{ user `iso_checksum_type` }}:{{ user `iso_checksum` }}",
+      "iso_checksum": "${var.iso_checksum_type}:${var.iso_checksum}",
       "iso_url": "{{ user `iso_url` }}",
       "memory": "{{ user `vm_mem_size` }}",
       "output_directory": "output-{{ user `vm_template_build_name` }}-{{ build_type }}-{{ timestamp }}",
@@ -114,7 +114,7 @@
   ],
   "variables": {
     "arch_version": "",
-    "boot_command_prefix": "",
+    "vm_boot_command_prefix": "",
     "box_tag": "",
     "compression_level": "6",
     "disk_adapter_type": "scsi",

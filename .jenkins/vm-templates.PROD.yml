@@ -13,9 +13,9 @@ supportedJobParams:
 jobList:
 - stage: Build Templates
   jobList:
-    - jobFolder: "RHEL/8/medium"
-    - jobFolder: "RHEL/9/small"
-    - jobFolder: "RHEL/9/medium"
+#    - jobFolder: "RHEL/8/medium"
+#    - jobFolder: "RHEL/9/small"
+#    - jobFolder: "RHEL/9/medium"
+    - jobFolder: "Ubuntu/24.04/medium"
     - jobFolder: "Windows/server/2019/standard"
     - jobFolder: "Windows/server/2022/standard"
-

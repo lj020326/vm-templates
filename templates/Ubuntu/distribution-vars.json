@@ -1,6 +1,7 @@
 {
-    "boot_command_prefix": "<esc><esc><esc><enter><wait>",
-    "boot_command": "/casper/vmlinuz root=/dev/sr0 initrd=/casper/initrd autoinstall ds=nocloud-net\\;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ubuntu/",
+    "answerfile_file_path": "./templates/user-data.pkrtpl.hcl",
     "vm_guest_os_type": "ubuntu64Guest",
-    "vm_disk_type": "pvscsi"
+    "vm_guest_os_language": "en_US.UTF-8",
+    "vm_disk_controller_type": "pvscsi",
+    "vm_firmware": "bios"
 }

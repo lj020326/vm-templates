@@ -1,7 +1,7 @@
 {
   "builders": [
     {
-      "accelerator": "{{ user `qemu_accelerator` }}",
+      "accelerator": "${var.qemu_accelerator}",
       "boot_command": [
         "<enter><wait10><wait10><wait10>",
         "/usr/bin/curl -O http://{{ .HTTPIP }}:{{ .HTTPPort }}/arch/bootstrap.sh<enter><wait5>",
@@ -114,7 +114,7 @@
   ],
   "variables": {
     "arch_version": "",
-    "boot_command_prefix": "",
+    "vm_boot_command_prefix": "",
     "box_tag": "",
     "compression_level": "6",
     "disk_adapter_type": "scsi",

@@ -4,7 +4,7 @@
       "name": "vsphere-iso",
       "type": "vsphere-iso",
       "boot_command": [
-        "{{ user `boot_command_prefix` }}",
+        "{{ user `vm_boot_command_prefix` }}",
         "{{ user `boot_command` }}",
         "<enter>"
       ],

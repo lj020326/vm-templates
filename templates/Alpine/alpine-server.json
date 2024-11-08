@@ -203,7 +203,7 @@
   "variables": {
     "alpine_system_part": "",
     "alpine_version": "",
-    "boot_command_prefix": "",
+    "vm_boot_command_prefix": "",
     "box_tag": "",
     "compression_level": "6",
     "disk_adapter_type": "scsi",

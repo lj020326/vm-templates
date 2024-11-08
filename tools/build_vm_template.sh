@@ -2,21 +2,24 @@
 
 BUILD_TAG="$( basename "${0}" )-test"
 #BUILD_TAG="${0}-test"
+BUILD_ENV="PROD"
+BUILD_FLAVOR="small"
 
 PACKER_ENV_VARS="
 VMWARE_VCENTER_PASSWORD
 VMWARE_ESXI_PASSWORD
-PACKER_SSH_PASSWORD
+PACKER_USER_PASSWORD
 "
 
 #VM_DIST_LIST="
 #Debian|9|debian-9.13.0-amd64-netinst.iso
 #CentOS|8|CentOS-8.5.2111-x86_64-dvd1.iso
 #CentOS|8-stream|CentOS-Stream-8-x86_64-latest-dvd1.iso
+#RHEL|9|rhel-9.2-x86_64-dvd.iso
 #"
 
 VM_DIST_LIST="
-CentOS|8|CentOS-8.5.2111-x86_64-dvd1.iso
+RHEL|9|rhel-9.2-x86_64-dvd.iso
 "
 
 PROJECT_DIR=$( git rev-parse --show-toplevel )
@@ -75,10 +78,15 @@ function build_vm_template() {
   if [[ "${PACKER_VAR_FORMAT}" == "json" ]]; then
     PACKER_CMD_ARRAY+=("-var-file=common-vars.${PACKER_VAR_FORMAT}")
   fi
+  PACKER_CMD_ARRAY+=("-var-file=env-vars.${BUILD_ENV}.${PACKER_VAR_FORMAT}")
   PACKER_CMD_ARRAY+=("-var-file=${VM_DIST_DIR}/distribution-vars.${PACKER_VAR_FORMAT}")
-  PACKER_CMD_ARRAY+=("-var-file=${VM_DIST_VERSION_DIR}/server/box_info.${PACKER_VAR_FORMAT}")
+  PACKER_CMD_ARRAY+=("-var-file=${VM_DIST_VERSION_DIR}/server/box_info.${BUILD_FLAVOR}.${PACKER_VAR_FORMAT}")
   PACKER_CMD_ARRAY+=("-var-file=${VM_DIST_VERSION_DIR}/server/template.${PACKER_VAR_FORMAT}")
-  PACKER_CMD_ARRAY+=("-var vm_name=${VM_NAME}")
+#  PACKER_CMD_ARRAY+=("-var vm_name=${VM_NAME}")
+  PACKER_CMD_ARRAY+=("-var vm_template_build_name=${VM_NAME}")
+  PACKER_CMD_ARRAY+=("-var vm_template_build_type=${BUILD_FLAVOR}")
+  PACKER_CMD_ARRAY+=("-var vm_template_name=${VM_NAME}-${BUILD_FLAVOR}-${BUILD_ENV}")
+  PACKER_CMD_ARRAY+=("-var vm_build_env=${BUILD_ENV}")
   PACKER_CMD_ARRAY+=("-var iso_dir=${VM_DIST_VERSION_DIR}")
   PACKER_CMD_ARRAY+=("-var iso_file=${VM_DIST_ISO}")
   if [[ ${PACKER_FORCE_BUILD} -ne 0 ]]; then

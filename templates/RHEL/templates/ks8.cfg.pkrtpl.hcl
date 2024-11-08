@@ -56,7 +56,8 @@ skipx
 #########################
 ### Packages selection.
 ### package groups ref: https://access.redhat.com/solutions/10549
-%packages --ignoremissing --excludedocs
+#%packages --ignoremissing --excludedocs
+%packages --excludedocs
 @core
 virt-who
 python3

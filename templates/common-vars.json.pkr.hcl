@@ -41,6 +41,11 @@ variable "ansible_command_orig3" {
   default = "env PATH=$PATH:~/.local/bin PYTHONUNBUFFERED=1 ansible-playbook"
 }
 
+variable "ansible_env_setup_script" {
+  type    = string
+  default = "ansible.sh"
+}
+
 variable "ansible_fetch_images_playbook" {
   type    = string
   default = "ansible/fetch_os_images.yml"
@@ -78,12 +83,12 @@ variable "ansible_galaxy_command_orig5" {
 
 variable "ansible_galaxy_req_file" {
   type    = string
-  default = "../ansible/roles/requirements.packer.yml"
+  default = "../ansible/collections/requirements.packer.yml"
 }
 
 variable "ansible_inventory_file" {
   type    = string
-  default = "../ansible/inventory/xenv_hosts.yml"
+  default = "../ansible/inventory/xenv_groups.yml"
 }
 
 variable "ansible_inventory_group_vars" {
@@ -190,6 +195,12 @@ variable "build_organization" {
 variable "build_password" {
   type      = string
   default   = "${env("PACKER_USER_PASSWORD")}"
+  sensitive = true
+}
+
+variable "build_ssh_public_key" {
+  type      = string
+  default   = "${env("PACKER_USER_SSH_PUBLIC_KEY")}"
   sensitive = true
 }
 
@@ -557,6 +568,11 @@ variable "vm_disk_use_swap" {
   default = "true"
 }
 
+variable "vm_dns_list" {
+  type    = string
+  default = ""
+}
+
 variable "vm_firmware" {
   type    = string
   default = "efi-secure"
@@ -599,7 +615,7 @@ variable "vm_guest_os_experience_desktop" {
 
 variable "vm_guest_os_family" {
   type    = string
-  default = ""
+  default = "linux"
 }
 
 variable "vm_guest_os_keyboard" {
@@ -675,6 +691,21 @@ variable "vm_inst_os_kms_key_standard" {
 variable "vm_inst_os_language" {
   type    = string
   default = "en-US"
+}
+
+variable "vm_ip_address" {
+  type    = string
+  default = ""
+}
+
+variable "vm_ip_gateway" {
+  type    = string
+  default = ""
+}
+
+variable "vm_ip_netmask" {
+  type    = string
+  default = ""
 }
 
 variable "vm_iso_datastore" {

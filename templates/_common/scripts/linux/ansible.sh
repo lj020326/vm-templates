@@ -30,7 +30,7 @@ echo "==> Install latest ansible"
 ### ref: https://github.com/pyca/pyopenssl/issues/559
 ##${PIP_INSTALL_CMD} pip ansible virtualenv cryptography pyopenssl
 ##${PIP_INSTALL_CMD} pip ansible cryptography pyopenssl
-#${PIP_INSTALL_CMD} wheel
+${PIP_INSTALL_CMD} wheel
 #${PIP_INSTALL_CMD} setuptools_rust
 ##${PIP_INSTALL_CMD} cryptography
 ##${PIP_INSTALL_CMD} pyopenssl
@@ -64,8 +64,14 @@ ${PIP_INSTALL_CMD} ansible
 
 ########
 ## pip libs required for dcc_common.util.apply_common_group
+PIP_LIB_LIST=()
+PIP_LIB_LIST+=("netaddr")
+PIP_LIB_LIST+=("jmespath")
+PIP_LIB_LIST+=("passlib")
+
 echo "==> Install additional pip libs required by private collections]"
-${PIP_INSTALL_CMD} netaddr jmespath
+#${PIP_INSTALL_CMD} netaddr jmespath
+eval "${PIP_INSTALL_CMD} ${PIP_LIB_LIST[*]}"
 
 #echo "export PATH=$PATH:~/.local/bin" >> ~/.bash_profile
 

@@ -165,19 +165,52 @@ $ cd /tmp/packer-provisioner-ansible-local/63b193ab-d1c4-b355-f4cf-9e9153570896
 $ ansible-playbook bootstrap_vm_template.yml --vault-password-file=~/.vault_pass --limit vm_template -e @./vars/vault.yml -c local -i hosts.yml
 ```
 
+## Other related/supporting information<a name="other-relatedsupporting-information"></a> 
+
+### To refresh template configurations using json sourced files<a name="to-refresh-template-configurations-using-json-sourced-files"></a> 
+
+To refresh template json configuration using the source json files:
+```shell
+$ alias gitpullsub="git submodule update --recursive --remote"
+$ alias gitmergesub="git submodule update --remote --merge && gitaddcommitpush"
+$ templates/config.sh 
+$ gitaddcommitpush
+```
+
+### To Refresh/Update/Repair submodules<a name="to-refreshupdaterepair-submodules"></a> 
+
+```shell
+$ alias gitpullsub="git submodule update --recursive --remote"
+$ alias gitmergesub="git submodule update --remote --merge && gitaddcommitpush"
+$ gitmergesub
+$ git status
+$ gitaddcommitpush ## git pull origin && git add . && git commit -m get-git-comment && git push origin
+```
+
+### Use script to automate / simplify refreshing/repairing submodules<a name="use-script-to-automate-simplify-refreshingrepairing-submodules"></a> 
+
+Run the utility bash script [`refresh-submodules.sh`](refresh-submodules.sh) found in the PROJECT root directory.
+
+```shell
+$ ./refresh-submodules.sh 
+```
+
 ## Notes, Considerations & Final Thoughts...
 
 If defining the ansible playbooks as a submodule the same way done in this repo, make sure that the git repo option to "Recursively update submodules" is set/checked.
 
 ## Reference
 
-* https://github.com/chef/bento
-* https://github.com/burkeazbill/ubuntu-22-04-packer-fusion-workstation/blob/master/http/user-data
-* https://github.com/williamsanmartin/packer-template-ubuntu/blob/main/http/user-data
-* [vagrant-template-templates](https://github.com/mrlesmithjr/vagrant-template-templates)
-* https://github.com/mwrock/packer-templates
-* https://github.com/jacqinthetemplate/packer-templates
-* https://github.com/geerlingguy/packer-templatees
+- https://github.com/vmware-samples
+- https://github.com/vmware-samples/packer-examples-for-vsphere
+- https://www.hashicorp.com/blog/using-template-files-with-hashicorp-packer
+- https://github.com/chef/bento
+- https://github.com/burkeazbill/ubuntu-22-04-packer-fusion-workstation/blob/master/http/user-data
+- https://github.com/williamsanmartin/packer-template-ubuntu/blob/main/http/user-data
+- [vagrant-template-templates](https://github.com/mrlesmithjr/vagrant-template-templates)
+- https://github.com/mwrock/packer-templates
+- https://github.com/jacqinthetemplate/packer-templates
+- https://github.com/geerlingguy/packer-templatees
 
 ## Contact
 

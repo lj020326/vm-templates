@@ -3,12 +3,13 @@
     {
       "name": "vsphere-iso",
       "type": "vsphere-iso",
-      "boot_command": "%%local.boot_command",
+      "boot_command": "%%local.vm_boot_command",
       "boot_wait": "%%var.vm_boot_wait",
       "boot_order": "%%var.vm_boot_order_install",
       "boot_keygroup_interval": "%%var.vm_boot_keygroup_interval",
       "http_content": "%%var.common_data_source == \"http\" ? local.data_source_content : null",
       "cd_content": "%%var.common_data_source == \"disk\" ? local.data_source_content : null",
+      "cd_label": "%%var.common_data_source == \"disk\" ? \"cidata\" : null",
       "iso_paths": "%%local.iso_paths",
       "iso_checksum": "%%local.iso_checksum",
       "ip_wait_timeout": "%%var.ip_wait_timeout",
@@ -46,6 +47,7 @@
       "RAM": "%%var.vm_mem_size",
       "RAM_hot_plug": "%%var.vm_mem_hot_plug",
       "RAM_reserve_all": "%%var.vm_mem_reserve_all",
+      "cdrom_type": "%%var.vm_cdrom_type",
       "firmware": "%%var.vm_firmware",
       "disk_controller_type": [
         "%%var.vm_disk_controller_type"
@@ -76,7 +78,8 @@
       "type": "shell",
       "execute_command": "echo '${var.build_username}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
       "environment_vars": [
-        "BUILD_USERNAME=${var.build_username}"
+        "BUILD_USERNAME=${var.build_username}",
+        "BUILD_USER_SSH_PUBLIC_KEY=${var.build_ssh_public_key}"
       ],
       "scripts": [
         "_common/scripts/${var.vm_guest_os_family}/base.sh",
@@ -103,7 +106,7 @@
       ],
       "execute_command": "echo '${var.build_username}' | {{.Vars}} bash '{{.Path}}'",
       "scripts": [
-        "_common/scripts/${var.vm_guest_os_family}/ansible.sh"
+        "_common/scripts/${var.vm_guest_os_family}/${var.ansible_env_setup_script}"
       ]
     },
     {
@@ -118,12 +121,24 @@
       "destination": "${var.ansible_staging_directory}/requirements.yml"
     },
     {
+      "type": "shell",
+      "environment_vars": [
+        "ANSIBLE_STAGING_DIRECTORY=${var.ansible_staging_directory}"
+      ],
+      "execute_command": "echo '${var.build_username}' | {{.Vars}} bash '{{.Path}}'",
+      "scripts": [
+        "_common/scripts/${var.vm_guest_os_family}/ansible-collections.sh"
+      ]
+    },
+    {
       "type": "ansible-local",
       "staging_directory": "${var.ansible_staging_directory}",
       "clean_staging_directory": "false",
       "playbook_dir": "${var.ansible_playbook_dir}",
       "playbook_file": "${var.ansible_playbook_file}",
       "command": "${var.ansible_command}",
+      "galaxy_command": "${var.ansible_galaxy_command}",
+      "galaxy_file": "${var.ansible_galaxy_req_file}",
       "inventory_file": "${var.ansible_inventory_file}",
       "group_vars": "${var.ansible_inventory_group_vars}",
       "extra_arguments": [
@@ -137,19 +152,8 @@
       "execute_command": "echo '${var.build_username}' | {{.Vars}} sudo -H -S -E bash '{{.Path}}'",
       "skip_clean": "true",
       "expect_disconnect": "true",
-      "script": "_common/scripts/${var.vm_guest_os_family}/reboot.sh"
-    },
-    {
-      "type": "inspec",
-      "pause_before": "120s",
-      "timeout": "60m",
-      "extra_arguments": [
-        "--no-distinct-exit"
-      ],
-      "inspec_env_vars": [
-        "CHEF_LICENSE=accept"
-      ],
-      "profile": "../inspec"
+      "script": "_common/scripts/${var.vm_guest_os_family}/reboot.sh",
+      "pause_after": "120s"
     },
     {
       "type": "shell",

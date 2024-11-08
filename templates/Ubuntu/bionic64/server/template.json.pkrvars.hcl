@@ -2,5 +2,5 @@ iso_checksum="sha256:8c5fc24894394035402f66f3824beb7234b757dd2b5531379cb310cedfd
 iso_checksum_type="sha256"
 iso_url="http://cdimage.ubuntu.com/releases/18.04/release/ubuntu-18.04.5-server-amd64.iso"
 vm_template_build_name="vm-template-ubuntu18"
-boot_command_prefix="<esc><wait><wait><esc><wait><wait><enter><wait><wait>"
-boot_command="/install/vmlinuz initrd=/install/initrd.gz auto=true priority=critical url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ubuntu/preseed.cfg <wait>"
+vm_boot_command_prefix="<esc><wait><wait><esc><wait><wait><enter><wait><wait>"
+vm_boot_command="/install/vmlinuz initrd=/install/initrd.gz auto=true priority=critical url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ubuntu/preseed.cfg <wait>"

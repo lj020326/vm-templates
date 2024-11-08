@@ -5,10 +5,30 @@
 // ref: https://www.hashicorp.com/blog/using-template-files-with-hashicorp-packer
 
 locals {
+
+  //additional_packages = ["git", "make", "vim"]
+  additional_packages = [
+    "python3.8",
+    "open-vm-tools",
+    "virt-who",
+    "gcc",
+    "kernel-devel",
+    "kernel-headers",
+    "make",
+    "python3",
+    "vim",
+    "curl",
+    "git",
+    "jq"
+  ]
+
+  // Additional Settings
+
   data_source_content = {
     "/kickstart.cfg" = templatefile(var.answerfile_file_path, {
       build_username           = var.build_username
       build_password           = var.build_password
+      build_ssh_public_key     = var.build_ssh_public_key
       build_password_encrypted = local.build_password_encrypted
       vm_guest_os_language     = var.vm_guest_os_language
       vm_guest_os_keyboard     = var.vm_guest_os_keyboard
@@ -20,13 +40,13 @@ locals {
         partitions = local.vm_disk_configs[var.vm_template_type].vm_disk_partitions
         lvm        = local.vm_disk_configs[var.vm_template_type].vm_disk_lvm
       })
-      additional_packages = join(" ", var.additional_packages)
+      additional_packages = join(" ", local.additional_packages)
     })
   }
 
   data_source_command = var.common_data_source == "http" ? "inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/kickstart.cfg" : "inst.ks=cdrom:/kickstart.cfg"
 
-  boot_command = [
+  vm_boot_command = [
     // This sends the "up arrow" key, typically used to navigate through boot menu options.
     "<up>",
     // This sends the "e" key. In the GRUB boot loader, this is used to edit the selected boot menu option.

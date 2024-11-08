@@ -1,11 +1,11 @@
 {
   "builders": [
     {
-      "accelerator": "{{ user `qemu_accelerator` }}",
+      "accelerator": "${var.qemu_accelerator}",
       "boot_command": [
         "root<enter><wait><wait>",
         "ifconfig eth0 up \u0026\u0026 udhcpc -i eth0<enter><wait10>",
-        "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}/alpine/{{ user `alpine_version` }}/answers<enter><wait>",
+        "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}/alpine/${var.alpine_version}/answers<enter><wait>",
         "sed -i 's/sda/vda/g' $PWD/answers<enter>",
         "setup-alpine -f $PWD/answers<enter><wait5>",
         "vagrant<enter><wait>",
@@ -38,14 +38,14 @@
         "reboot<enter>"
       ],
       "boot_wait": "30s",
-      "cpus": "{{ user `vm_cpu_num` }}",
+      "cpus": "${var.vm_cpu_num}",
       "disk_interface": "virtio",
-      "disk_size": "{{ user `vm_disk_size` }}",
+      "disk_size": "${var.vm_disk_size}",
       "format": "qcow2",
       "headless": true,
       "http_directory": "http",
-      "iso_checksum": "{{ user `iso_checksum` }}",
-      "iso_url": "{{ user `iso_url` }}",
+      "iso_checksum": "${var.iso_checksum}",
+      "iso_url": "${var.iso_url}",
       "memory": "{{ user `vm_mem_size` }}",
       "output_directory": "output-{{ user `vm_template_build_name` }}-{{ build_type }}-{{ timestamp }}",
       "shutdown_command": "/sbin/poweroff",
@@ -203,7 +203,7 @@
   "variables": {
     "alpine_system_part": "",
     "alpine_version": "",
-    "boot_command_prefix": "",
+    "vm_boot_command_prefix": "",
     "box_tag": "",
     "compression_level": "6",
     "disk_adapter_type": "scsi",

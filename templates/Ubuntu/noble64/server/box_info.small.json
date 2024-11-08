@@ -1,0 +1,11 @@
+{
+  "vm_mem_size": "2000",
+  "vm_disk_size": "20000",
+  "vm_cpu_num": "2",
+  "vm_cpu_cores_num": "1",
+  "vm_template_type": "small",
+  "vm_disk_partition_auto": "true",
+  "box_name": "ubuntu24-small",
+  "box_tag": "dettonville/ubuntu24-small",
+  "description": "Ubuntu 24.04 Server[small]"
+}

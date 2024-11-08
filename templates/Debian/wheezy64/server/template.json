@@ -1,5 +1,5 @@
 {
-  "boot_command_prefix": "<esc><wait>",
+  "vm_boot_command_prefix": "<esc><wait>",
   "box_tag": "dettonville/wheezy64",
   "iso_checksum": "62876fb786f203bc732ec1bd2ca4c8faea19d0a97c5936d69f3406ef92ff49bd",
   "iso_checksum_type": "sha256",

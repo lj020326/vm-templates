@@ -1,6 +1,3 @@
-# Copyright 2023 Broadcom. All rights reserved.
-# SPDX-License-Identifier: BSD-2
-
 # Red Hat Enterprise Linux Server 9
 
 ### Installs from the first attached CD-ROM/DVD on the system.

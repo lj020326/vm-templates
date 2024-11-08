@@ -3,6 +3,10 @@
 VM_DIST_LIST_DEFAULT="
 RHEL|8
 RHEL|9
+Ubuntu|18.04
+Ubuntu|20.04
+Ubuntu|22.04
+Ubuntu|24.04
 Windows/server|2016
 Windows/server|2019
 Windows/server|2022
