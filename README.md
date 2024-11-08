@@ -78,11 +78,11 @@ https://github.com/lj020326/pipeline-automation-lib/blob/main/jobs/jobdsl/templa
 
 An ansible role is used to setup all docker stack instances.
 
-The `docker-stack` ansible role used to stand up the docker stack [can be found here](https://github.com/lj020326/ansible-datacenter/tree/main/roles/docker-stack).
+The `bootstrap_docker_stack` ansible role used to stand up the docker stack [can be found here](https://github.com/lj020326/ansible-datacenter/tree/main/roles/bootstrap_docker_stack).
 
-The [`docker-stack` ansible role](https://github.com/lj020326/ansible-datacenter/tree/main/roles/docker-stack) contains the [__jenkins config-as-code (jcac) yaml definition__](https://github.com/lj020326/ansible-datacenter/blob/main/roles/docker-stack/templates/jenkins_jcac/jenkins_casc.yml.j2) in template form used to setup the jenkins jcac instance.
+The [`bootstrap_docker_stack` ansible role](https://github.com/lj020326/ansible-datacenter/tree/main/roles/bootstrap_docker_stack) contains the [__jenkins config-as-code (jcac) yaml definition__](https://github.com/lj020326/ansible-datacenter/blob/main/roles/bootstrap_docker_stack/templates/jenkins_jcac/jenkins_casc.yml.j2) in template form used to setup the jenkins jcac instance.
 
-[The jcac definition can be found here](https://github.com/lj020326/ansible-datacenter/blob/main/roles/docker-stack/templates/jenkins_jcac/jenkins_casc.yml.j2).  
+[The jcac definition can be found here](https://github.com/lj020326/ansible-datacenter/blob/main/roles/bootstrap_docker_stack/templates/jenkins_jcac/jenkins_casc.yml.j2).  
 
 ### Setup pipeline automation library used by all jenkins jobs<a name="setup-pipeline-automation-library-used-by-all-jenkins-jobs"></a> 
 
