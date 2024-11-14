@@ -12,7 +12,10 @@ Logger log = new Logger(this)
 String jobBaseFolder = "${JOB_NAME.substring(0, JOB_NAME.lastIndexOf("/"))}"
 log.info("jobBaseFolder=${jobBaseFolder}")
 
-Map config = readYaml text: configYmlStr
+// Map config = readYaml text: configYmlStr
+Map config = [:]
+
+log.info("JENKINS_ENV=${JENKINS_ENV}")
 
 config.configFile = ".jenkins/vm-templates.${JENKINS_ENV}.yml"
 config.jobBaseFolder = jobBaseFolder
