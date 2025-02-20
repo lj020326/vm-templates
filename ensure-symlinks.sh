@@ -12,6 +12,18 @@ PROJECT_DIR="$(cd "${SCRIPT_DIR}" && git rev-parse --show-toplevel)"
 REPO_SYMBOLIC_LINKS=()
 
 #####
+REPO_SYMBOLIC_LINKS+=("templates/CentOS/common-build-vars.pkr.hcl:../common-build-vars.pkr.hcl")
+REPO_SYMBOLIC_LINKS+=("templates/CentOS/common-vars.json.pkr.hcl:../common-vars.json.pkr.hcl")
+REPO_SYMBOLIC_LINKS+=("templates/CentOS/env-vars.DEV.json.pkrvars.hcl:../env-vars.DEV.json.pkrvars.hcl")
+REPO_SYMBOLIC_LINKS+=("templates/CentOS/env-vars.PROD.json.pkrvars.hcl:../env-vars.PROD.json.pkrvars.hcl")
+REPO_SYMBOLIC_LINKS+=("templates/CentOS/env-vars.QA.json.pkrvars.hcl:../env-vars.QA.json.pkrvars.hcl")
+
+REPO_SYMBOLIC_LINKS+=("templates/Debian/common-vars.json.pkr.hcl:../common-vars.json.pkr.hcl")
+REPO_SYMBOLIC_LINKS+=("templates/Debian/env-vars.DEV.json.pkrvars.hcl:../env-vars.DEV.json.pkrvars.hcl")
+REPO_SYMBOLIC_LINKS+=("templates/Debian/env-vars.PROD.json.pkrvars.hcl:../env-vars.PROD.json.pkrvars.hcl")
+REPO_SYMBOLIC_LINKS+=("templates/Debian/env-vars.QA.json.pkrvars.hcl:../env-vars.QA.json.pkrvars.hcl")
+REPO_SYMBOLIC_LINKS+=("templates/Debian/common-build-vars.pkr.hcl:../common-build-vars.pkr.hcl")
+
 REPO_SYMBOLIC_LINKS+=("templates/RHEL/common-build-vars.pkr.hcl:../common-build-vars.pkr.hcl")
 REPO_SYMBOLIC_LINKS+=("templates/RHEL/common-vars.json.pkr.hcl:../common-vars.json.pkr.hcl")
 REPO_SYMBOLIC_LINKS+=("templates/RHEL/env-vars.DEV.json.pkrvars.hcl:../env-vars.DEV.json.pkrvars.hcl")
