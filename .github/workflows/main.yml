@@ -61,7 +61,7 @@ jobs:
         working-directory: "${{ github.repository }}/templates"
         run: |
             packer validate \
-                -only vsphere-iso.${{ build_distribution_config_dir }} \
+                -only vsphere-iso.${{ matrix.template.build_distribution_config_dir }} \
                 -var-file=env-vars.PROD.json.pkrvars.hcl \
                 -var-file=${{ matrix.template.build_distribution_config_dir }}/distribution-vars.json.pkrvars.hcl \
                 -var-file=${{ matrix.template.build_release_config_dir }}/template.json.pkrvars.hcl \
