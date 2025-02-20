@@ -61,13 +61,16 @@ jobs:
         working-directory: "${{ github.repository }}/templates"
         run: |
             packer validate \
-                -only vsphere-iso \
-                -var-file=common-vars.json \
-                -var-file=${{ matrix.template.build_distribution_config_dir }}/distribution-vars.json \
-                -var-file=${{ matrix.template.build_release_config_dir }}/box_info.json \
-                -var-file=${{ matrix.template.build_release_config_dir }}/template.json \
-                -var vm_build_id=$TEMPLATE_BUILD_ID \
-                ${{ matrix.template.build_distribution_config_dir }}/build-config.json
+                -only vsphere-iso.${{ build_distribution_config_dir }} \
+                -var-file=env-vars.PROD.json.pkrvars.hcl \
+                -var-file=${{ matrix.template.build_distribution_config_dir }}/distribution-vars.json.pkrvars.hcl \
+                -var-file=${{ matrix.template.build_release_config_dir }}/template.json.pkrvars.hcl \
+                -var-file=${{ matrix.template.build_release_config_dir }}/box_info.json.pkrvars.hcl \
+                -var vm_template_build_name=$TEMPLATE_BUILD_ID \
+                -var vm_template_build_type=small \
+                -var vm_template_name=$TEMPLATE_BUILD_ID \
+                -var vm_build_env=PROD \
+                ${{ matrix.template.build_distribution_config_dir }}/
         env:
           TEMPLATE_BUILD_ID: ${{ github.job }}-${{ matrix.template.name }}-${{ github.run_id }}
           VMWARE_VCENTER_PASSWORD: 'foobar'
