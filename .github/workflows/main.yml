@@ -14,36 +14,51 @@ jobs:
           - name: CentOS8
             build_distribution_config_dir: CentOS
             build_release_config_dir: CentOS/8/server
+            build_type: small
           - name: CentOS9
             build_distribution_config_dir: CentOS
             build_release_config_dir: CentOS/9/server
+            build_type: small
+          - name: CentOS10
+            build_distribution_config_dir: CentOS
+            build_release_config_dir: CentOS/10/server
+            build_type: small
           - name: Debian11
             build_distribution_config_dir: Debian
             build_release_config_dir: Debian/11/server
+            build_type: small
           - name: Debian12
             build_distribution_config_dir: Debian
             build_release_config_dir: Debian/12/server
+            build_type: small
           - name: RHEL8
             build_distribution_config_dir: RHEL
             build_release_config_dir: RHEL/8/server
+            build_type: small
           - name: RHEL9
             build_distribution_config_dir: RHEL
             build_release_config_dir: RHEL/9/server
+            build_type: small
           - name: Ubuntu2204
             build_distribution_config_dir: Ubuntu
             build_release_config_dir: Ubuntu/22.04/server
+            build_type: small
           - name: Ubuntu2404
             build_distribution_config_dir: Ubuntu
             build_release_config_dir: Ubuntu/24.04/server
+            build_type: small
           - name: Windows2016
             build_distribution_config_dir: Windows
             build_release_config_dir: Windows/2016/server
+            build_type: standard
           - name: Windows2019
             build_distribution_config_dir: Windows
             build_release_config_dir: Windows/2019/server
+            build_type: standard
           - name: Windows2022
             build_distribution_config_dir: Windows
             build_release_config_dir: Windows/2022/server
+            build_type: standard
 
     name: Validate
     runs-on: ubuntu-latest
@@ -68,9 +83,9 @@ jobs:
                 -var-file=env-vars.PROD.json.pkrvars.hcl \
                 -var-file=${{ matrix.template.build_distribution_config_dir }}/distribution-vars.json.pkrvars.hcl \
                 -var-file=${{ matrix.template.build_release_config_dir }}/template.json.pkrvars.hcl \
-                -var-file=${{ matrix.template.build_release_config_dir }}/box_info.json.pkrvars.hcl \
+                -var-file=${{ matrix.template.build_release_config_dir }}/box_info.${{ matrix.template.build_type }}.json.pkrvars.hcl \
                 -var vm_template_build_name=$TEMPLATE_BUILD_ID \
-                -var vm_template_build_type=small \
+                -var vm_template_build_type=${{ matrix.template.build_type }} \
                 -var vm_template_name=$TEMPLATE_BUILD_ID \
                 -var vm_build_env=PROD \
                 ${{ matrix.template.build_distribution_config_dir }}/
