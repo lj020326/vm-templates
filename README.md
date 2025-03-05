@@ -28,7 +28,7 @@ You can also fork this repository and customize a build configuration with your 
 ### GitHub Actions
 
 [![Template Validation](https://github.com/lj020326/vm-templates/actions/workflows/main.yml/badge.svg)](https://github.com/lj020326/vm-templates/actions/workflows/main.yml)
-[![License](https://img.shields.io/badge/license-GPLv3-brightgreen.svg?style=flat)](LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](LICENSE)
 
 ## Requirements
 
