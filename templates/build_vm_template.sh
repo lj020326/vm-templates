@@ -202,6 +202,14 @@ function handle_cmd_return_code_orig() {
 
 }
 
+## ref: https://stackoverflow.com/questions/1527049/how-can-i-join-elements-of-a-bash-array-into-a-delimited-string
+function join_by {
+  local d=${1-} f=${2-}
+  if shift 2; then
+    printf %s "$f" "${@/#/$d}"
+  fi
+}
+
 function get_build_vm_template_command() {
   local PACKER_COMMAND=$1
   local VM_DIST=$2
@@ -217,7 +225,7 @@ function get_build_vm_template_command() {
   VM_NAME=vm-template-${VM_DIST}-${VM_DIST_VERSION}-${RUN_ID}
   VM_DIST_DIR="${VM_DIST}"
   VM_DIST_VERSION_DIR="${VM_DIST_DIR}/${VM_DIST_VERSION}"
-  VM_BUILD_ENV="prod"
+  VM_BUILD_ENV="PROD"
 
   VAULTPASS_FILEPATH="${HOME}/.vault_pass"
   if [[ -f "${PROJECT_DIR}/.vault_pass" ]]; then
@@ -273,7 +281,7 @@ function get_build_vm_template_command() {
   PACKER_CMD_ARRAY+=("${BUILD_CONFIG}")
 
   ## ref: https://stackoverflow.com/questions/1527049/how-can-i-join-elements-of-a-bash-array-into-a-delimited-string
-  local PACKER_CMD=$(printf " %s" "${PACKER_CMD_ARRAY[@]}")
+  local PACKER_CMD=$(join_by ' ' "${PACKER_CMD_ARRAY[@]}")
 
   echo "${PACKER_CMD}"
 }
@@ -282,6 +290,10 @@ function validate_vm_template() {
   local PACKER_COMMAND_ARGS=("validate")
   PACKER_COMMAND_ARGS+=("$@")
   logInfo "PACKER_COMMAND_ARGS=${PACKER_COMMAND_ARGS[@]}"
+
+  local VM_DIST="${PACKER_COMMAND_ARGS[1]}"
+  local PACKER_INIT_CMD="packer init ${VM_DIST}"
+  handle_cmd_return_code "${PACKER_INIT_CMD}"
 
   local PACKER_CMD=$(get_build_vm_template_command "${PACKER_COMMAND_ARGS[@]}")
 
