@@ -17,7 +17,9 @@ locals {
     "make",
     "python3",
     "vim",
+    "wget",
     "curl",
+    "rsync",
     "git",
     "jq"
   ]
@@ -33,8 +35,19 @@ locals {
       vm_guest_os_language     = var.vm_guest_os_language
       vm_guest_os_keyboard     = var.vm_guest_os_keyboard
       vm_guest_os_timezone     = var.vm_guest_os_timezone
-      network                  = templatefile("${abspath(path.root)}/templates/network.pkrtpl.hcl", merge(var, local))
-      storage = templatefile("${abspath(path.root)}/templates/storage.pkrtpl.hcl", {
+      vm_guest_os_cloudinit    = var.vm_guest_os_cloudinit
+      vm_network_device        = var.vm_network_device
+      common_data_source       = var.common_data_source
+      network = templatefile("${abspath(path.root)}/_templates/network.pkrtpl.hcl", {
+        device  = var.vm_network_device
+        ip      = var.vm_ip_address
+        netmask = var.vm_ip_netmask
+        gateway = var.vm_ip_gateway
+        dns     = var.vm_dns_list
+        hostname = var.vm_template_name
+        domain  = var.vm_network_domain
+      })
+      storage = templatefile("${abspath(path.root)}/_templates/storage.pkrtpl.hcl", {
         device     = local.vm_disk_device
         swap       = local.vm_disk_use_swap
         partitions = local.vm_disk_configs[var.vm_template_type].vm_disk_partitions
@@ -55,7 +68,7 @@ locals {
     "<down><down><end><wait>",
     // This types the string "text" followed by the value of the 'data_source_command' local variable.
     // This is used to modify the boot menu option's configuration to boot in text mode and specify the kickstart data source configured in the common variables.
-    "inst.text ${local.data_source_command}",
+    " inst.text ${local.data_source_command}",
     // This sends the "enter" key, waits, turns on the left control key, sends the "x" key, and then turns off the left control key. This is used to save the changes and exit the boot menu option's configuration, and then continue the boot process.
     "<enter><wait><leftCtrlOn>x<leftCtrlOff>"
   ]
@@ -101,6 +114,7 @@ locals {
         },
         {
           pv_name = "pv.01",
+          volume_group = "vg_root",
           drive = "sda",
           size = -1,
           format = {
@@ -248,6 +262,7 @@ locals {
         },
         {
           pv_name = "pv.01",
+          volume_group = "vg_root",
           drive = "sda",
           size = -1,
           format = {

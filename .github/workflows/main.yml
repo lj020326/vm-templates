@@ -11,36 +11,39 @@ jobs:
     strategy:
       matrix:
         template:
-          - name: Debian8
-            build_distribution_config_dir: Debian
-            build_release_config_dir: Debian/8/server
-          - name: Debian9
-            build_distribution_config_dir: Debian
-            build_release_config_dir: Debian/9/server
-          - name: Debian10
-            build_distribution_config_dir: Debian
-            build_release_config_dir: Debian/10/server
-          - name: CentOS7
-            build_distribution_config_dir: CentOS
-            build_release_config_dir: CentOS/7/server
           - name: CentOS8
             build_distribution_config_dir: CentOS
             build_release_config_dir: CentOS/8/server
-          - name: Ubuntu1804
-            build_distribution_config_dir: Ubuntu
-            build_release_config_dir: Ubuntu/18.04/server
-          - name: Ubuntu2004
-            build_distribution_config_dir: Ubuntu
-            build_release_config_dir: Ubuntu/20.04/server
+          - name: CentOS9
+            build_distribution_config_dir: CentOS
+            build_release_config_dir: CentOS/9/server
+          - name: Debian11
+            build_distribution_config_dir: Debian
+            build_release_config_dir: Debian/11/server
+          - name: Debian12
+            build_distribution_config_dir: Debian
+            build_release_config_dir: Debian/12/server
+          - name: RHEL8
+            build_distribution_config_dir: RHEL
+            build_release_config_dir: RHEL/8/server
+          - name: RHEL9
+            build_distribution_config_dir: RHEL
+            build_release_config_dir: RHEL/9/server
           - name: Ubuntu2204
             build_distribution_config_dir: Ubuntu
             build_release_config_dir: Ubuntu/22.04/server
+          - name: Ubuntu2404
+            build_distribution_config_dir: Ubuntu
+            build_release_config_dir: Ubuntu/24.04/server
           - name: Windows2016
             build_distribution_config_dir: Windows
             build_release_config_dir: Windows/2016/server
           - name: Windows2019
             build_distribution_config_dir: Windows
             build_release_config_dir: Windows/2019/server
+          - name: Windows2022
+            build_distribution_config_dir: Windows
+            build_release_config_dir: Windows/2022/server
 
     name: Validate
     runs-on: ubuntu-latest

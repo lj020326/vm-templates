@@ -593,6 +593,11 @@ variable "vm_firmware_alt3" {
   default = "efi"
 }
 
+variable "vm_guest_os_cloudinit" {
+  type    = string
+  default = "false"
+}
+
 variable "vm_guest_os_edition_datacenter" {
   type    = string
   default = "datacenter"
@@ -746,6 +751,11 @@ variable "vm_network_card_e1000" {
 variable "vm_network_device" {
   type    = string
   default = "ens192"
+}
+
+variable "vm_network_domain" {
+  type    = string
+  default = "dettonville.int"
 }
 
 variable "vm_network_mgt" {

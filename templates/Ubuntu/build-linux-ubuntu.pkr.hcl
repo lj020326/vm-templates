@@ -15,6 +15,7 @@ locals {
     "curl",
     "rsync",
     "git",
+    "jq",
     "python3",
     "python3-pip",
     "python3-apt",
@@ -25,7 +26,7 @@ locals {
   // Additional Settings
 
   data_source_content = {
-    "/meta-data" = file("${abspath(path.root)}/templates/meta-data")
+    "/meta-data" = file("${abspath(path.root)}/_templates/meta-data")
     "/user-data" = templatefile(var.answerfile_file_path, {
       build_username           = var.build_username
       build_password           = var.build_password
@@ -34,15 +35,17 @@ locals {
       vm_guest_os_language     = var.vm_guest_os_language
       vm_guest_os_keyboard     = var.vm_guest_os_keyboard
       vm_guest_os_timezone     = var.vm_guest_os_timezone
+      vm_guest_os_cloudinit    = var.vm_guest_os_cloudinit
       vm_network_device        = var.vm_network_device
-      network = templatefile("${abspath(path.root)}/templates/network.pkrtpl.hcl", {
+      common_data_source       = var.common_data_source
+      network = templatefile("${abspath(path.root)}/_templates/network.pkrtpl.hcl", {
         device  = var.vm_network_device
         ip      = var.vm_ip_address
         netmask = var.vm_ip_netmask
         gateway = var.vm_ip_gateway
         dns     = var.vm_dns_list
       })
-      storage = templatefile("${abspath(path.root)}/templates/storage.pkrtpl.hcl", {
+      storage = templatefile("${abspath(path.root)}/_templates/storage.pkrtpl.hcl", {
         device     = local.vm_disk_device
         swap       = local.vm_disk_use_swap
         partitions = local.vm_disk_configs[var.vm_template_type].vm_disk_partitions
@@ -87,7 +90,20 @@ locals {
     medium = {
       vm_disk_partitions = [
         {
-          name = "boot",
+          pv_name = "",
+          drive = "sda",
+          size = 1024,
+          format = {
+            label  = "EFIFS",
+            fstype = "efi",
+          },
+          mount = {
+            path    = "/boot/efi",
+            options = "",
+          }
+        },
+        {
+          pv_name = "",
           drive = "sda",
           size = 1024,
           format = {
@@ -97,11 +113,11 @@ locals {
           mount = {
             path    = "/boot",
             options = "",
-          },
-          volume_group = ""
+          }
         },
         {
-          name = "pv.01",
+          pv_name = "pv.01",
+          volume_group = "vg_root",
           drive = "sda",
           size = -1,
           format = {
@@ -111,16 +127,16 @@ locals {
           mount = {
             path    = "",
             options = "",
-          },
-          volume_group = "vg_root"
+          }
         },
       ],
       vm_disk_lvm = [
         {
-          name = "vg_root",
+          vg_name = "vg_root",
+          pv_name = "pv.01",
           partitions: [
             {
-              name = "lv_swap",
+              lv_name = "lv_swap",
               size = 4000,
               format = {
                 label  = "SWAPFS",
@@ -132,7 +148,7 @@ locals {
               }
             },
             {
-              name = "lv_root",
+              lv_name = "lv_root",
               size = 10000,
               format = {
                 label  = "ROOTFS",
@@ -144,7 +160,7 @@ locals {
               }
             },
             {
-              name = "lv_var",
+              lv_name = "lv_var",
               size = 8000,
               format = {
                 label  = "VARFS",
@@ -156,7 +172,7 @@ locals {
               }
             },
             {
-              name = "lv_tmp",
+              lv_name = "lv_tmp",
               size = 4000,
               format = {
                 label  = "TMPFS",
@@ -168,7 +184,7 @@ locals {
               }
             },
             {
-              name = "lv_home",
+              lv_name = "lv_home",
               size = 4000,
               format = {
                 label  = "HOMEFS",
@@ -180,7 +196,7 @@ locals {
               }
             },
             {
-              name = "lv_opt",
+              lv_name = "lv_opt",
               size = 6000,
               format = {
                 label  = "OPTFS",
@@ -192,7 +208,7 @@ locals {
               }
             },
             {
-              name = "lv_log",
+              lv_name = "lv_log",
               size = 2000,
               format = {
                 label  = "LOGFS",
@@ -204,7 +220,7 @@ locals {
               }
             },
             {
-              name = "lv_audit",
+              lv_name = "lv_audit",
               size = 4096,
               format = {
                 label  = "AUDITFS",
@@ -222,21 +238,34 @@ locals {
     large = {
       vm_disk_partitions = [
         {
-          name = "boot",
+          pv_name = "",
+          drive = "sda",
+          size = 1024,
+          format = {
+            label  = "EFIFS",
+            fstype = "efi",
+          },
+          mount = {
+            path    = "/boot/efi",
+            options = "",
+          }
+        },
+        {
+          pv_name = "boot",
           drive = "sda",
           size = 1024,
           format = {
             label  = "BOOTFS",
-            fstype = "xfs",
+            fstype = "ext4",
           },
           mount = {
             path    = "/boot",
             options = "",
-          },
-          volume_group = ""
+          }
         },
         {
-          name = "pv.01",
+          pv_name = "pv.01",
+          volume_group = "vg_root",
           drive = "sda",
           size = -1,
           format = {
@@ -246,11 +275,10 @@ locals {
           mount = {
             path    = "",
             options = "",
-          },
-          volume_group = "vg_root"
+          }
         },
         {
-          name = "pv.02",
+          pv_name = "pv.02",
           drive = "sda",
           size = 24000,
           format = {
@@ -260,16 +288,16 @@ locals {
           mount = {
             path    = "",
             options = "",
-          },
-          volume_group = "vg_data"
+          }
         },
       ],
       vm_disk_lvm = [
         {
-          name = "vg_root",
+          vg_name = "vg_root",
+          pv_name = "pv.01",
           partitions : [
             {
-              name = "lv_swap",
+              lv_name = "lv_swap",
               size    = 12000,
               format  = {
                 label  = "SWAPFS",
@@ -281,7 +309,7 @@ locals {
               }
             },
             {
-              name = "lv_root",
+              lv_name = "lv_root",
               size    = 30000,
               format  = {
                 label  = "ROOTFS",
@@ -293,7 +321,7 @@ locals {
               }
             },
             {
-              name = "lv_var",
+              lv_name = "lv_var",
               size    = 24000,
               format  = {
                 label  = "VARFS",
@@ -305,7 +333,7 @@ locals {
               }
             },
             {
-              name = "lv_tmp",
+              lv_name = "lv_tmp",
               size    = 12000,
               format  = {
                 label  = "TMPFS",
@@ -317,7 +345,7 @@ locals {
               }
             },
             {
-              name = "lv_home",
+              lv_name = "lv_home",
               size    = 12000,
               format  = {
                 label  = "HOMEFS",
@@ -329,7 +357,7 @@ locals {
               }
             },
             {
-              name = "lv_opt",
+              lv_name = "lv_opt",
               size    = 18000,
               format  = {
                 label  = "OPTFS",
@@ -341,7 +369,7 @@ locals {
               }
             },
             {
-              name = "lv_log",
+              lv_name = "lv_log",
               size    = 6000,
               format  = {
                 label  = "LOGFS",
@@ -353,7 +381,7 @@ locals {
               }
             },
             {
-              name = "lv_audit",
+              lv_name = "lv_audit",
               size    = 12000,
               format  = {
                 label  = "AUDITFS",
@@ -367,10 +395,11 @@ locals {
           ],
         },
         {
-          name = "vg_data",
+          vg_name = "vg_data",
+          pv_name = "pv.02",
           partitions: [
             {
-              name = "lv_data",
+              lv_name = "lv_data",
               size = 24000,
               format = {
                 label  = "DATAFS",

@@ -3,139 +3,165 @@
     {
       "name": "vsphere-iso",
       "type": "vsphere-iso",
-      "boot_command": [
-        "{{ user `vm_boot_command_prefix` }}=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos/{{ user `kickstart_cfg` }}<enter><wait>"
-      ],
-      "boot_wait": "{{ user `vm_boot_wait` }}",
-      "boot_order": "{{ user `vm_boot_order_install` }}",
-      "boot_keygroup_interval": "{{ user `vm_boot_keygroup_interval` }}",
-      "http_directory": "{{ user `vm_boot_http_directory` }}",
-      "ip_wait_timeout": "{{ user `ip_wait_timeout` }}",
-      "ip_settle_timeout": "{{ user `ip_settle_timeout` }}",
-      "vcenter_server": "{{ user `vcenter_host` }}",
-      "username": "{{ user `vcenter_username` }}",
-      "password": "{{ user `vcenter_password` }}",
+      "boot_command": "%%local.vm_boot_command",
+      "boot_wait": "%%var.vm_boot_wait",
+      "boot_order": "%%var.vm_boot_order_install",
+      "boot_keygroup_interval": "%%var.vm_boot_keygroup_interval",
+      "http_content": "%%var.common_data_source == \"http\" ? local.data_source_content : null",
+      "cd_content": "%%var.common_data_source == \"disk\" ? local.data_source_content : null",
+      "cd_label": "%%var.common_data_source == \"disk\" ? \"OEMDRV\" : null",
+      "iso_paths": "%%local.iso_paths",
+      "iso_checksum": "%%local.iso_checksum",
+      "ip_wait_timeout": "%%var.ip_wait_timeout",
+      "ip_settle_timeout": "%%var.ip_settle_timeout",
+      "vcenter_server": "%%var.vcenter_host",
+      "username": "%%var.vcenter_username",
+      "password": "%%var.vcenter_password",
       "insecure_connection": "true",
-      "datacenter": "{{ user `vcenter_datacenter` }}",
-      "cluster": "{{ user `vcenter_cluster` }}",
-      "datastore": "{{ user `vm_datastore` }}",
-      "folder": "{{ user `vm_build_folder` }}",
-      "vm_name": "{{ user `vm_template_build_name` }}",
-      "host": "{{ user `vm_host` }}",
-      "notes": "Build via Packer - date: {{ isotime }} build tag: {{ user `vm_build_tag` }}",
-      "convert_to_template": true,
-      "communicator": "ssh",
+      "datacenter": "%%var.vcenter_datacenter",
+      "cluster": "%%var.vcenter_cluster",
+      "datastore": "%%var.vm_datastore",
+      "folder": "%%var.vm_build_folder",
+      "vm_name": "%%var.vm_template_build_name",
+      "vm_version": "%%var.common_vm_version",
+      "host": "%%var.vm_host",
+      "notes": "%%local.build_notes",
+      "convert_to_template": "true",
+      "communicator": "%%var.vm_communicator",
       "configuration_parameters": {
         "bios.bootDelay": "5000",
-        "bootOrder": "{{ user `vm_boot_order` }}"
+        "bootOrder": "%%var.vm_boot_order"
       },
-      "iso_paths": [
-        "[{{ user `vm_iso_datastore` }}] {{ user `iso_base_dir` }}/{{user `iso_dir` }}/{{user `iso_file` }}"
-      ],
-      "iso_checksum": "{{ user `iso_checksum_type` }}:{{user `iso_checksum` }}",
-      "shutdown_command": "echo '{{ user `ssh_password` }}'| sudo -S /sbin/halt -h -p",
-      "shutdown_timeout": "15m",
-      "ssh_handshake_attempts": "{{ user `ssh_handshake_attempts` }}",
-      "ssh_username": "{{ user `ssh_username` }}",
-      "ssh_password": "{{ user `ssh_password` }}",
-      "ssh_timeout": "{{ user `ssh_timeout` }}",
-      "ssh_pty": "{{ user `ssh_pty` }}",
-      "guest_os_type": "{{ user `vm_guest_os_type` }}",
-      "CPUs": "{{ user `vm_cpu_num` }}",
-      "RAM": "{{ user `vm_mem_size` }}",
-      "RAM_reserve_all": false,
-      "firmware": "{{ user `vm_firmware` }}",
+      "shutdown_command": "%%local.vm_shutdown_command",
+      "shutdown_timeout": "%%var.vm_shutdown_timeout",
+      "ssh_handshake_attempts": "%%var.ssh_handshake_attempts",
+      "ssh_username": "%%local.ssh_username",
+      "ssh_password": "%%local.ssh_password",
+      "ssh_timeout": "%%var.ssh_timeout",
+      "ssh_pty": "%%var.ssh_pty",
+      "remove_cdrom": "%%var.vm_cdrom_remove",
+      "guest_os_type": "%%var.vm_guest_os_type",
+      "CPUs": "%%var.vm_cpu_num",
+      "cpu_cores": "%%var.vm_cpu_cores_num",
+      "CPU_hot_plug": "%%var.vm_cpu_hot_plug",
+      "RAM": "%%var.vm_mem_size",
+      "RAM_hot_plug": "%%var.vm_mem_hot_plug",
+      "RAM_reserve_all": "%%var.vm_mem_reserve_all",
+      "cdrom_type": "%%var.vm_cdrom_type",
+      "firmware": "%%var.vm_firmware",
       "disk_controller_type": [
-        "{{ user `vm_disk_type` }}"
+        "%%var.vm_disk_controller_type"
       ],
       "storage": [
         {
-          "disk_size": "{{ user `vm_disk_size` }}",
-          "disk_thin_provisioned": "{{ user `vm_disk_thin_provisioned` }}"
+          "disk_size": "%%var.vm_disk_size",
+          "disk_thin_provisioned": "%%var.vm_disk_thin_provisioned"
         }
       ],
       "network_adapters": [
         {
-          "network": "{{ user `vm_network_mgt` }}",
-          "network_card": "{{ user `vm_network_card` }}"
+          "network": "%%var.vm_network_mgt",
+          "network_card": "%%var.vm_network_card"
         }
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "echo '${var.build_username}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "scripts": [
+        "_common/scripts/${var.vm_guest_os_family}/install_site_cacerts.sh"
       ]
     },
     {
-      "type": "qemu",
-      "accelerator": "{{ user `qemu_accelerator` }}",
-      "boot_command": [
-        "<tab> {{ user `vm_boot_command_prefix` }}=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos/ks.cfg <enter><wait>"
+      "type": "shell",
+      "execute_command": "echo '${var.build_username}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "environment_vars": [
+        "BUILD_USERNAME=${var.build_username}",
+        "BUILD_USER_SSH_PUBLIC_KEY=${var.build_ssh_public_key}"
       ],
-      "boot_wait": "{{ user `vm_boot_wait` }}",
-      "cpus": "{{ user `vm_cpu_num` }}",
-      "disk_interface": "virtio",
-      "disk_size": "{{ user `vm_disk_size` }}",
-      "format": "qcow2",
-      "headless": true,
-      "http_directory": "{{ user `vm_boot_http_directory` }}",
-      "iso_checksum": "{{ user `iso_checksum_type` }}:{{ user `iso_checksum` }}",
-      "iso_url": "{{ user `iso_url` }}",
-      "memory": "{{ user `vm_mem_size` }}",
-      "output_directory": "output-{{ user `vm_template_build_name` }}-{{ build_type }}-{{ timestamp }}",
-      "shutdown_command": "echo '{{ user `ssh_password` }}'| sudo -S /sbin/halt -h -p",
-      "ssh_handshake_attempts": "20",
-      "ssh_password": "{{ user `ssh_password` }}",
-      "ssh_timeout": "{{ user `ssh_timeout` }}",
-      "ssh_username": "{{ user `ssh_username` }}",
-      "vm_name": "{{ user `vm_template_build_name` }}"
+      "scripts": [
+        "_common/scripts/${var.vm_guest_os_family}/base.sh",
+        "_common/scripts/${var.vm_guest_os_family}/vmware.sh",
+        "_common/scripts/${var.vm_guest_os_family}/sshd.sh"
+      ]
     },
     {
-      "type": "virtualbox-iso",
-      "boot_command": [
-        "<tab> {{ user `vm_boot_command_prefix` }}=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos/ks.cfg <enter><wait>"
+      "type": "shell",
+      "execute_command": "echo '${var.build_username}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "environment_vars": [
+        "BUILD_USERNAME=${var.build_username}",
+        "BUILD_JOB_URL=${var.build_job_url}",
+        "BUILD_JOB_ID=${var.build_job_id}",
+        "BUILD_GIT_COMMIT_HASH=${var.build_git_commit_hash}"
       ],
-      "boot_wait": "{{ user `vm_boot_wait` }}",
-      "cpus": "{{ user `vm_cpu_num` }}",
-      "disk_size": "{{ user `vm_disk_size` }}",
-      "guest_os_type": "RedHat_64",
-      "hard_drive_interface": "{{ user `disk_adapter_type` }}",
-      "headless": true,
-      "http_directory": "{{ user `vm_boot_http_directory` }}",
-      "iso_checksum": "{{ user `iso_checksum_type` }}:{{ user `iso_checksum` }}",
-      "iso_url": "{{ user `iso_url` }}",
-      "memory": "{{ user `vm_mem_size` }}",
-      "output_directory": "output-{{ user `vm_template_build_name` }}-{{ build_type }}-{{ timestamp }}",
-      "shutdown_command": "echo '{{ user `ssh_password` }}'| sudo -S /sbin/halt -h -p",
-      "ssh_handshake_attempts": "20",
-      "ssh_password": "{{ user `ssh_password` }}",
-      "ssh_timeout": "{{ user `ssh_timeout` }}",
-      "ssh_username": "{{ user `ssh_username` }}",
-      "vm_name": "{{ user `vm_template_build_name` }}"
+      "script": "_common/scripts/${var.vm_guest_os_family}/add-build-info.sh"
     },
     {
-      "type": "vmware-iso",
-      "boot_command": [
-        "<tab> {{ user `vm_boot_command_prefix` }}=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos/ks.cfg <enter><wait>"
+      "type": "shell",
+      "environment_vars": [
+        "PIP_INSTALL_VERSION=${var.pip_version}",
+        "ANSIBLE_VAULT_PASS=${var.ansible_vault_password}"
       ],
-      "boot_wait": "{{ user `vm_boot_wait` }}",
-      "cpus": "{{ user `vm_cpu_num` }}",
-      "disk_adapter_type": "{{ user `disk_adapter_type` }}",
-      "disk_size": "{{ user `vm_disk_size` }}",
-      "disk_type_id": 0,
-      "guest_os_type": "centos-64",
-      "headless": true,
-      "http_directory": "{{ user `vm_boot_http_directory` }}",
-      "iso_checksum": "{{ user `iso_checksum_type` }}:{{ user `iso_checksum` }}",
-      "iso_url": "{{ user `iso_url` }}",
-      "memory": "{{ user `vm_mem_size` }}",
-      "output_directory": "output-{{ user `vm_template_build_name` }}-{{ build_type }}-{{ timestamp }}",
-      "shutdown_command": "echo '{{ user `ssh_password` }}'| sudo -S /sbin/halt -h -p",
-      "ssh_handshake_attempts": "20",
-      "ssh_password": "{{ user `ssh_password` }}",
-      "ssh_timeout": "{{ user `ssh_timeout` }}",
-      "ssh_username": "{{ user `ssh_username` }}",
-      "tools_upload_flavor": "linux",
-      "vm_name": "{{ user `vm_template_build_name` }}",
-      "vmx_data": {
-        "ethernet0.pciSlotNumber": "32"
-      },
-      "vmx_remove_ethernet_interfaces": true
+      "execute_command": "echo '${var.build_username}' | {{.Vars}} bash '{{.Path}}'",
+      "scripts": [
+        "_common/scripts/${var.vm_guest_os_family}/${var.ansible_env_setup_script}"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "mkdir -p ${var.ansible_staging_directory}"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "${var.ansible_galaxy_req_file}",
+      "destination": "${var.ansible_staging_directory}/requirements.yml"
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "ANSIBLE_STAGING_DIRECTORY=${var.ansible_staging_directory}"
+      ],
+      "execute_command": "echo '${var.build_username}' | {{.Vars}} bash '{{.Path}}'",
+      "scripts": [
+        "_common/scripts/${var.vm_guest_os_family}/ansible-collections.sh"
+      ]
+    },
+    {
+      "type": "ansible-local",
+      "staging_directory": "${var.ansible_staging_directory}",
+      "clean_staging_directory": "false",
+      "playbook_dir": "${var.ansible_playbook_dir}",
+      "playbook_file": "${var.ansible_playbook_file}",
+      "command": "${var.ansible_command}",
+      "galaxy_command": "${var.ansible_galaxy_command}",
+      "galaxy_file": "${var.ansible_galaxy_req_file}",
+      "inventory_file": "${var.ansible_inventory_file}",
+      "group_vars": "${var.ansible_inventory_group_vars}",
+      "extra_arguments": [
+        "--tag", "${var.ansible_playbook_tag}",
+        "--vault-password-file=${var.ansible_playbook_vault_password_file}",
+        "-e", "@${var.ansible_playbook_vault}"
+      ]
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo '${var.build_username}' | {{.Vars}} sudo -H -S -E bash '{{.Path}}'",
+      "skip_clean": "true",
+      "expect_disconnect": "true",
+      "script": "_common/scripts/${var.vm_guest_os_family}/reboot.sh",
+      "pause_after": "120s"
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo '${var.build_username}' | {{.Vars}} sudo -H -S -E bash '{{.Path}}'",
+      "scripts": [
+        "_common/scripts/${var.vm_guest_os_family}/cleanup.sh",
+        "_common/scripts/${var.vm_guest_os_family}/zerodisk.sh"
+      ]
     }
   ],
   "post-processors": [
@@ -143,82 +169,28 @@
       {
         "output": "manifest.json",
         "strip_path": true,
-        "type": "manifest"
+        "type": "manifest",
+        "custom_data": {
+          "build_username":           "%%var.build_username",
+          "build_date":               "%%local.build_date",
+          "build_version":            "%%local.build_version",
+          "common_data_source":       "%%var.common_data_source",
+          "common_vm_version":        "%%var.common_vm_version",
+          "vm_cpu_cores":             "%%var.vm_cpu_cores_num",
+          "vm_cpu_count":             "%%var.vm_cpu_num",
+          "vm_disk_size":             "%%var.vm_disk_size",
+          "vm_disk_thin_provisioned": "%%var.vm_disk_thin_provisioned",
+          "vm_firmware":              "%%var.vm_firmware",
+          "vm_guest_os_type":         "%%var.vm_guest_os_type",
+          "vm_mem_size":              "%%var.vm_mem_size",
+          "vm_network_card":          "%%var.vm_network_card",
+          "vsphere_cluster":          "%%var.vcenter_cluster",
+          "vsphere_host":             "%%var.vcenter_host",
+          "vsphere_datacenter":       "%%var.vcenter_datacenter",
+          "vsphere_datastore":        "%%var.vcenter_datacenter",
+          "vsphere_folder":           "%%var.vm_build_folder"
+        }
       }
     ]
-  ],
-  "provisioners": [
-    {
-      "type": "shell",
-      "execute_command": "echo '{{ user `ssh_username` }}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "scripts": [
-        "_common/scripts/install_site_cacerts.sh"
-      ]
-    },
-    {
-      "type": "shell",
-      "execute_command": "echo '{{ user `ssh_username` }}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "scripts": [
-        "_common/scripts/base.sh",
-        "_common/scripts/vmware.sh",
-        "_common/scripts/sshd.sh"
-      ]
-    },
-    {
-      "type": "shell",
-      "environment_vars": [
-        "PIP_NSTALL_VERSION={{user `pip_version`}}",
-        "VENV_DIR={{user `python_venv_dir`}}",
-        "ANSIBLE_VAULT_PASS={{ user `ansible_vault_password` }}"
-      ],
-      "execute_command": "echo '{{ user `ssh_username` }}' | {{.Vars}} bash '{{.Path}}'",
-      "scripts": [
-        "_common/scripts/ansible.sh"
-      ]
-    },
-    {
-      "type": "ansible-local",
-      "staging_directory": "{{ user `ansible_staging_directory` }}",
-      "clean_staging_directory": "false",
-      "playbook_dir": "{{ user `ansible_playbook_dir` }}",
-      "playbook_file": "{{ user `ansible_playbook_file` }}",
-      "command": "{{ user `ansible_command` }}",
-      "galaxy_command": "{{ user `ansible_galaxy_command` }}",
-      "galaxy_file": "{{ user `ansible_galaxy_req_file` }}",
-      "inventory_file": "{{ user `ansible_inventory_file` }}",
-      "group_vars": "{{ user `ansible_inventory_group_vars` }}",
-      "extra_arguments": [
-        "--tag", "{{ user `ansible_playbook_tag` }}",
-        "--vault-password-file={{ user `ansible_playbook_vault_password_file` }}",
-        "-e", "@{{ user `ansible_playbook_vault` }}"
-      ]
-    },
-    {
-      "type": "shell",
-      "execute_command": "echo '{{ user `ssh_username` }}' | {{.Vars}} sudo -H -S -E bash '{{.Path}}'",
-      "skip_clean": "true",
-      "expect_disconnect": "true",
-      "script": "_common/scripts/reboot.sh"
-    },
-    {
-      "type": "inspec",
-      "pause_before": "60s",
-      "timeout": "60m",
-      "extra_arguments": [
-        "--no-distinct-exit"
-      ],
-      "inspec_env_vars": [
-        "CHEF_LICENSE=accept"
-      ],
-      "profile": "../inspec"
-    },
-    {
-      "type": "shell",
-      "execute_command": "echo '{{ user `ssh_username` }}' | {{.Vars}} sudo -H -S -E bash '{{.Path}}'",
-      "scripts": [
-        "_common/scripts/cleanup.sh",
-        "_common/scripts/zerodisk.sh"
-      ]
-    }
   ]
 }

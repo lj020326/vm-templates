@@ -36,6 +36,11 @@ REPO_SYMBOLIC_LINKS+=("templates/Ubuntu/env-vars.PROD.json.pkrvars.hcl:../env-va
 REPO_SYMBOLIC_LINKS+=("templates/Ubuntu/env-vars.QA.json.pkrvars.hcl:../env-vars.QA.json.pkrvars.hcl")
 REPO_SYMBOLIC_LINKS+=("templates/Ubuntu/common-build-vars.pkr.hcl:../common-build-vars.pkr.hcl")
 
+REPO_SYMBOLIC_LINKS+=("templates/Debian/7:wheezy64")
+REPO_SYMBOLIC_LINKS+=("templates/Debian/8:jessie64")
+REPO_SYMBOLIC_LINKS+=("templates/Debian/9:stretch64")
+REPO_SYMBOLIC_LINKS+=("templates/Debian/10:buster64")
+
 REPO_SYMBOLIC_LINKS+=("templates/Ubuntu/12.04:precise64")
 REPO_SYMBOLIC_LINKS+=("templates/Ubuntu/14.04:trusty64")
 REPO_SYMBOLIC_LINKS+=("templates/Ubuntu/14.10:utopic64")

@@ -76,7 +76,7 @@ elif [[ $id == "centos" || $id == "ol" ]]; then
 #            dnf distro-sync
 #          fi
         else
-          rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-${os_version_id_short}.noarch.rpm
+          dnf install -y epel-release
         fi
 
         dnf -y update
@@ -108,11 +108,18 @@ elif [[ $id == "debian" ]]; then
     apt-get update
     echo "libc6:amd64     libraries/restart-without-asking        boolean true" | debconf-set-selections
     echo "libssl1.1:amd64 libssl1.1/restart-services      string" | debconf-set-selections
-    apt-get install -y python-minimal linux-headers-"$(uname -r)" \
-        build-essential zlib1g-dev libssl-dev libreadline-gplv2-dev unzip
+    if [[ $os_version_id -lt 10 ]]; then
+      apt-get install -y python-minimal libreadline-gplv2-dev
+    fi
+    apt-get install -y linux-headers-"$(uname -r)" \
+        build-essential \
+        python3-venv \
+        zlib1g-dev \
+        libssl-dev \
+        unzip
 
     if [[ ! -f /etc/vyos_build ]]; then
-        if [[ $os_version_id > 7 ]]; then
+        if [[ $os_version_id -gt 7 ]]; then
             apt-get -y install cloud-initramfs-growroot
         fi
     fi
@@ -125,13 +132,13 @@ elif [[ $id == "elementary" ]]; then
         build-essential zlib1g-dev libssl-dev libreadline-gplv2-dev unzip
 
     if [[ ! -f /etc/vyos_build ]]; then
-        if [[ $os_version_id > 7 ]]; then
+        if [[ $os_version_id -gt 7 ]]; then
             apt-get -y install cloud-initramfs-growroot
         fi
     fi
 
 elif [[ $id == "fedora" ]]; then
-    if [[ $os_version_id < 30 ]]; then
+    if [[ $os_version_id -lt 30 ]]; then
         dnf -y install python-devel python-dnf
     else
         dnf -y install initscripts python-devel python3-dnf
@@ -145,7 +152,7 @@ elif [[ $id == "linuxmint" ]]; then
         build-essential zlib1g-dev libssl-dev libreadline-gplv2-dev unzip
 
     if [[ ! -f /etc/vyos_build ]]; then
-        if [[ $os_version_id > 7 ]]; then
+        if [[ $os_version_id -gt 7 ]]; then
             apt-get -y install cloud-initramfs-growroot
         fi
     fi
@@ -170,14 +177,19 @@ elif [[ $id == "ubuntu" ]]; then
     echo "debconf debconf/frontend select Noninteractive" | debconf-set-selections
     echo "libc6:amd64     libraries/restart-without-asking        boolean true" | debconf-set-selections
     echo "libssl1.1:amd64 libssl1.1/restart-services      string" | debconf-set-selections
-    if [[ $os_version_id_short < 20.04 ]]; then
+    if [[ $os_version_id_short -lt 20.04 ]]; then
         apt-get install -y python-minimal
     fi
-    if [[ $os_version_id_short < 22.04 ]]; then
+    if [[ $os_version_id_short -lt 22.04 ]]; then
       apt-get install -y libreadline-gplv2-dev
     fi
     apt-get install -y linux-headers-"$(uname -r)" \
-        build-essential zlib1g-dev libssl-dev unzip
+        build-essential \
+        python3-venv \
+        zlib1g-dev \
+        libssl-dev \
+        unzip
+
     if [[ ! -f /etc/vyos_build ]]; then
         apt-get -y install cloud-initramfs-growroot
     fi

@@ -1,6 +1,5 @@
-answerfile_file_path="./templates/ks9.cfg.pkrtpl.hcl"
+answerfile_file_path="./_templates/ks9.cfg.pkrtpl.hcl"
 iso_checksum_type="sha256"
 iso_url="https://access.cdn.redhat.com/content/origin/files/sha256/a1/a18bf014e2cb5b6b9cee3ea09ccfd7bc2a84e68e09487bb119a98aa0e3563ac2/rhel-9.2-x86_64-dvd.iso"
 iso_checksum="a18bf014e2cb5b6b9cee3ea09ccfd7bc2a84e68e09487bb119a98aa0e3563ac2"
-vm_boot_command_prefix="<up><wait><tab>"
 vm_guest_os_type="rhel8_64Guest"

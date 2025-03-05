@@ -35,7 +35,7 @@ elif [[ $id == "opensuse" || $id == "opensuse-leap" ]]; then
 fi
 
 # Stop rsyslog service
-if [[ $id != "arch" ]]; then
+if [[ $id != "arch" && $id != "debian" && $id != "ubuntu" ]]; then
   sudo service rsyslog stop
 fi
 

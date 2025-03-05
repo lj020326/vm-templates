@@ -1,9 +1,0 @@
-{
-  "boot_command_prefix": "<up><wait><tab>vmlinuz initrd=initrd.img ip=172.31.26.250::172.31.26.1:255.255.255.0:centos8:ens224:none nameserver=172.31.0.12 nameserver=172.31.0.11 nameserver=172.21.0.49 inst.text inst.ks",
-  "iso_checksum_type": "sha256",
-  "iso_url": "https://vault.centos.org/8.5.2111/isos/x86_64/CentOS-8.5.2111-x86_64-dvd1.iso",
-  "iso_checksum": "3b795863001461d4f670b0dedd02d25296b6d64683faceb8f2b60c53ac5ebb3e",
-  "kickstart_cfg": "ks.8.cfg",
-  "vm_template_build_name": "vm-template-centos8",
-  "vm_guest_os_type": "centos8_64Guest"
-}

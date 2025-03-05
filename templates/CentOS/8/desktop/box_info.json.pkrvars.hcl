@@ -1,0 +1,6 @@
+auto_build="True"
+box_name="centos8-desktop"
+box_tag="dettonville/centos8-desktop"
+description="CentOS 8 Desktop"
+private="False"
+short_description="CentOS 8 Desktop"

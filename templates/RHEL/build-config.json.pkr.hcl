@@ -40,7 +40,6 @@ source "vsphere-iso" "RHEL" {
   boot_order             = var.vm_boot_order_install
   boot_wait              = var.vm_boot_wait
   cd_content             = var.common_data_source == "disk" ? local.data_source_content : null
-  cd_label               = var.common_data_source == "disk" ? "cidata" : null
   cdrom_type             = var.vm_cdrom_type
   cluster                = var.vcenter_cluster
   communicator           = var.vm_communicator

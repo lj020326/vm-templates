@@ -1,8 +1,0 @@
-{
-  "auto_build": "False",
-  "box_name": "centos5",
-  "box_tag": "dettonville/centos5",
-  "description": "CentOS 5",
-  "private": "False",
-  "short_description": "CentOS 5"
-}

@@ -1,5 +1,7 @@
 {
-    "vm_boot_command_prefix": "<esc><wait>",
-    "boot_command": "install auto=true priority=critical url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/debian/preseed.cfg",
-    "vm_guest_os_type": "debian10_64Guest"
+    "answerfile_file_path": "./_templates/ks.cfg.pkrtpl.hcl",
+    "vm_guest_os_type": "debian10_64Guest",
+    "vm_guest_os_language": "en_US.UTF-8",
+    "vm_disk_controller_type": "pvscsi",
+    "vm_firmware": "efi-secure"
 }

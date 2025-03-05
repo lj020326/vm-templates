@@ -9,7 +9,6 @@
       "boot_keygroup_interval": "%%var.vm_boot_keygroup_interval",
       "http_content": "%%var.common_data_source == \"http\" ? local.data_source_content : null",
       "cd_content": "%%var.common_data_source == \"disk\" ? local.data_source_content : null",
-      "cd_label": "%%var.common_data_source == \"disk\" ? \"cidata\" : null",
       "iso_paths": "%%local.iso_paths",
       "iso_checksum": "%%local.iso_checksum",
       "ip_wait_timeout": "%%var.ip_wait_timeout",

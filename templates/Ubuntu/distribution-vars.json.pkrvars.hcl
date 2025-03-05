@@ -1,4 +1,4 @@
-answerfile_file_path="./templates/user-data.pkrtpl.hcl"
+answerfile_file_path="./_templates/user-data.pkrtpl.hcl"
 vm_guest_os_type="ubuntu64Guest"
 vm_guest_os_language="en_US.UTF-8"
 vm_disk_controller_type="pvscsi"

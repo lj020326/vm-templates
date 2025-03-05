@@ -1,6 +1,0 @@
-iso_checksum_type="sha256"
-iso_url="https://mirrors.edge.kernel.org/centos/8-stream/isos/x86_64/CentOS-Stream-8-x86_64-latest-dvd1.iso"
-iso_checksum="8f55ffa743193c79aea89f0c52b0a0087092f9516f1962c54cd29e0a0e472b4d"
-kickstart_cfg="ks.8-stream.cfg"
-vm_template_build_name="vm-template-centos8-stream"
-vm_guest_os_type="centos8_64Guest"

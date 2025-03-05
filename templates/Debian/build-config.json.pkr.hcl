@@ -11,6 +11,28 @@
 # and HCL2 calls (for example '${ var.string_value_example }' ). They won't be
 # executed together and the outcome will be unknown.
 
+# See https://www.packer.io/docs/templates/hcl_templates/blocks/packer for more info
+packer {
+  required_plugins {
+    ansible = {
+      source  = "github.com/hashicorp/ansible"
+      version = "~> 1"
+    }
+    qemu = {
+      source  = "github.com/hashicorp/qemu"
+      version = "~> 1"
+    }
+    vmware = {
+      source  = "github.com/hashicorp/vmware"
+      version = "~> 1"
+    }
+    vsphere = {
+      source  = "github.com/hashicorp/vsphere"
+      version = "~> 1"
+    }
+  }
+}
+
 # "timestamp" template function replacement
 locals { timestamp = regex_replace(timestamp(), "[- TZ:]", "") }
 
@@ -20,7 +42,7 @@ locals { timestamp = regex_replace(timestamp(), "[- TZ:]", "") }
 # https://www.packer.io/docs/templates/hcl_templates/blocks/source
 source "qemu" "Debian" {
   accelerator            = "${var.qemu_accelerator}"
-  boot_command           = ["${var.boot_command_prefix}", "${var.boot_command}", "<enter>"]
+  boot_command           = ["${var.vm_boot_command_prefix}", "${var.boot_command}", "<enter>"]
   boot_wait              = "${var.vm_boot_wait}"
   cpus                   = "${var.vm_cpu_num}"
   disk_interface         = "virtio"
@@ -41,7 +63,7 @@ source "qemu" "Debian" {
 }
 
 source "virtualbox-iso" "Debian" {
-  boot_command           = ["${var.boot_command_prefix}", "${var.boot_command}", "<enter>"]
+  boot_command           = ["${var.vm_boot_command_prefix}", "${var.boot_command}", "<enter>"]
   boot_wait              = "${var.vm_boot_wait}"
   cpus                   = "${var.vm_cpu_num}"
   disk_size              = "${var.vm_disk_size}"
@@ -62,7 +84,7 @@ source "virtualbox-iso" "Debian" {
 }
 
 source "vmware-iso" "Debian" {
-  boot_command           = ["${var.boot_command_prefix}", "${var.boot_command}", "<enter>"]
+  boot_command           = ["${var.vm_boot_command_prefix}", "${var.boot_command}", "<enter>"]
   boot_wait              = "${var.vm_boot_wait}"
   cpus                   = "${var.vm_cpu_num}"
   disk_adapter_type      = "${var.disk_adapter_type}"
@@ -89,53 +111,61 @@ source "vmware-iso" "Debian" {
 }
 
 source "vsphere-iso" "Debian" {
-  CPUs                   = "${var.vm_cpu_num}"
-  RAM                    = "${var.vm_mem_size}"
-  RAM_reserve_all        = false
-  boot_command           = ["${var.boot_command_prefix}", "${var.boot_command}", "<enter>"]
-  boot_keygroup_interval = "${var.vm_boot_keygroup_interval}"
-  boot_order             = "${var.vm_boot_order_install}"
-  boot_wait              = "${var.vm_boot_wait}"
-  cluster                = "${var.vcenter_cluster}"
-  communicator           = "ssh"
+  CPU_hot_plug           = var.vm_cpu_hot_plug
+  CPUs                   = var.vm_cpu_num
+  RAM                    = var.vm_mem_size
+  RAM_hot_plug           = var.vm_mem_hot_plug
+  RAM_reserve_all        = var.vm_mem_reserve_all
+  boot_command           = local.vm_boot_command
+  boot_keygroup_interval = var.vm_boot_keygroup_interval
+  boot_order             = var.vm_boot_order_install
+  boot_wait              = var.vm_boot_wait
+  cd_content             = var.common_data_source == "disk" ? local.data_source_content : null
+  cd_label               = var.common_data_source == "disk" ? "cidata" : null
+  cdrom_type             = var.vm_cdrom_type
+  cluster                = var.vcenter_cluster
+  communicator           = var.vm_communicator
   configuration_parameters = {
     "bios.bootDelay" = "5000"
-    bootOrder        = "${var.vm_boot_order}"
+    bootOrder        = var.vm_boot_order
   }
-  convert_to_template  = true
-  datacenter           = "${var.vcenter_datacenter}"
-  datastore            = "${var.vm_datastore}"
-  disk_controller_type = ["${var.vm_disk_type}"]
-  firmware             = "${var.vm_firmware}"
-  folder               = "${var.vm_build_folder}"
-  guest_os_type        = "${var.vm_guest_os_type}"
-  host                 = "${var.vm_host}"
-  http_directory       = "${var.vm_boot_http_directory}"
+  convert_to_template  = "true"
+  cpu_cores            = var.vm_cpu_cores_num
+  datacenter           = var.vcenter_datacenter
+  datastore            = var.vm_datastore
+  disk_controller_type = [var.vm_disk_controller_type]
+  firmware             = var.vm_firmware
+  folder               = var.vm_build_folder
+  guest_os_type        = var.vm_guest_os_type
+  host                 = var.vm_host
+  http_content         = var.common_data_source == "http" ? local.data_source_content : null
   insecure_connection  = "true"
-  ip_settle_timeout    = "${var.ip_settle_timeout}"
-  ip_wait_timeout      = "${var.ip_wait_timeout}"
-  iso_checksum         = "${var.iso_checksum_type}:${var.iso_checksum}"
-  iso_paths            = ["[${var.vm_iso_datastore}] ${var.iso_base_dir}/${var.iso_dir}/${var.iso_file}"]
+  ip_settle_timeout    = var.ip_settle_timeout
+  ip_wait_timeout      = var.ip_wait_timeout
+  iso_checksum         = local.iso_checksum
+  iso_paths            = local.iso_paths
   network_adapters {
-    network      = "${var.vm_network_mgt}"
-    network_card = "${var.vm_network_card}"
+    network      = var.vm_network_mgt
+    network_card = var.vm_network_card
   }
-  notes                  = "Build via Packer - date: ${timestamp()} build tag: ${var.vm_build_tag}"
-  password               = "${var.vcenter_password}"
-  shutdown_command       = "echo '${var.ssh_password}'| sudo -S /sbin/halt -h -p"
-  shutdown_timeout       = "15m"
-  ssh_handshake_attempts = "${var.ssh_handshake_attempts}"
-  ssh_password           = "${var.ssh_password}"
-  ssh_pty                = "${var.ssh_pty}"
-  ssh_timeout            = "${var.ssh_timeout}"
-  ssh_username           = "${var.ssh_username}"
+  notes                  = local.build_notes
+  password               = var.vcenter_password
+  remove_cdrom           = var.vm_cdrom_remove
+  shutdown_command       = local.vm_shutdown_command
+  shutdown_timeout       = var.vm_shutdown_timeout
+  ssh_handshake_attempts = var.ssh_handshake_attempts
+  ssh_password           = local.ssh_password
+  ssh_pty                = var.ssh_pty
+  ssh_timeout            = var.ssh_timeout
+  ssh_username           = local.ssh_username
   storage {
-    disk_size             = "${var.vm_disk_size}"
-    disk_thin_provisioned = "${var.vm_disk_thin_provisioned}"
+    disk_size             = var.vm_disk_size
+    disk_thin_provisioned = var.vm_disk_thin_provisioned
   }
-  username       = "${var.vcenter_username}"
-  vcenter_server = "${var.vcenter_host}"
-  vm_name        = "${var.vm_template_build_name}"
+  username       = var.vcenter_username
+  vcenter_server = var.vcenter_host
+  vm_name        = var.vm_template_build_name
+  vm_version     = var.common_vm_version
 }
 
 # a build block invokes sources and runs provisioning steps on them. The
@@ -145,19 +175,47 @@ build {
   sources = ["source.qemu.Debian", "source.virtualbox-iso.Debian", "source.vmware-iso.Debian", "source.vsphere-iso.Debian"]
 
   provisioner "shell" {
-    execute_command = "echo '${var.ssh_username}' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'"
-    scripts         = ["_common/scripts/install_site_cacerts.sh"]
+    execute_command = "echo '${var.build_username}' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'"
+    scripts         = ["_common/scripts/${var.vm_guest_os_family}/install_site_cacerts.sh"]
   }
 
   provisioner "shell" {
-    execute_command = "echo '${var.ssh_username}' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'"
-    scripts         = ["_common/scripts/base.sh", "_common/scripts/vmware.sh", "_common/scripts/sshd.sh"]
+    environment_vars = ["BUILD_USERNAME=${var.build_username}"]
+    execute_command  = "echo '${var.build_username}' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'"
+    scripts          = ["_common/scripts/${var.vm_guest_os_family}/base.sh", "_common/scripts/${var.vm_guest_os_family}/vmware.sh"]
   }
 
   provisioner "shell" {
-    environment_vars = ["PIP_VERSION=${var.pip_version}", "VENV_DIR=${var.python_venv_dir}", "ANSIBLE_VAULT_PASS=${var.ansible_vault_password}"]
-    execute_command  = "echo '${var.ssh_username}' | {{ .Vars }} bash '{{ .Path }}'"
-    scripts          = ["_common/scripts/ansible.sh"]
+    environment_vars = ["BUILD_USERNAME=${var.build_username}", "BUILD_USER_SSH_PUBLIC_KEY=${var.build_ssh_public_key}"]
+    execute_command  = "echo '${var.build_username}' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'"
+    scripts          = ["_common/scripts/${var.vm_guest_os_family}/sshd.sh"]
+  }
+
+  provisioner "shell" {
+    environment_vars = ["BUILD_USERNAME=${var.build_username}", "BUILD_JOB_URL=${var.build_job_url}", "BUILD_JOB_ID=${var.build_job_id}", "BUILD_GIT_COMMIT_HASH=${var.build_git_commit_hash}"]
+    execute_command  = "echo '${var.build_username}' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'"
+    script           = "_common/scripts/${var.vm_guest_os_family}/add-build-info.sh"
+  }
+
+  provisioner "shell" {
+    environment_vars = ["PIP_INSTALL_VERSION=${var.pip_version}", "ANSIBLE_VAULT_PASS=${var.ansible_vault_password}"]
+    execute_command  = "echo '${var.build_username}' | {{ .Vars }} bash '{{ .Path }}'"
+    scripts          = ["_common/scripts/${var.vm_guest_os_family}/${var.ansible_env_setup_script}"]
+  }
+
+  provisioner "shell" {
+    inline = ["mkdir -p ${var.ansible_staging_directory}"]
+  }
+
+  provisioner "file" {
+    destination = "${var.ansible_staging_directory}/requirements.yml"
+    source      = "${var.ansible_galaxy_req_file}"
+  }
+
+  provisioner "shell" {
+    environment_vars = ["ANSIBLE_STAGING_DIRECTORY=${var.ansible_staging_directory}"]
+    execute_command  = "echo '${var.build_username}' | {{ .Vars }} bash '{{ .Path }}'"
+    scripts          = ["_common/scripts/${var.vm_guest_os_family}/ansible-collections.sh"]
   }
 
   provisioner "ansible-local" {
@@ -174,26 +232,39 @@ build {
   }
 
   provisioner "shell" {
-    execute_command   = "echo '${var.ssh_username}' | {{ .Vars }} sudo -H -S -E bash '{{ .Path }}'"
+    execute_command   = "echo '${var.build_username}' | {{ .Vars }} sudo -H -S -E bash '{{ .Path }}'"
     expect_disconnect = "true"
-    script            = "_common/scripts/reboot.sh"
+    pause_after       = "120s"
+    script            = "_common/scripts/${var.vm_guest_os_family}/reboot.sh"
     skip_clean        = "true"
   }
 
-  provisioner "inspec" {
-    extra_arguments = ["--no-distinct-exit"]
-    inspec_env_vars = ["CHEF_LICENSE=accept"]
-    pause_before    = "1m0s"
-    profile         = "../inspec"
-    timeout         = "1h0m0s"
-  }
-
   provisioner "shell" {
-    execute_command = "echo '${var.ssh_username}' | {{ .Vars }} sudo -H -S -E bash '{{ .Path }}'"
-    scripts         = ["_common/scripts/cleanup.sh", "_common/scripts/minimize.sh"]
+    execute_command = "echo '${var.build_username}' | {{ .Vars }} sudo -H -S -E bash '{{ .Path }}'"
+    scripts         = ["_common/scripts/${var.vm_guest_os_family}/cleanup.sh", "_common/scripts/${var.vm_guest_os_family}/minimize.sh"]
   }
 
   post-processor "manifest" {
+    custom_data = {
+      build_date               = local.build_date
+      build_username           = var.build_username
+      build_version            = local.build_version
+      common_data_source       = var.common_data_source
+      common_vm_version        = var.common_vm_version
+      vm_cpu_cores             = var.vm_cpu_cores_num
+      vm_cpu_count             = var.vm_cpu_num
+      vm_disk_size             = var.vm_disk_size
+      vm_disk_thin_provisioned = var.vm_disk_thin_provisioned
+      vm_firmware              = var.vm_firmware
+      vm_guest_os_type         = var.vm_guest_os_type
+      vm_mem_size              = var.vm_mem_size
+      vm_network_card          = var.vm_network_card
+      vsphere_cluster          = var.vcenter_cluster
+      vsphere_datacenter       = var.vcenter_datacenter
+      vsphere_datastore        = var.vcenter_datacenter
+      vsphere_folder           = var.vm_build_folder
+      vsphere_host             = var.vcenter_host
+    }
     output     = "manifest.json"
     strip_path = true
   }

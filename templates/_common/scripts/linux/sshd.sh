@@ -39,7 +39,7 @@ if [[ "${__BUILD_USER_SSH_PUBLIC_KEY}" != "" ]]; then
 
   ### set permissions
   chown "${BUILD_USERNAME}:${BUILD_USERNAME}" -R "/home/${BUILD_USERNAME}/.ssh"
-  chmod 0600 "/home/${BUILD_USERNAME}/.ssh/authorized_keys"
+  chmod 0644 "/home/${BUILD_USERNAME}/.ssh/authorized_keys"
 
 #  ## ref: https://github.com/vinceskahan/docs/blob/master/files/kickstart/adding-ssh-keys-in-kickstart.md
 #  ### fix up selinux context

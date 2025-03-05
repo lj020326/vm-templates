@@ -1,0 +1,8 @@
+vm_mem_size="64000"
+vm_disk_size="140000"
+vm_cpu_num="4"
+vm_cpu_cores_num="2"
+vm_template_type="large"
+box_name="centos8-large"
+box_tag="dettonville/centos8-large"
+description="CentOS 8 - large template"
