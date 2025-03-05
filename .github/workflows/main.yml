@@ -107,6 +107,7 @@ jobs:
           TEMPLATE_BUILD_ID: ${{ github.job }}-${{ matrix.template.name }}-${{ github.run_id }}
           PACKER_USER_USERNAME: 'packer'
           PACKER_USER_PASSWORD: 'foobar'
+          VMWARE_VCENTER_USERNAME: 'administrator@vsphere.local'
           VMWARE_VCENTER_PASSWORD: 'foobar'
           VMWARE_ESXI_PASSWORD: 'foobar'
 
