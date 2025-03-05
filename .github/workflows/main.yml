@@ -6,9 +6,19 @@ on:
   pull_request:
     branches:
       - main
+
+## ref: https://docs.github.com/en/actions/examples/using-concurrency-expressions-and-a-test-matrix
+concurrency:
+#  group: ${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate:
     strategy:
+      fail-fast: false
+      ## ref: https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs
+#      max-parallel: 2
       matrix:
         template:
           - name: CentOS8
