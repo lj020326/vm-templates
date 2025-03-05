@@ -40,6 +40,8 @@ REPO_SYMBOLIC_LINKS+=("templates/Debian/7:wheezy64")
 REPO_SYMBOLIC_LINKS+=("templates/Debian/8:jessie64")
 REPO_SYMBOLIC_LINKS+=("templates/Debian/9:stretch64")
 REPO_SYMBOLIC_LINKS+=("templates/Debian/10:buster64")
+REPO_SYMBOLIC_LINKS+=("templates/Debian/11:bullseye64")
+REPO_SYMBOLIC_LINKS+=("templates/Debian/12:bookworm64")
 
 REPO_SYMBOLIC_LINKS+=("templates/Ubuntu/12.04:precise64")
 REPO_SYMBOLIC_LINKS+=("templates/Ubuntu/14.04:trusty64")
