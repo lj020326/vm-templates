@@ -1,5 +1,5 @@
-answerfile_file_path="./2022/templates/autounattend.xml.pkrtpl.hcl"
-answerfile_file_path_orig="./2022/templates/autounattend.xml.pkrtpl.hcl"
+answerfile_file_path="./2022/_templates/autounattend.xml.pkrtpl.hcl"
+answerfile_file_path_orig="./2022/_templates/autounattend.xml.pkrtpl.hcl"
 iso_checksum_type="sha1"
 iso_checksum="5caaad8e9d4f36caa7a61633ea572bddc88fa1bd"
 iso_url="https://archiva.admin.dettonville.int/repository/internal/org/dettonville/infra/windows/windows-SRV2022.LTSC.21H2.Build-20348.1006.iso"

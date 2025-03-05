@@ -58,16 +58,16 @@ jobs:
             build_release_config_dir: Ubuntu/24.04/server
             build_type: small
           - name: Windows2016
-            build_distribution_config_dir: Windows
-            build_release_config_dir: Windows/2016/server
+            build_distribution_config_dir: Windows/server
+            build_release_config_dir: Windows/server/2016
             build_type: standard
           - name: Windows2019
-            build_distribution_config_dir: Windows
-            build_release_config_dir: Windows/2019/server
+            build_distribution_config_dir: Windows/server
+            build_release_config_dir: Windows/server/2019
             build_type: standard
           - name: Windows2022
-            build_distribution_config_dir: Windows
-            build_release_config_dir: Windows/2022/server
+            build_distribution_config_dir: Windows/server
+            build_release_config_dir: Windows/server/2022
             build_type: standard
 
     name: Validate

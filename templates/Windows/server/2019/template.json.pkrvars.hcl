@@ -1,5 +1,5 @@
-answerfile_file_path="./2019/templates/autounattend.xml.pkrtpl.hcl"
-answerfile_file_path_orig="./2019/templates/autounattend.xml.pkrtpl.hcl"
+answerfile_file_path="./2019/_templates/autounattend.xml.pkrtpl.hcl"
+answerfile_file_path_orig="./2019/_templates/autounattend.xml.pkrtpl.hcl"
 iso_checksum_type="sha1"
 iso_checksum="5caaad8e9d4f36caa7a61633ea572bddc88fa1bd"
 iso_url_orig="https://software-download.microsoft.com/download/pr/17763.1.180914-1434.rs5_release_SERVER_EVAL_x64FRE_en-us.iso"

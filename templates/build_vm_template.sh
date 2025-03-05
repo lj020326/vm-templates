@@ -40,6 +40,11 @@ PACKER_USER_PASSWORD
 #Debian,9,debian-9.13.0-amd64-netinst.iso
 #CentOS,8,CentOS-8.5.2111-x86_64-dvd1.iso
 #CentOS,8-stream,CentOS-Stream-8-x86_64-latest-dvd1.iso
+#Windows/server,2016
+#Windows/server,2019
+#Windows/server,2022
+#Windows/desktop,10
+#Windows/desktop,11
 #"
 
 #VM_DIST_LIST_DEFAULT="
@@ -262,8 +267,13 @@ function get_build_vm_template_command() {
   fi
   PACKER_CMD_ARRAY+=("-var-file=${VM_DIST_DIR}/env-vars.${VM_BUILD_ENV}.${PACKER_VAR_FORMAT}")
   PACKER_CMD_ARRAY+=("-var-file=${VM_DIST_DIR}/distribution-vars.${PACKER_VAR_FORMAT}")
-  PACKER_CMD_ARRAY+=("-var-file=${VM_DIST_VERSION_DIR}/server/template.${PACKER_VAR_FORMAT}")
-  PACKER_CMD_ARRAY+=("-var-file=${VM_DIST_VERSION_DIR}/server/box_info.${VM_TEMPLATE_BUILD_TYPE}.${PACKER_VAR_FORMAT}")
+  if [[ "${VM_DIST}" =~ ^Windows ]]; then
+    PACKER_CMD_ARRAY+=("-var-file=${VM_DIST_VERSION_DIR}/template.${PACKER_VAR_FORMAT}")
+    PACKER_CMD_ARRAY+=("-var-file=${VM_DIST_VERSION_DIR}/box_info.${VM_TEMPLATE_BUILD_TYPE}.${PACKER_VAR_FORMAT}")
+  else
+    PACKER_CMD_ARRAY+=("-var-file=${VM_DIST_VERSION_DIR}/server/template.${PACKER_VAR_FORMAT}")
+    PACKER_CMD_ARRAY+=("-var-file=${VM_DIST_VERSION_DIR}/server/box_info.${VM_TEMPLATE_BUILD_TYPE}.${PACKER_VAR_FORMAT}")
+  fi
   PACKER_CMD_ARRAY+=("-var vm_template_build_name=${VM_NAME}")
   PACKER_CMD_ARRAY+=("-var vm_template_build_type=${VM_TEMPLATE_BUILD_TYPE}")
   PACKER_CMD_ARRAY+=("-var vm_template_name=${VM_NAME}")
@@ -414,9 +424,10 @@ function main() {
 #      VM_DIST_ISO="${DIST_INFO_ARRAY[3]}"
       VM_DIST_ISO="${DIST_INFO_ARRAY[3]-"${VM_DIST}.${VM_DIST_VERSION}.iso"}"
 
-      logInfo "VM_DIST=[$VM_DIST]"
-      logInfo "VM_DIST_VERSION=[$VM_DIST_VERSION]"
-      logInfo "VM_DIST_ISO=[$VM_DIST_ISO]"
+      logInfo "VM_DIST=$VM_DIST"
+      logInfo "VM_DIST_VERSION=$VM_DIST_VERSION"
+      logInfo "VM_TEMPLATE_BUILD_TYPE=$VM_TEMPLATE_BUILD_TYPE"
+      logInfo "VM_DIST_ISO=$VM_DIST_ISO"
 
       logInfo "Validate packer build"
       validate_vm_template "${VM_DIST}" "${VM_DIST_VERSION}" "${VM_TEMPLATE_BUILD_TYPE}" "${VM_DIST_ISO}"
