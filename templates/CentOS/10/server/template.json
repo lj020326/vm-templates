@@ -4,5 +4,5 @@
   "iso_url": "http://mirror.stream.centos.org/10-stream/BaseOS/x86_64/iso/CentOS-Stream-10-latest-x86_64-dvd1.iso",
   "iso_checksum": "f871337c5d39d1549c66eac26bfc78d5c3ecc81973595b37a38b7a35a4a89ca0",
   "vm_firmware": "efi",
-  "vm_guest_os_type": "centos9_64Guest"
+  "vm_guest_os_type": "centos8_64Guest"
 }

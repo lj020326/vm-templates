@@ -210,9 +210,8 @@ If defining the ansible playbooks as a submodule the same way done in this repo,
 - [vagrant-template-templates](https://github.com/mrlesmithjr/vagrant-template-templates)
 - https://github.com/mwrock/packer-templates
 - https://github.com/jacqinthetemplate/packer-templates
-- https://github.com/geerlingguy/packer-templatees
+- https://github.com/geerlingguy/packer-templates
 
 ## Contact
 
 [![Linkedin](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/leejjohnson/)
-
