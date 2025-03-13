@@ -43,6 +43,7 @@ CACERT_TRUST_IMPORT_DIR=/etc/pki/ca-trust/source/anchors
 CACERT_BUNDLE=${CACERT_TRUST_DIR}/openssl/ca-bundle.trust.crt
 CACERT_TRUST_FORMAT="pem"
 
+#### LOGGING RELATED
 LOG_ERROR=0
 LOG_WARN=1
 LOG_INFO=2
@@ -52,33 +53,33 @@ LOG_DEBUG=4
 #LOG_LEVEL=${LOG_DEBUG}
 LOG_LEVEL=${LOG_INFO}
 
+function abort() {
+  logError "%s\n" "$@"
+  exit 1
+}
+
 function logError() {
   if [ $LOG_LEVEL -ge $LOG_ERROR ]; then
-#  	echo -e "[ERROR]: ==> ${1}"
   	logMessage "${LOG_ERROR}" "${1}"
   fi
 }
 function logWarn() {
   if [ $LOG_LEVEL -ge $LOG_WARN ]; then
-#  	echo -e "[WARN ]: ==> ${1}"
   	logMessage "${LOG_WARN}" "${1}"
   fi
 }
 function logInfo() {
   if [ $LOG_LEVEL -ge $LOG_INFO ]; then
-#  	echo -e "[INFO ]: ==> ${1}"
   	logMessage "${LOG_INFO}" "${1}"
   fi
 }
 function logTrace() {
   if [ $LOG_LEVEL -ge $LOG_TRACE ]; then
-#  	echo -e "[TRACE]: ==> ${1}"
   	logMessage "${LOG_TRACE}" "${1}"
   fi
 }
 function logDebug() {
   if [ $LOG_LEVEL -ge $LOG_DEBUG ]; then
-#  	echo -e "[DEBUG]: ==> ${1}"
   	logMessage "${LOG_DEBUG}" "${1}"
   fi
 }
