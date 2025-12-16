@@ -12,7 +12,7 @@ PROJECT_DIR=$( git rev-parse --show-toplevel )
 ##
 
 SUBMODULE_CONFIGS="
-ansible|ansible|git@bitbucket.org:lj020326/ansible-datacenter.git
+ansible|ansible|ssh://gitea.admin.dettonville.int:2222/infra/vm-templates.git
 "
 
 refresh_submodules() {

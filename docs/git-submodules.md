@@ -75,7 +75,7 @@ blastit
 ```shell
 $ git switch main
 $ git submodule deinit -f .
-$ git submodule add --force --name ansible git@bitbucket.org:lj020326/ansible-datacenter.git ansible/
+$ git submodule add --force --name ansible ssh://git@gitea.admin.dettonville.int:2222/infra/ansible-datacenter.git ansible/
 $ git submodule update --init --recursive --remote
 $ git add . && git commit -m 'update submodule' && git push
 ```
@@ -86,13 +86,13 @@ Assuming the submodule directory `submodule-dir` is already linked in `.gitmodul
 
 ```shell
 $ rm -fr submodule-dir/
-$ GIT_SSH_COMMAND="ssh -i ~/.ssh/repo_sub.key" git submodule add --force --name submodule-name git@bitbucket.org:lj020326/ansible-datacenter.git new-submodule-dir-name/
+$ GIT_SSH_COMMAND="ssh -i ~/.ssh/repo_sub.key" git submodule add --force --name submodule-name ssh://git@gitea.admin.dettonville.int:2222/infra/ansible-datacenter.git new-submodule-dir-name/
 ```
 
 ## To add using specified ssh key for auth
 
 ```shell
-GIT_SSH_COMMAND="ssh -i ~/.ssh/repo_sub.key" git submodule add --name ansible git@bitbucket.org:lj020326/ansible-datacenter.git ansible/
+GIT_SSH_COMMAND="ssh -i ~/.ssh/repo_sub.key" git submodule add --name ansible ssh://git@gitea.admin.dettonville.int:2222/infra/ansible-datacenter.git ansible/
 ```
 
 ## How to push updates including submodule branch updates:
@@ -136,7 +136,7 @@ ref: https://stackoverflow.com/questions/1777854/how-can-i-specify-a-branch-tag-
 ```ini
 [submodule "ansible"]
     path = ansible
-    url = git@bitbucket.org:lj020326/ansible-datacenter.git
+    url = ssh://git@gitea.admin.dettonville.int:2222/infra/ansible-datacenter.git
     branch = main
     update = merge
 ```

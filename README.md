@@ -142,11 +142,11 @@ $ git submodule update --init --recursive --remote
 $ git add . && git commit -m 'update submodule' && git push
 ```
 
-## for master branch
+## for main branch
 ```shell
-$ git switch master
+$ git switch main
 $ git submodule deinit -f .
-$ git submodule add --force --name ansible git@bitbucket.org:lj020326/ansible-datacenter.git ansible/
+$ git submodule add --force --name ansible ssh://git@gitea.admin.dettonville.int:2222/infra/ansible-datacenter.git ansible/
 $ git submodule update --init --recursive --remote
 $ git add . && git commit -m 'update submodule' && git push
 ```
