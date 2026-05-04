@@ -46,6 +46,7 @@ locals {
         dns     = var.vm_dns_list
       })
       storage = templatefile("${abspath(path.root)}/_templates/storage.pkrtpl.hcl", {
+        firmware   = var.vm_firmware
         device     = local.vm_disk_device
         swap       = local.vm_disk_use_swap
         partitions = local.vm_disk_configs[var.vm_template_type].vm_disk_partitions
@@ -90,29 +91,33 @@ locals {
     medium = {
       vm_disk_partitions = [
         {
+          // NEW: Correct BIOS Boot Partition for GPT/BIOS compatibility
           pv_name = "",
+          volume_group = "",
           drive = "sda",
-          size = 1024,
+          // Small 2MB partition
+          size = 2,
           format = {
-            label  = "EFIFS",
-            fstype = "efi",
+              label = "",
+              fstype = ""
           },
           mount = {
-            path    = "/boot/efi",
-            options = "",
+              path = "",
+              options = ""
           }
         },
         {
           pv_name = "",
+          volume_group = "",
           drive = "sda",
           size = 1024,
           format = {
-            label  = "BOOTFS",
-            fstype = "xfs",
+              label  = "BOOTFS",
+              fstype = "xfs"
           },
           mount = {
-            path    = "/boot",
-            options = "",
+              path    = "/boot",
+              options = ""
           }
         },
         {
@@ -122,11 +127,11 @@ locals {
           size = -1,
           format = {
             label  = "",
-            fstype = "",
+            fstype = ""
           },
           mount = {
             path    = "",
-            options = "",
+            options = ""
           }
         },
       ],
@@ -239,6 +244,7 @@ locals {
       vm_disk_partitions = [
         {
           pv_name = "",
+          volume_group = "",
           drive = "sda",
           size = 1024,
           format = {
@@ -252,6 +258,7 @@ locals {
         },
         {
           pv_name = "boot",
+          volume_group = "",
           drive = "sda",
           size = 1024,
           format = {

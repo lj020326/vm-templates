@@ -426,10 +426,10 @@ Answer files for each platform OS have been setup as templates that can make use
 
 The Platform OS answer file details:
 
-| OS Platform Distribution | release | answer file                                                                                                                             |
-|--------------------------|---------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| RHEL                     | 8       | [`templates/RHEL/templates/ks8.cfg.pkrtpl.hcl`](../templates/RHEL/templates/ks8.cfg.pkrtpl.hcl)                                           | 
-| RHEL                     | 9       | [`templates/RHEL/templates/ks9.cfg.pkrtpl.hcl`](../templates/RHEL/templates/ks9.cfg.pkrtpl.hcl)                                           | 
+| OS Platform Distribution | release | answer file                                                                                                                                     |
+|--------------------------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------|
+| RHEL                     | 8       | [`templates/RHEL/templates/ks8.cfg.pkrtpl.hcl`](../templates/RHEL/templates/ks8.cfg.pkrtpl.hcl)                                                 | 
+| RHEL                     | 9       | [`templates/RHEL/templates/ks9.cfg.pkrtpl.hcl`](../templates/RHEL/templates/ks9.cfg.pkrtpl.hcl)                                                 | 
 | Windows                  | 2019    | [`templates/Windows/server/2019/templates/autounattend.xml.pkrtpl.hcl`](../templates/Windows/server/2019/templates/autounattend.xml.pkrtpl.hcl) | 
 | Windows                  | 2022    | [`templates/Windows/server/2022/templates/autounattend.xml.pkrtpl.hcl`](../templates/Windows/server/2019/templates/autounattend.xml.pkrtpl.hcl) | 
 

@@ -1,19 +1,19 @@
+network:
   network:
-    network:
-      version: 2
-      ethernets:
+    version: 2
+    ethernets:
 %{ if ip != null && ip != "" ~}
-        ${device}:
-          dhcp4: false
+      ${device}:
+        dhcp4: false
+        addresses:
+          - ${ip}/${netmask}
+        gateway4: ${gateway}
+        nameservers:
           addresses:
-            - ${ip}/${netmask}
-          gateway4: ${gateway}
-          nameservers:
-            addresses:
 %{ for item in dns ~}
-              - ${item}
+            - ${item}
 %{ endfor ~}
 %{ else ~}
-        ${device}:
-          dhcp4: true
+      ${device}:
+        dhcp4: true
 %{ endif ~}

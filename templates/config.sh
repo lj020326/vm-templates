@@ -11,9 +11,9 @@ VM_DIST_LIST_DEFAULT+=("Debian,11")
 VM_DIST_LIST_DEFAULT+=("Debian,12")
 VM_DIST_LIST_DEFAULT+=("RHEL,8")
 VM_DIST_LIST_DEFAULT+=("RHEL,9")
-VM_DIST_LIST_DEFAULT+=("Ubuntu,20.04")
 VM_DIST_LIST_DEFAULT+=("Ubuntu,22.04")
 VM_DIST_LIST_DEFAULT+=("Ubuntu,24.04")
+VM_DIST_LIST_DEFAULT+=("Ubuntu,26.04")
 VM_DIST_LIST_DEFAULT+=("Windows/server,2016")
 VM_DIST_LIST_DEFAULT+=("Windows/server,2019")
 VM_DIST_LIST_DEFAULT+=("Windows/server,2022")
@@ -313,14 +313,14 @@ function convert_dist2hcl() {
   do
     logDebug "Link hcl2 var file [${COMMON_VAR_HCL_FILE}] to VM_DIST_DIR [$VM_DIST_DIR]"
     logDebug "pwd=`pwd`"
-    cd "${VM_DIST_DIR}"
+    cd "${VM_DIST_DIR}" || exit
     RELPATH=$(pnrelpath "$PWD" "$TEMPLATE_BASE_DIRECTORY")
     logDebug "RELPATH=${RELPATH}"
 
     ln -sf "${RELPATH}/$(basename ${COMMON_VAR_HCL_FILE})" .
 #    ln -sf "../$(basename ${COMMON_VAR_HCL_FILE})" .
 #    cd ../
-    cd "${TEMPLATE_BASE_DIRECTORY}"
+    cd "${TEMPLATE_BASE_DIRECTORY}" || exit
   done
 
   DIST_VAR_FILE_LIST=$(\
@@ -421,7 +421,7 @@ function main() {
     fi
   fi
 
-  cd "${TEMPLATE_DIR}"
+  cd "${TEMPLATE_DIR}" || exit
 
   COMMON_VARS_FILE="common-vars"
   COMMON_VARS_FILE_JSON="${COMMON_VARS_FILE}.json"

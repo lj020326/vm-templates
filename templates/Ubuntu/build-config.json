@@ -232,18 +232,20 @@
     {
       "type": "shell",
       "execute_command": "echo '${var.build_username}' | {{.Vars}} sudo -H -S -E bash '{{.Path}}'",
-      "skip_clean": "true",
-      "expect_disconnect": "true",
+      "expect_disconnect": true,
+      "pause_after": "180s",
       "script": "_common/scripts/${var.vm_guest_os_family}/reboot.sh",
-      "pause_after": "120s"
+      "skip_clean": "true"
     },
     {
       "type": "shell",
       "execute_command": "echo '${var.build_username}' | {{.Vars}} sudo -H -S -E bash '{{.Path}}'",
-      "scripts": [
-        "_common/scripts/${var.vm_guest_os_family}/cleanup.sh",
-        "_common/scripts/${var.vm_guest_os_family}/minimize.sh"
-      ]
+      "script": "_common/scripts/${var.vm_guest_os_family}/cleanup.sh"
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo '${var.build_username}' | {{.Vars}} sudo -H -S -E bash '{{.Path}}'",
+      "script": "_common/scripts/${var.vm_guest_os_family}/minimize.sh"
     }
   ],
   "post-processors": [

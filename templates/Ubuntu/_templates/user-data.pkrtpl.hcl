@@ -17,9 +17,9 @@ autoinstall:
   keyboard:
     layout: ${vm_guest_os_keyboard}
 
-${storage}
+  ${storage}
 
-${network}
+  ${network}
 
   identity:
     hostname: ubuntu-server

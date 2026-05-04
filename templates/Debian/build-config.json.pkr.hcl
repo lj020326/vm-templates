@@ -22,6 +22,10 @@ packer {
       source  = "github.com/hashicorp/qemu"
       version = "~> 1"
     }
+    virtualbox = {
+      source  = "github.com/hashicorp/virtualbox"
+      version = "~> 1"
+    }
     vmware = {
       source  = "github.com/hashicorp/vmware"
       version = "~> 1"

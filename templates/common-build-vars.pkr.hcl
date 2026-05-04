@@ -9,14 +9,6 @@ packer {
       source  = "github.com/ethanmdavidson/git"
       version = ">= 0.4.3"
     }
-    inspec = {
-      version = ">= 1.0.0"
-      source  = "github.com/hashicorp/inspec"
-    }
-    virtualbox = {
-      version = ">= 1.1.1"
-      source  = "github.com/hashicorp/virtualbox"
-    }
     windows-update = {
       source  = "github.com/rgl/windows-update"
       version = ">= 0.14.3"

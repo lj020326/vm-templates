@@ -1,0 +1,6 @@
+{
+  "vm_boot_command_prefix": "",
+  "iso_checksum": "487f87faaf547ea30e0aba4d5b53346292571256b25333a978db1692bcee9dd2",
+  "iso_url": "http://releases.ubuntu.com/26.04/ubuntu-26.04.1-desktop-amd64.iso",
+  "vm_template_build_name": "resolute64-desktop-packer-template"
+}

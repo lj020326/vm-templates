@@ -22,6 +22,10 @@ packer {
       source  = "github.com/hashicorp/qemu"
       version = "~> 1"
     }
+    virtualbox = {
+      source  = "github.com/hashicorp/virtualbox"
+      version = "~> 1"
+    }
     vmware = {
       source  = "github.com/hashicorp/vmware"
       version = "~> 1"
@@ -227,15 +231,20 @@ build {
 
   provisioner "shell" {
     execute_command   = "echo '${var.build_username}' | {{ .Vars }} sudo -H -S -E bash '{{ .Path }}'"
-    expect_disconnect = "true"
-    pause_after       = "120s"
+    expect_disconnect = true
+    pause_after       = "180s"
     script            = "_common/scripts/${var.vm_guest_os_family}/reboot.sh"
     skip_clean        = "true"
   }
 
   provisioner "shell" {
     execute_command = "echo '${var.build_username}' | {{ .Vars }} sudo -H -S -E bash '{{ .Path }}'"
-    scripts         = ["_common/scripts/${var.vm_guest_os_family}/cleanup.sh", "_common/scripts/${var.vm_guest_os_family}/minimize.sh"]
+    script          = "_common/scripts/${var.vm_guest_os_family}/cleanup.sh"
+  }
+
+  provisioner "shell" {
+    execute_command = "echo '${var.build_username}' | {{ .Vars }} sudo -H -S -E bash '{{ .Path }}'"
+    script          = "_common/scripts/${var.vm_guest_os_family}/minimize.sh"
   }
 
   post-processor "manifest" {

@@ -9,6 +9,7 @@
   - [Requirements](#requirements)
     - [Software](#software)
   - [Usage](#usage)
+    - [Refresh hcl template configurations](#refresh-hcl-template-configurations)
     - [Building a box](#building-a-box)
       - [Select distro](#select-distro)
       - [Build distro](#build-distro)
@@ -73,6 +74,19 @@ If you do not want this functionality, you will need to edit the respective temp
 - [Virtualbox](https://www.virtualbox.org)
 
 ## Usage
+
+### Refresh HCL template configurations
+
+To refresh template configurations using json sourced files<a name="to-refresh-template-configurations-using-json-sourced-files"></a> 
+
+To refresh template json configuration using the source json files:
+```shell
+$ alias gitpullsub="git submodule update --recursive --remote"
+$ alias gitmergesub="git submodule update --remote --merge && gitaddcommitpush"
+$ templates/config.sh 
+$ gitaddcommitpush
+```
+
 
 ### Building a box
 
@@ -218,4 +232,3 @@ ssh packer@10.10.100.73
 * https://github.com/mwrock/packer-templates
 * https://github.com/jacqinthebox/packer-templates
 * https://github.com/geerlingguy/packer-boxes
-* 
