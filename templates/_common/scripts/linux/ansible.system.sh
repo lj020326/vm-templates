@@ -6,8 +6,8 @@ echo "==> Add ${BUILD_USERNAME} user to sudoers."
 echo "${SSH_USER} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers.d/${SSH_USER} && chmod 440 /etc/sudoers.d/${SSH_USER}
 
 echo "==> Setup Ansible pipelining+sudo support for USER=${SSH_USER}"
-echo "Defaults !requiretty" >> /etc/sudoers.d/${SSH_USER} && chmod 440 /etc/sudoers.d/${SSH_USER}
-sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers
+chmod 440 "/etc/sudoers.d/${SSH_USER}"
+sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers || true
 
 ## ref: https://github.com/hashicorp/packer/issues/4623#issuecomment-315489018
 

@@ -49,13 +49,13 @@ jobs:
             build_distribution_config_dir: RHEL
             build_release_config_dir: RHEL/9/server
             build_type: small
-          - name: Ubuntu2204
-            build_distribution_config_dir: Ubuntu
-            build_release_config_dir: Ubuntu/22.04/server
-            build_type: small
           - name: Ubuntu2404
             build_distribution_config_dir: Ubuntu
             build_release_config_dir: Ubuntu/24.04/server
+            build_type: small
+          - name: Ubuntu2604
+            build_distribution_config_dir: Ubuntu
+            build_release_config_dir: Ubuntu/26.04/server
             build_type: small
           - name: Windows2016
             build_distribution_config_dir: Windows/server

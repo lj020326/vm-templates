@@ -177,11 +177,11 @@ elif [[ $id == "ubuntu" ]]; then
     echo "debconf debconf/frontend select Noninteractive" | debconf-set-selections
     echo "libc6:amd64     libraries/restart-without-asking        boolean true" | debconf-set-selections
     echo "libssl1.1:amd64 libssl1.1/restart-services      string" | debconf-set-selections
-    if [[ $os_version_id_short -lt 20.04 ]]; then
+    if (( $(echo "$os_version_id_short < 20.04" | bc -l) )); then
         apt-get install -y python-minimal
     fi
-    if [[ $os_version_id_short -lt 22.04 ]]; then
-      apt-get install -y libreadline-gplv2-dev
+    if (( $(echo "$os_version_id_short < 22.04" | bc -l) )); then
+        apt-get install -y libreadline-gplv2-dev
     fi
     apt-get install -y linux-headers-"$(uname -r)" \
         build-essential \
@@ -264,10 +264,8 @@ echo "${BUILD_USER} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers.d/${BUILD_USER} \
   && chmod 440 /etc/sudoers.d/${BUILD_USER}
 
 echo "==> Setup Ansible pipelining+sudo support for USER=${BUILD_USER}"
-echo "Defaults !requiretty" >> /etc/sudoers.d/${BUILD_USER} \
-  && chmod 440 /etc/sudoers.d/${BUILD_USER}
-
-sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers
+chmod 440 "/etc/sudoers.d/${BUILD_USER}"
+sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers || true
 
 ## ref: https://github.com/hashicorp/packer/issues/4623#issuecomment-315489018
 

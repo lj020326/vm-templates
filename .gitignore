@@ -34,3 +34,4 @@ Berksfile.lock
 archive/
 save/
 .idea/
+.gitmodules.int

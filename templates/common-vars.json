@@ -47,7 +47,7 @@
     "ssh_password": "",
     "ssh_timeout": "60m",
     "ssh_pty": "false",
-    "ssh_handshake_attempts": "20",
+    "ssh_handshake_attempts": "100",
     "temporary_key_pair_type": "ed25519",
     "winrm_username": "",
     "winrm_password": "",

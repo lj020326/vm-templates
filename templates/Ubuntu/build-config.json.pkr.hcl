@@ -22,6 +22,10 @@ packer {
       source  = "github.com/hashicorp/qemu"
       version = "~> 1"
     }
+    virtualbox = {
+      source  = "github.com/hashicorp/virtualbox"
+      version = "~> 1"
+    }
     vmware = {
       source  = "github.com/hashicorp/vmware"
       version = "~> 1"
@@ -126,8 +130,11 @@ source "vsphere-iso" "Ubuntu" {
   cluster                = var.vcenter_cluster
   communicator           = var.vm_communicator
   configuration_parameters = {
-    "bios.bootDelay" = "5000"
-    bootOrder        = var.vm_boot_order
+    "bios.bootDelay"                       = "5000"
+    bootOrder                              = var.vm_boot_order
+    "isolation.tools.copy.disable"         = "FALSE"
+    "isolation.tools.paste.disable"        = "FALSE"
+    "isolation.tools.setGUIOptions.enable" = "TRUE"
   }
   convert_to_template  = "true"
   cpu_cores            = var.vm_cpu_cores_num
@@ -174,31 +181,47 @@ source "vsphere-iso" "Ubuntu" {
 build {
   sources = ["source.qemu.Ubuntu", "source.virtualbox-iso.Ubuntu", "source.vmware-iso.Ubuntu", "source.vsphere-iso.Ubuntu"]
 
+  provisioner "file" {
+    destination = "/tmp/retry_command.sh"
+    source      = "_common/scripts/linux/retry_command.sh"
+  }
+
+  provisioner "file" {
+    destination = "/tmp/cacerts.cfg"
+    source      = "_common/cacerts.cfg"
+  }
+
   provisioner "shell" {
-    execute_command = "echo '${var.build_username}' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'"
-    scripts         = ["_common/scripts/${var.vm_guest_os_family}/install_site_cacerts.sh"]
+    execute_command = "echo '${var.build_username}' | {{ .Vars }} sudo -S bash '{{ .Path }}' -c /tmp/cacerts.cfg"
+    scripts         = ["_common/scripts/${var.vm_guest_os_family}/install_cacerts.sh"]
   }
 
   provisioner "shell" {
     environment_vars = ["BUILD_USERNAME=${var.build_username}", "BUILD_USER_SSH_PUBLIC_KEY=${var.build_ssh_public_key}"]
-    execute_command  = "echo '${var.build_username}' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'"
+    execute_command  = "echo '${var.build_username}' | sudo -S bash -c '{{ .Vars }} bash {{ .Path }}'"
     scripts          = ["_common/scripts/${var.vm_guest_os_family}/base.sh", "_common/scripts/${var.vm_guest_os_family}/vmware.sh", "_common/scripts/${var.vm_guest_os_family}/sshd.sh"]
   }
 
   provisioner "shell" {
     environment_vars = ["BUILD_USERNAME=${var.build_username}", "BUILD_JOB_URL=${var.build_job_url}", "BUILD_JOB_ID=${var.build_job_id}", "BUILD_GIT_COMMIT_HASH=${var.build_git_commit_hash}"]
-    execute_command  = "echo '${var.build_username}' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'"
+    execute_command  = "echo '${var.build_username}' | sudo -S bash -c '{{ .Vars }} bash {{ .Path }}'"
     script           = "_common/scripts/${var.vm_guest_os_family}/add-build-info.sh"
   }
 
   provisioner "shell" {
+    execute_command   = "echo '${var.build_username}' | {{ .Vars }} sudo -H -S bash '{{ .Path }}'"
+    expect_disconnect = true
+    script            = "_common/scripts/${var.vm_guest_os_family}/netplan-dhcp-persist.sh"
+  }
+
+  provisioner "shell" {
     environment_vars = ["PIP_INSTALL_VERSION=${var.pip_version}", "ANSIBLE_VAULT_PASS=${var.ansible_vault_password}"]
-    execute_command  = "echo '${var.build_username}' | {{ .Vars }} bash '{{ .Path }}'"
+    execute_command  = "echo '${var.build_username}' | sudo -S bash -c '{{ .Vars }} bash {{ .Path }}'"
     scripts          = ["_common/scripts/${var.vm_guest_os_family}/${var.ansible_env_setup_script}"]
   }
 
   provisioner "shell" {
-    inline = ["mkdir -p ${var.ansible_staging_directory}"]
+    inline = ["sudo mv /tmp/retry_command.sh /usr/local/bin/retry_command.sh", "sudo chown root:root /usr/local/bin/retry_command.sh", "sudo chmod +x /usr/local/bin/retry_command.sh", "mkdir -p ${var.ansible_staging_directory}"]
   }
 
   provisioner "file" {
@@ -208,7 +231,7 @@ build {
 
   provisioner "shell" {
     environment_vars = ["ANSIBLE_STAGING_DIRECTORY=${var.ansible_staging_directory}"]
-    execute_command  = "echo '${var.build_username}' | {{ .Vars }} bash '{{ .Path }}'"
+    execute_command  = "echo '${var.build_username}' | sudo -S bash -c '{{ .Vars }} bash {{ .Path }}'"
     scripts          = ["_common/scripts/${var.vm_guest_os_family}/ansible-collections.sh"]
   }
 
@@ -226,16 +249,21 @@ build {
   }
 
   provisioner "shell" {
-    execute_command   = "echo '${var.build_username}' | {{ .Vars }} sudo -H -S -E bash '{{ .Path }}'"
-    expect_disconnect = "true"
-    pause_after       = "120s"
+    execute_command   = "echo '${var.build_username}' | {{ .Vars }} sudo -H -S bash '{{ .Path }}'"
+    expect_disconnect = true
+    pause_after       = "180s"
     script            = "_common/scripts/${var.vm_guest_os_family}/reboot.sh"
     skip_clean        = "true"
   }
 
   provisioner "shell" {
-    execute_command = "echo '${var.build_username}' | {{ .Vars }} sudo -H -S -E bash '{{ .Path }}'"
-    scripts         = ["_common/scripts/${var.vm_guest_os_family}/cleanup.sh", "_common/scripts/${var.vm_guest_os_family}/minimize.sh"]
+    execute_command = "echo '${var.build_username}' | {{ .Vars }} sudo -H -S bash '{{ .Path }}'"
+    script          = "_common/scripts/${var.vm_guest_os_family}/cleanup.sh"
+  }
+
+  provisioner "shell" {
+    execute_command = "echo '${var.build_username}' | {{ .Vars }} sudo -H -S bash '{{ .Path }}'"
+    script          = "_common/scripts/${var.vm_guest_os_family}/minimize.sh"
   }
 
   post-processor "manifest" {

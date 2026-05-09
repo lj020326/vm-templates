@@ -22,6 +22,10 @@ packer {
       source  = "github.com/hashicorp/qemu"
       version = "~> 1"
     }
+    virtualbox = {
+      source  = "github.com/hashicorp/virtualbox"
+      version = "~> 1"
+    }
     vmware = {
       source  = "github.com/hashicorp/vmware"
       version = "~> 1"
@@ -176,7 +180,7 @@ build {
 
   provisioner "shell" {
     execute_command = "echo '${var.build_username}' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'"
-    scripts         = ["_common/scripts/${var.vm_guest_os_family}/install_site_cacerts.sh"]
+    scripts         = ["_common/scripts/${var.vm_guest_os_family}/install_cacerts.sh"]
   }
 
   provisioner "shell" {

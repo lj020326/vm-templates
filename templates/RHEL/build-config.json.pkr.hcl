@@ -94,7 +94,7 @@ build {
 
   provisioner "shell" {
     execute_command = "echo '${var.build_username}' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'"
-    scripts         = ["_common/scripts/${var.vm_guest_os_family}/install_site_cacerts.sh"]
+    scripts         = ["_common/scripts/${var.vm_guest_os_family}/install_cacerts.sh"]
   }
 
   provisioner "shell" {

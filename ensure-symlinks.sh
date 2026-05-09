@@ -57,6 +57,7 @@ REPO_SYMBOLIC_LINKS+=("templates/Ubuntu/18.10:cosmic64")
 REPO_SYMBOLIC_LINKS+=("templates/Ubuntu/20.04:focal64")
 REPO_SYMBOLIC_LINKS+=("templates/Ubuntu/22.04:jammy64")
 REPO_SYMBOLIC_LINKS+=("templates/Ubuntu/24.04:noble64")
+REPO_SYMBOLIC_LINKS+=("templates/Ubuntu/26.04:resolute64")
 
 #### LOGGING RELATED
 LOG_ERROR=0

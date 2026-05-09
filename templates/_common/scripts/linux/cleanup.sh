@@ -3,81 +3,115 @@
 set -e
 set -x
 
+# =============================================================================
+# Detect OS Family
+# =============================================================================
 if [ -f /etc/os-release ]; then
-  # shellcheck disable=SC1091
-  source /etc/os-release
-  id=$ID
-
-elif [ -f /etc/redhat-release ]; then
-  id="$(awk '{ print tolower($1) }' /etc/redhat-release | sed 's/"//g')"
+    source /etc/os-release
+    OS_ID=${ID,,}
+    OS_FAMILY=""
+    if [[ "$OS_ID" == "ubuntu" || "$OS_ID" == "debian" || "$ID_LIKE" == *"debian"* ]]; then
+        OS_FAMILY="debian"
+    elif [[ "$OS_ID" == "centos" || "$OS_ID" == "rhel" || "$OS_ID" == "fedora" || "$OS_ID" == "ol" || "$ID_LIKE" == *"rhel"* ]]; then
+        OS_FAMILY="redhat"
+    fi
+else
+    echo "WARNING: Could not detect OS via /etc/os-release"
 fi
 
-if [[ $id == "arch" ]]; then
-  /usr/bin/yes | sudo /usr/bin/pacman -Scc
+echo "==> Detected OS Family: ${OS_FAMILY:-unknown}"
 
-elif [[ $id == "centos" || $id == "ol" ]]; then
-  sudo yum clean all
-  sudo rm -rf /var/cache/yum
+# =============================================================================
+# NETWORK / CLOUD-INIT CLEANUP
+# =============================================================================
+echo "==> Cleaning up networking artifacts..."
 
-elif [[ $id == "debian" || $id == "elementary" || $id == "linuxmint" || $id == "ubuntu" ]]; then
-  sudo apt-get clean
+# Debian/Ubuntu - Netplan cleanup
+if [[ "$OS_FAMILY" == "debian" ]]; then
+    echo "==> Debian/Ubuntu: Cleaning netplan configs..."
 
-elif [[ $id == "fedora" ]]; then
-  sudo dnf clean all
+    # Remove cloud-init generated files
+    sudo rm -f /etc/netplan/50-cloud-init.yaml
+    sudo rm -f /etc/netplan/*cloud-init*.yaml
 
-elif [[ $id == "opensuse" || $id == "opensuse-leap" ]]; then
-  if [ -f /var/lib/misc/random-seed ]; then
-    rm /var/lib/misc/random-seed
-  fi
-  if [ -f /var/lib/systemd/random-seed ]; then
-    rm /var/lib/systemd/random-seed
-  fi
+    # Keep only our high-priority stable config, remove others
+    sudo find /etc/netplan -name "*.yaml" ! -name "01-*" -delete 2>/dev/null || true
+
+    # Re-apply netplan if any config exists
+    if sudo ls /etc/netplan/*.yaml >/dev/null 2>&1; then
+        sudo netplan generate 2>/dev/null || true
+        sudo netplan apply 2>/dev/null || true
+    fi
 fi
 
-# Stop rsyslog service
-if [[ $id != "arch" && $id != "debian" && $id != "ubuntu" ]]; then
-  sudo service rsyslog stop
+# RedHat family - Basic NetworkManager cleanup
+if [[ "$OS_FAMILY" == "redhat" ]]; then
+    echo "==> RedHat family: Cleaning NetworkManager/DHCP caches..."
+#    sudo rm -f /etc/sysconfig/network-scripts/ifcfg-* 2>/dev/null || true
+    sudo rm -f /var/lib/NetworkManager/*dhcp* /var/lib/dhclient/* 2>/dev/null || true
+    sudo systemctl restart NetworkManager 2>/dev/null || true
 fi
 
-#clear audit logs
-if [ -f /var/log/audit/audit.log ]; then
-  sudo bash -c "cat /dev/null > /var/log/audit/audit.log"
-fi
-if [ -f /var/log/wtmp ]; then
-  sudo bash -c "cat /dev/null > /var/log/wtmp"
-fi
-if [ -f /var/log/lastlog ]; then
-  sudo bash -c "cat /dev/null > /var/log/lastlog"
+# Common cleanup for all distros
+sudo rm -f /var/lib/dhcp/* 2>/dev/null || true
+
+# cloud-init cleanup (works on both families)
+if command -v cloud-init >/dev/null 2>&1; then
+    echo "==> Running cloud-init clean..."
+    sudo cloud-init clean --logs --machine-id 2>/dev/null || true
+    sudo rm -rf /var/lib/cloud/instances/* /var/lib/cloud/instance 2>/dev/null || true
 fi
 
-#cleanup persistent udev rules
-if [ -f /etc/udev/rules.d/70-persistent-net.rules ]; then
-  sudo rm /etc/udev/rules.d/70-persistent-net.rules
-fi
+echo "==> Network cleanup completed."
 
-#cleanup /tmp directories
-sudo rm -rf /tmp/*
-sudo rm -rf /var/tmp/*
-
-#cleanup current ssh keys
+# =============================================================================
+# SSH Host Keys
+# =============================================================================
+echo "==> Cleaning up SSH host keys..."
 sudo rm -f /etc/ssh/ssh_host_*
 
-#reset hostname
+# =============================================================================
+# OS-specific package cleanup
+# =============================================================================
+if [[ "$OS_FAMILY" == "debian" ]]; then
+    sudo apt-get clean
+elif [[ "$OS_FAMILY" == "redhat" ]]; then
+    if command -v dnf >/dev/null 2>&1; then
+        sudo dnf clean all
+    elif command -v yum >/dev/null 2>&1; then
+        sudo yum clean all
+        sudo rm -rf /var/cache/yum
+    fi
+fi
+
+# =============================================================================
+# General system cleanup
+# =============================================================================
+sudo rm -rf /tmp/* /var/tmp/*
+sudo rm -f /var/log/audit/audit.log /var/log/wtmp /var/log/lastlog 2>/dev/null || true
+
+# Remove old udev rules
+sudo rm -f /etc/udev/rules.d/70-persistent-net.rules
+
+# Reset hostname
 sudo bash -c "cat /dev/null > /etc/hostname"
 
-#cleanup shell history
+# =============================================================================
+# Machine-ID fix (critical for templates)
+# =============================================================================
+if [ -f /etc/machine-id ]; then
+    echo "==> Resetting machine-id..."
+    sudo truncate -s 0 /etc/machine-id
+    sudo echo -n > /etc/machine-id
+fi
+
+if [ -f /var/lib/dbus/machine-id ]; then
+    sudo rm -f /var/lib/dbus/machine-id
+    sudo ln -s /etc/machine-id /var/lib/dbus/machine-id 2>/dev/null || true
+fi
+
+# Cleanup shell history
 history -w
 history -c
 
-## Fix machine-id issue with duplicate IP addresses being assigned
-## ref: https://jaylacroix.com/fixing-ubuntu-18-04-virtual-machines-that-fight-over-the-same-ip-address/
-## ref: https://kb.vmware.com/s/article/82229
-if [ -f /etc/machine-id ]; then
-  echo "==> Clearing machine-id"
-#  sudo truncate -s 0 /etc/machine-id
-  sudo echo -n > /etc/machine-id
-fi
-#if [ -f /var/lib/dbus/machine-id ]; then
-#  sudo rm /var/lib/dbus/machine-id
-#  sudo ln -s /etc/machine-id /var/lib/dbus/machine-id
-#fi
+echo "==> Full cleanup completed successfully"

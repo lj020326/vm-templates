@@ -352,7 +352,7 @@ variable "skip_packer_build" {
 
 variable "ssh_handshake_attempts" {
   type    = string
-  default = "20"
+  default = "100"
 }
 
 variable "ssh_password" {

@@ -1,0 +1,113 @@
+name: VM Templates Repo Config
+version: 1.0.0
+schema: v1
+
+# ==================== MODELS ====================
+models:
+  - name: Qwen2.5-Coder 32B (Main)
+    provider: ollama
+    apiBase: http://gpu02.johnson.int:11434
+    model: qwen2.5-coder:32b
+    roles:
+      - chat
+      - edit
+      - apply
+
+  # Fast & capable autocomplete
+  - name: Qwen2.5-Coder 1.5B
+    provider: ollama
+    apiBase: http://gpu02.johnson.int:11434
+    model: qwen2.5-coder:1.5b
+    roles:
+      - autocomplete
+
+  # Heavy reasoning model when needed
+  - name: Gemma 4 31B
+    provider: llama.cpp
+    apiBase: http://gpu02.johnson.int:11432
+    model: gemma-4-31B-it-Q5_K_M
+    contextLength: 32768
+    roles:
+      - chat
+      - edit
+      - apply
+
+  # Fast & capable autocomplete
+  - name: Gemma 4 E2B (Fast Draft)
+    provider: llama.cpp
+    apiBase: http://gpu02.johnson.int:11432
+    model: gemma-4-E2B-it-Q5_K_M
+    contextLength: 4096
+    roles:
+      - autocomplete
+
+  # Lightweight fallback
+  - name: Llama 3.1 8B
+    provider: ollama
+    apiBase: http://gpu02.johnson.int:11434
+    model: llama3.1:8b
+    roles:
+      - chat
+      - edit
+
+  - name: Nomic Embed Text
+    provider: ollama
+    apiBase: http://gpu02.johnson.int:11434
+    model: nomic-embed-text
+    roles:
+      - embed
+
+  - name: BGE Reranker
+    provider: ollama
+    apiBase: http://gpu02.johnson.int:11434
+    model: bona/bge-reranker:v2-m3
+    roles:
+      - rerank
+
+tabAutocompleteModel:
+  name: Gemma 4 E2B (Fast Draft)
+  provider: llama.cpp
+  apiBase: http://gpu02.johnson.int:11432
+  model: gemma-4-E2B-it-Q5_K_M
+#  name: Qwen2.5-Coder 1.5B
+#  provider: ollama
+#  apiBase: http://gpu02.johnson.int:11434
+#  model: qwen2.5-coder:1.5b
+
+context:
+  - provider: file
+  - provider: code
+  - provider: codebase
+  - provider: terminal
+  - provider: diff
+
+rules:
+  - "This is the vm-templates repository — focus on Packer + Ansible IaC for VMware templates"
+  - "Prioritize reproducible, idempotent, and well-documented build processes"
+  - "Packer HCL should be clean, modular, and use best practices (variables, provisioners, post-processors)"
+  - "Ansible playbooks used in Packer must be fully idempotent and use FQCNs"
+  - "Keep build configurations maintainable and easy to fork/customize"
+  - "Document all template parameters, build steps, and requirements clearly"
+  - "Favor open source tools and community best practices"
+  - "Ensure Jenkins pipeline integration is robust and observable"
+
+prompts:
+  - name: packer-review
+    description: Review Packer template
+    prompt: "Review this Packer HCL template. Suggest improvements for structure, performance, security, maintainability, and best practices."
+
+  - name: packer-ansible
+    description: Review Packer + Ansible integration
+    prompt: "Review this Packer configuration that uses Ansible provisioners. Suggest improvements for idempotency, performance, variable handling, and reliability."
+
+  - name: jenkins-pipeline
+    description: Review Jenkins pipeline
+    prompt: "Review this Jenkins Groovy pipeline for VM template building. Suggest improvements for reliability, error handling, logging, and maintainability."
+
+  - name: bash-build-script
+    description: Improve build script
+    prompt: "Review and improve this bash script used in the VM template build process for robustness, error handling, logging, and cross-platform compatibility."
+
+  - name: hcl-best-practices
+    description: Improve HCL code
+    prompt: "Review this HashiCorp Configuration Language (HCL) code and suggest improvements for readability, modularity, and Packer best practices."

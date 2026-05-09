@@ -163,7 +163,7 @@
       "type": "shell",
       "execute_command": "echo '{{ user `ssh_username` }}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
       "scripts": [
-        "_common/scripts/install_site_cacerts.sh"
+        "_common/scripts/install_cacerts.sh"
       ]
     },
     {

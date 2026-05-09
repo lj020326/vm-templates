@@ -17,7 +17,9 @@ mkdir -p "${__ANSIBLE_STAGING_DIRECTORY}/galaxy_collections/ansible_collections/
 
 export -p | sed 's/declare -x //' | sed 's/export //'
 
-env PATH="${PATH}:${__VENV_BINDIR}" ansible-galaxy collection install --upgrade \
+env PATH="${PATH}:${__VENV_BINDIR}" \
+  /usr/local/bin/retry_command.sh \
+  ansible-galaxy collection install --upgrade \
   -r "${__ANSIBLE_STAGING_DIRECTORY}/requirements.yml" \
   -p "${__ANSIBLE_STAGING_DIRECTORY}/galaxy_collections"
 

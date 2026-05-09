@@ -11,4 +11,5 @@ secrets.yml
 vault.yml
 integration_config.yml
 integration_config.vault.yml
+.gitmodules.int
 *.log
