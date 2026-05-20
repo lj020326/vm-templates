@@ -23,7 +23,7 @@ variable "ansible_bitbucket_ssh_key_string" {
 
 variable "ansible_command" {
   type    = string
-  default = "env PATH=$PATH:~/.venv/ansible/bin PYTHONUNBUFFERED=1 ansible-playbook"
+  default = "env PATH=~/.venv/ansible/bin:$PATH PYTHONUNBUFFERED=1 ansible-playbook"
 }
 
 variable "ansible_command_orig" {
@@ -816,6 +816,11 @@ variable "vm_template_dir" {
 variable "vm_template_host" {
   type    = string
   default = "esx02.dettonville.int"
+}
+
+variable "vm_template_host2" {
+  type    = string
+  default = "esx01.dettonville.int"
 }
 
 variable "vm_template_name" {

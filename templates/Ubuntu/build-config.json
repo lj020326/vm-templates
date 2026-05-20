@@ -154,17 +154,12 @@
   "provisioners": [
     {
       "type": "file",
-      "source": "_common/scripts/linux/retry_command.sh",
-      "destination": "/tmp/retry_command.sh"
-    },
-    {
-      "type": "file",
       "source": "_common/cacerts.cfg",
       "destination": "/tmp/cacerts.cfg"
     },
     {
       "type": "shell",
-      "execute_command": "echo '${var.build_username}' | {{.Vars}} sudo -S bash '{{.Path}}' -c /tmp/cacerts.cfg",
+      "execute_command": "echo '${var.build_username}' | sudo -H -S bash -c '{{ .Vars }} bash {{.Path}}' -c /tmp/cacerts.cfg",
       "scripts": [
         "_common/scripts/${var.vm_guest_os_family}/install_cacerts.sh"
       ]
@@ -195,7 +190,7 @@
     },
     {
       "type": "shell",
-      "execute_command": "echo '${var.build_username}' | {{.Vars}} sudo -H -S bash '{{.Path}}'",
+      "execute_command": "echo '${var.build_username}' | sudo -S bash -c '{{ .Vars }} bash {{ .Path }}' ${var.vm_network_device}",
       "script": "_common/scripts/${var.vm_guest_os_family}/netplan-dhcp-persist.sh",
       "expect_disconnect": true
     },
@@ -205,7 +200,7 @@
         "PIP_INSTALL_VERSION=${var.pip_version}",
         "ANSIBLE_VAULT_PASS=${var.ansible_vault_password}"
       ],
-      "execute_command": "echo '${var.build_username}' | sudo -S bash -c '{{ .Vars }} bash {{ .Path }}'",
+      "execute_command": "echo '${var.build_username}' | bash -c '{{ .Vars }} bash {{ .Path }}'",
       "scripts": [
         "_common/scripts/${var.vm_guest_os_family}/${var.ansible_env_setup_script}"
       ]
@@ -213,9 +208,6 @@
     {
       "type": "shell",
       "inline": [
-        "sudo mv /tmp/retry_command.sh /usr/local/bin/retry_command.sh",
-        "sudo chown root:root /usr/local/bin/retry_command.sh",
-        "sudo chmod +x /usr/local/bin/retry_command.sh",
         "mkdir -p ${var.ansible_staging_directory}"
       ]
     },
@@ -229,7 +221,7 @@
       "environment_vars": [
         "ANSIBLE_STAGING_DIRECTORY=${var.ansible_staging_directory}"
       ],
-      "execute_command": "echo '${var.build_username}' | sudo -S bash -c '{{ .Vars }} bash {{ .Path }}'",
+      "execute_command": "echo '${var.build_username}' | bash -c '{{ .Vars }} bash {{ .Path }}'",
       "scripts": [
         "_common/scripts/${var.vm_guest_os_family}/ansible-collections.sh"
       ]
@@ -253,15 +245,15 @@
     },
     {
       "type": "shell",
-      "execute_command": "echo '${var.build_username}' | {{.Vars}} sudo -H -S bash '{{.Path}}'",
-      "expect_disconnect": true,
+      "execute_command": "echo '${var.build_username}' | sudo -S bash -c '{{ .Vars }} bash {{ .Path }}'",
+      "expect_disconnect": "true",
       "pause_after": "180s",
       "script": "_common/scripts/${var.vm_guest_os_family}/reboot.sh",
       "skip_clean": "true"
     },
     {
       "type": "shell",
-      "execute_command": "echo '${var.build_username}' | {{.Vars}} sudo -H -S bash '{{.Path}}'",
+      "execute_command": "echo '${var.build_username}' | sudo -S bash -c '{{ .Vars }} bash {{ .Path }}'",
       "script": "_common/scripts/${var.vm_guest_os_family}/cleanup.sh"
     },
     {

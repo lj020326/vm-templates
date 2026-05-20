@@ -4,7 +4,6 @@ set -e
 set -x
 
 ANSIBLE_STAGING_DIRECTORY_DEFAULT="/var/tmp/packer-provisioner-ansible-local"
-ANSIBLE_COLLECTION_REQUIREMENTS_FILE_DEFAULT="/collections/requirements.yml"
 
 VENV_BINDIR_DEFAULT="${HOME}/.venv/ansible/bin"
 
@@ -18,7 +17,6 @@ mkdir -p "${__ANSIBLE_STAGING_DIRECTORY}/galaxy_collections/ansible_collections/
 export -p | sed 's/declare -x //' | sed 's/export //'
 
 env PATH="${PATH}:${__VENV_BINDIR}" \
-  /usr/local/bin/retry_command.sh \
   ansible-galaxy collection install --upgrade \
   -r "${__ANSIBLE_STAGING_DIRECTORY}/requirements.yml" \
   -p "${__ANSIBLE_STAGING_DIRECTORY}/galaxy_collections"

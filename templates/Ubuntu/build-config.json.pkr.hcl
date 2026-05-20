@@ -182,17 +182,12 @@ build {
   sources = ["source.qemu.Ubuntu", "source.virtualbox-iso.Ubuntu", "source.vmware-iso.Ubuntu", "source.vsphere-iso.Ubuntu"]
 
   provisioner "file" {
-    destination = "/tmp/retry_command.sh"
-    source      = "_common/scripts/linux/retry_command.sh"
-  }
-
-  provisioner "file" {
     destination = "/tmp/cacerts.cfg"
     source      = "_common/cacerts.cfg"
   }
 
   provisioner "shell" {
-    execute_command = "echo '${var.build_username}' | {{ .Vars }} sudo -S bash '{{ .Path }}' -c /tmp/cacerts.cfg"
+    execute_command = "echo '${var.build_username}' | sudo -H -S bash -c '{{ .Vars }} bash {{ .Path }}' -c /tmp/cacerts.cfg"
     scripts         = ["_common/scripts/${var.vm_guest_os_family}/install_cacerts.sh"]
   }
 
@@ -209,19 +204,19 @@ build {
   }
 
   provisioner "shell" {
-    execute_command   = "echo '${var.build_username}' | {{ .Vars }} sudo -H -S bash '{{ .Path }}'"
+    execute_command   = "echo '${var.build_username}' | sudo -S bash -c '{{ .Vars }} bash {{ .Path }}' ${var.vm_network_device}"
     expect_disconnect = true
     script            = "_common/scripts/${var.vm_guest_os_family}/netplan-dhcp-persist.sh"
   }
 
   provisioner "shell" {
     environment_vars = ["PIP_INSTALL_VERSION=${var.pip_version}", "ANSIBLE_VAULT_PASS=${var.ansible_vault_password}"]
-    execute_command  = "echo '${var.build_username}' | sudo -S bash -c '{{ .Vars }} bash {{ .Path }}'"
+    execute_command  = "echo '${var.build_username}' | bash -c '{{ .Vars }} bash {{ .Path }}'"
     scripts          = ["_common/scripts/${var.vm_guest_os_family}/${var.ansible_env_setup_script}"]
   }
 
   provisioner "shell" {
-    inline = ["sudo mv /tmp/retry_command.sh /usr/local/bin/retry_command.sh", "sudo chown root:root /usr/local/bin/retry_command.sh", "sudo chmod +x /usr/local/bin/retry_command.sh", "mkdir -p ${var.ansible_staging_directory}"]
+    inline = ["mkdir -p ${var.ansible_staging_directory}"]
   }
 
   provisioner "file" {
@@ -231,7 +226,7 @@ build {
 
   provisioner "shell" {
     environment_vars = ["ANSIBLE_STAGING_DIRECTORY=${var.ansible_staging_directory}"]
-    execute_command  = "echo '${var.build_username}' | sudo -S bash -c '{{ .Vars }} bash {{ .Path }}'"
+    execute_command  = "echo '${var.build_username}' | bash -c '{{ .Vars }} bash {{ .Path }}'"
     scripts          = ["_common/scripts/${var.vm_guest_os_family}/ansible-collections.sh"]
   }
 
@@ -249,15 +244,15 @@ build {
   }
 
   provisioner "shell" {
-    execute_command   = "echo '${var.build_username}' | {{ .Vars }} sudo -H -S bash '{{ .Path }}'"
-    expect_disconnect = true
+    execute_command   = "echo '${var.build_username}' | sudo -S bash -c '{{ .Vars }} bash {{ .Path }}'"
+    expect_disconnect = "true"
     pause_after       = "180s"
     script            = "_common/scripts/${var.vm_guest_os_family}/reboot.sh"
     skip_clean        = "true"
   }
 
   provisioner "shell" {
-    execute_command = "echo '${var.build_username}' | {{ .Vars }} sudo -H -S bash '{{ .Path }}'"
+    execute_command = "echo '${var.build_username}' | sudo -S bash -c '{{ .Vars }} bash {{ .Path }}'"
     script          = "_common/scripts/${var.vm_guest_os_family}/cleanup.sh"
   }
 

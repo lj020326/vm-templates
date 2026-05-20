@@ -400,7 +400,7 @@ function main() {
   if [[ ${SYNC_JSON2HCL} -ne 0 ]]; then
     logInfo "Synchronize json config to HCL2"
   #  ./convert_json2hcl.sh "${VM_DIST_LIST}"
-    ./config.sh "${VM_DIST_LIST}"
+    python3 ${PROJECT_DIR}/ensure-template-configs.py "${VM_DIST_LIST}"
   fi
 
   logInfo "Validate all necessary env vars exist"

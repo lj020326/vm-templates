@@ -70,9 +70,7 @@ locals {
     // This sends the "enter" key and then waits. This is typically used to execute the command and give the system time to process it.
     "<enter><wait>",
     // This types a command to load the initial RAM disk from the specified path.
-    "initrd /casper/initrd",
-    // This sends the "enter" key and then waits. This is typically used to execute the command and give the system time to process it.
-    "<enter><wait>",
+    "initrd /casper/initrd<enter><wait>",
     // This types the "boot" command. This starts the boot process using the loaded kernel and initial RAM disk.
     "boot",
     // This sends the "enter" key. This is typically used to execute the command.
@@ -110,7 +108,7 @@ locals {
         },
         {
           // /boot partition
-          pv_name = "",
+          pv_name = "boot",
           volume_group = "",
           drive = "sda",
           size = 1024,

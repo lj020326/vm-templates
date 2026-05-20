@@ -43,45 +43,6 @@ locals {
   vm_disk_partition_list = []
 }
 
-//variable "vm_disk_partitions" {
-//  type = list(object({
-//    name = string
-//    size = number
-//    format = object({
-//      label  = string
-//      fstype = string
-//    })
-//    mount = object({
-//      path    = string
-//      options = string
-//    })
-//    volume_group = string
-//  }))
-//  description = "The disk partitions for the virtual disk."
-//  default     = []
-//}
-//
-//variable "vm_disk_lvm" {
-//  type = list(object({
-//    name = string
-//    partitions = list(object({
-//      name = string
-//      size = number
-//      format = object({
-//        label  = string
-//        fstype = string
-//      })
-//      mount = object({
-//        path    = string
-//        options = string
-//      })
-//    }))
-//  }))
-//  description = "The LVM configuration for the virtual disk."
-//  default     = []
-//}
-
-
 // Additional Settings
 
 variable "additional_packages" {

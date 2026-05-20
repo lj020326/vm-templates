@@ -1,4 +1,4 @@
-answerfile_file_path="./_templates/ks.cfg.pkrtpl.hcl"
+answerfile_file_path="./_templates/preseed.cfg.pkrtpl.hcl"
 vm_guest_os_type="debian10_64Guest"
 vm_guest_os_language="en_US.UTF-8"
 vm_disk_controller_type="pvscsi"

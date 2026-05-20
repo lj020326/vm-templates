@@ -102,7 +102,7 @@ sudo bash -c "cat /dev/null > /etc/hostname"
 if [ -f /etc/machine-id ]; then
     echo "==> Resetting machine-id..."
     sudo truncate -s 0 /etc/machine-id
-    sudo echo -n > /etc/machine-id
+    echo -n | sudo tee /etc/machine-id > /dev/null
 fi
 
 if [ -f /var/lib/dbus/machine-id ]; then

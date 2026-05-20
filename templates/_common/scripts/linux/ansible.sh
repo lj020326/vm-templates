@@ -85,3 +85,6 @@ if [[ ! -z ${ANSIBLE_VAULT_PASS+x} ]]; then
   echo "${ANSIBLE_VAULT_PASS}" > ~/.vault_pass
   chmod 600 ~/.vault_pass
 fi
+
+echo "==> Display ansible --version"
+env PATH="~/.venv/ansible/bin:${PATH}" ansible --version

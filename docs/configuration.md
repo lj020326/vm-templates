@@ -34,14 +34,14 @@ This repo includes variables files that can be used to configure customized plat
 
 The [variables][packer-variables] are defined in `.json` and `.pkrvars.hcl` files.
 
-Running the config script `./templates/config.sh`:
+Running the config script `./python3 ensure-template-configs.py`:
 1) synchronizes/converts the json config files to HCL2 formatted variable files `.pkrvars.hcl` files in the respective common/distribution/release directories as well as 
 2) creates the necessary symlinks to each distribution directory.
 
 ```shell
 $ git clone https://github.com/lj020326/vm-templates.git
 $ cd vm-templates
-$ templates/config.sh
+$ python3 ensure-template-configs.py
 ```
 
 ## Configuration Variables<a name="configuration-variables"></a>
@@ -77,9 +77,9 @@ Variables can be set for template build settings/configs related to:
      - [`templates/env-vars.DEV.json`](../templates/env-vars.DEV.json)
      - [`templates/env-vars.PROD.json`](../templates/env-vars.PROD.json)
 
-All of the `.json` variable files are converted to HCL2 formatted `.pkr.hcl` files by the aforementioned `templates/config.sh` script.
+All of the `.json` variable files are converted to HCL2 formatted `.pkr.hcl` files by the aforementioned `python3 ensure-template-configs.py` script.
 
-Upon editing/updating any of the above `.json` make sure to re-run the `templates/config.sh` to make sure the updates are reflected in the corresponding hcl files. 
+Upon editing/updating any of the above `.json` make sure to re-run the `python3 ensure-template-configs.py` to make sure the updates are reflected in the corresponding hcl files. 
 
 ### [1] Common Template Build Settings/Configurations<a name="1-common-template-build-settingsconfigurations"></a>
 

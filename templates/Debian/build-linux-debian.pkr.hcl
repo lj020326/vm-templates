@@ -15,17 +15,24 @@ locals {
     "curl",
     "rsync",
     "git",
-    "jq"
+    "jq",
+    "python3",
+    "python3-pip",
+    "python3-apt",
+    "python3-virtualenv",
+    "python3-venv"
   ]
 
   // Additional Settings
 
   data_source_content = {
-    "/kickstart.cfg" = templatefile(var.answerfile_file_path, {
+    "/preseed.cfg" = templatefile(var.answerfile_file_path, {
       build_username           = var.build_username
       build_password           = var.build_password
       build_ssh_public_key     = var.build_ssh_public_key
       build_password_encrypted = local.build_password_encrypted
+      vm_disk_device           = local.vm_disk_device
+      vm_firmware              = var.vm_firmware
       vm_guest_os_language     = var.vm_guest_os_language
       vm_guest_os_keyboard     = var.vm_guest_os_keyboard
       vm_guest_os_timezone     = var.vm_guest_os_timezone
@@ -42,6 +49,7 @@ locals {
         domain  = var.vm_network_domain
       })
       storage = templatefile("${abspath(path.root)}/_templates/storage.pkrtpl.hcl", {
+        firmware   = var.vm_firmware
         device     = local.vm_disk_device
         swap       = local.vm_disk_use_swap
         partitions = local.vm_disk_configs[var.vm_template_type].vm_disk_partitions
@@ -51,36 +59,24 @@ locals {
     })
   }
 
-  data_source_command = var.common_data_source == "http" ? "ds=\"nocloud-net;seedfrom=http://{{.HTTPIP}}:{{.HTTPPort}}/kickstart.cfg\"" : "ds=nocloud"
-//  data_source_command = var.common_data_source == "http" ? "ds=\"nocloud-net;seedfrom=http://{{.HTTPIP}}:{{.HTTPPort}}/kickstart.cfg\"" : "ds=nocloud file=hd:sr1:/kickstart.cfg"
-  mount_cdrom_command = "<leftAltOn><f2><leftAltOff> <enter><wait> mount /dev/sr1 /media<enter> <leftAltOn><f1><leftAltOff>"
+  data_source_command = var.common_data_source == "http" ? "ds=\"nocloud-net;seedfrom=http://{{.HTTPIP}}:{{.HTTPPort}}/preseed.cfg\"" : "file=/media/preseed.cfg"
+  mount_cdrom_command = "mkdir -p /media && mount -t iso9660 /dev/sr1 /media"
   mount_cdrom         = var.common_data_source == "http" ? " " : local.mount_cdrom_command
 
   // ref: https://github.com/hashicorp/packer-plugin-vmware/issues/64#issuecomment-1436174305
   vm_boot_command = [
     // This waits for 3 seconds, sends the "c" key, and then waits for another 3 seconds. In the GRUB boot loader, this is used to enter command line mode.
     "<wait3s>c<wait3s>",
-    // This types a command to load the Linux kernel from the specified path.
-    "linux /install.amd/vmlinuz",
-    // This types a string that sets the auto-install/enable option to true. This is used to automate the installation process.
-    " auto-install/enable=true",
-    // This types a string that sets the debconf/priority option to critical. This is used to minimize the number of questions asked during the installation process.
-    " debconf/priority=critical",
-    // This types the value of the 'data_source_command' local variable. This is used to specify the kickstart data source configured in the common variables.
-    " ${local.data_source_command}",
-    // This types a string that sets the noprompt option and then sends the "enter" key. This is used to prevent the installer from pausing for user input.
-    " noprompt --<enter>",
-    // This types a command to load the initial RAM disk from the specified path and then sends the "enter" key.
+    // 1. Load Linux kernel AND all boot arguments on one line
+    "linux /install.amd/vmlinuz ",
+    "auto=true priority=critical ",
+    "preseed/${local.data_source_command} ",
+    "preseed/early_command=\"${local.mount_cdrom_command}\" ",
+    "--- quiet<enter>",
+    // 2. Load the initrd
     "initrd /install.amd/initrd.gz<enter>",
-    // This types the "boot" command and then sends the "enter" key. This starts the boot process using the loaded kernel and initial RAM disk.
-    "boot<enter><wait3s>",
-    // This waits for 30 seconds. This is typically used to give the system time to boot before sending more commands.
-    "<wait40s>",
-    // This types the value of the `mount_cdrom` local variable. This is used to mount the installation preseed/kickstart media on cdrom2 (/dev/sr2).
-    " ${local.mount_cdrom}",
-    "<wait3s>",
-    "file:///media/kickstart.cfg",
-    "<enter>"
+    // 3. Actually start the boot process
+    "boot<enter>"
   ]
 
   iso_paths = [
@@ -98,6 +94,7 @@ locals {
       vm_disk_partitions = [
         {
           pv_name = "boot-efi",
+          volume_group = "",
           drive = "sda",
           size = 1024,
           format = {
@@ -110,16 +107,18 @@ locals {
           }
         },
         {
+          // /boot partition
           pv_name = "boot",
+          volume_group = "",
           drive = "sda",
           size = 1024,
           format = {
-            label  = "BOOTFS",
-            fstype = "xfs",
+              label  = "BOOTFS",
+              fstype = "xfs"
           },
           mount = {
-            path    = "/boot",
-            options = "",
+              path    = "/boot",
+              options = ""
           }
         },
         {
@@ -129,11 +128,11 @@ locals {
           size = -1,
           format = {
             label  = "",
-            fstype = "",
+            fstype = ""
           },
           mount = {
             path    = "",
-            options = "",
+            options = ""
           }
         },
       ],
@@ -246,6 +245,7 @@ locals {
       vm_disk_partitions = [
         {
           pv_name = "",
+          volume_group = "",
           drive = "sda",
           size = 1024,
           format = {
@@ -259,6 +259,7 @@ locals {
         },
         {
           pv_name = "boot",
+          volume_group = "",
           drive = "sda",
           size = 1024,
           format = {

@@ -45,8 +45,11 @@ source "vsphere-iso" "CentOS" {
   cluster                = var.vcenter_cluster
   communicator           = var.vm_communicator
   configuration_parameters = {
-    "bios.bootDelay" = "5000"
-    bootOrder        = var.vm_boot_order
+    "bios.bootDelay"                       = "5000"
+    bootOrder                              = var.vm_boot_order
+    "isolation.tools.copy.disable"         = "FALSE"
+    "isolation.tools.paste.disable"        = "FALSE"
+    "isolation.tools.setGUIOptions.enable" = "TRUE"
   }
   convert_to_template  = "true"
   cpu_cores            = var.vm_cpu_cores_num
@@ -93,26 +96,31 @@ source "vsphere-iso" "CentOS" {
 build {
   sources = ["source.vsphere-iso.CentOS"]
 
+  provisioner "file" {
+    destination = "/tmp/cacerts.cfg"
+    source      = "_common/cacerts.cfg"
+  }
+
   provisioner "shell" {
-    execute_command = "echo '${var.build_username}' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'"
+    execute_command = "echo '${var.build_username}' | sudo -H -S bash -c '{{ .Vars }} bash {{ .Path }}' -c /tmp/cacerts.cfg"
     scripts         = ["_common/scripts/${var.vm_guest_os_family}/install_cacerts.sh"]
   }
 
   provisioner "shell" {
     environment_vars = ["BUILD_USERNAME=${var.build_username}", "BUILD_USER_SSH_PUBLIC_KEY=${var.build_ssh_public_key}"]
-    execute_command  = "echo '${var.build_username}' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'"
+    execute_command  = "echo '${var.build_username}' | sudo -S bash -c '{{ .Vars }} bash {{ .Path }}'"
     scripts          = ["_common/scripts/${var.vm_guest_os_family}/base.sh", "_common/scripts/${var.vm_guest_os_family}/vmware.sh", "_common/scripts/${var.vm_guest_os_family}/sshd.sh"]
   }
 
   provisioner "shell" {
     environment_vars = ["BUILD_USERNAME=${var.build_username}", "BUILD_JOB_URL=${var.build_job_url}", "BUILD_JOB_ID=${var.build_job_id}", "BUILD_GIT_COMMIT_HASH=${var.build_git_commit_hash}"]
-    execute_command  = "echo '${var.build_username}' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'"
+    execute_command  = "echo '${var.build_username}' | sudo -S bash -c '{{ .Vars }} bash {{ .Path }}'"
     script           = "_common/scripts/${var.vm_guest_os_family}/add-build-info.sh"
   }
 
   provisioner "shell" {
     environment_vars = ["PIP_INSTALL_VERSION=${var.pip_version}", "ANSIBLE_VAULT_PASS=${var.ansible_vault_password}"]
-    execute_command  = "echo '${var.build_username}' | {{ .Vars }} bash '{{ .Path }}'"
+    execute_command  = "echo '${var.build_username}' | bash -c '{{ .Vars }} bash {{ .Path }}'"
     scripts          = ["_common/scripts/${var.vm_guest_os_family}/${var.ansible_env_setup_script}"]
   }
 
@@ -127,7 +135,7 @@ build {
 
   provisioner "shell" {
     environment_vars = ["ANSIBLE_STAGING_DIRECTORY=${var.ansible_staging_directory}"]
-    execute_command  = "echo '${var.build_username}' | {{ .Vars }} bash '{{ .Path }}'"
+    execute_command  = "echo '${var.build_username}' | bash -c '{{ .Vars }} bash {{ .Path }}'"
     scripts          = ["_common/scripts/${var.vm_guest_os_family}/ansible-collections.sh"]
   }
 
@@ -145,16 +153,21 @@ build {
   }
 
   provisioner "shell" {
-    execute_command   = "echo '${var.build_username}' | {{ .Vars }} sudo -H -S -E bash '{{ .Path }}'"
+    execute_command   = "echo '${var.build_username}' | sudo -S bash -c '{{ .Vars }} bash {{ .Path }}'"
     expect_disconnect = "true"
-    pause_after       = "120s"
+    pause_after       = "180s"
     script            = "_common/scripts/${var.vm_guest_os_family}/reboot.sh"
     skip_clean        = "true"
   }
 
   provisioner "shell" {
-    execute_command = "echo '${var.build_username}' | {{ .Vars }} sudo -H -S -E bash '{{ .Path }}'"
-    scripts         = ["_common/scripts/${var.vm_guest_os_family}/cleanup.sh", "_common/scripts/${var.vm_guest_os_family}/zerodisk.sh"]
+    execute_command = "echo '${var.build_username}' | sudo -S bash -c '{{ .Vars }} bash {{ .Path }}'"
+    script          = "_common/scripts/${var.vm_guest_os_family}/cleanup.sh"
+  }
+
+  provisioner "shell" {
+    execute_command = "echo '${var.build_username}' | {{ .Vars }} sudo -H -S bash '{{ .Path }}'"
+    script          = "_common/scripts/${var.vm_guest_os_family}/zerodisk.sh"
   }
 
   post-processor "manifest" {

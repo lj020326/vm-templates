@@ -83,7 +83,7 @@ To refresh template json configuration using the source json files:
 ```shell
 $ alias gitpullsub="git submodule update --recursive --remote"
 $ alias gitmergesub="git submodule update --remote --merge && gitaddcommitpush"
-$ templates/config.sh 
+$ python3 ensure-template-configs.py 
 $ gitaddcommitpush
 ```
 

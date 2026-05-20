@@ -234,7 +234,7 @@ function main() {
   echo "*******************************"
   echo "Synchronize json config to HCL2"
   if [[ ${SYNC_JSON2HCL} -ne 0 ]]; then
-    ./config.sh "${VM_DIST_LIST}"
+    python3 ${PROJECT_DIR}/ensure-template-configs.py "${VM_DIST_LIST}"
   fi
 
   echo "************************************"

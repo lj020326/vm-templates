@@ -30,7 +30,10 @@
       "communicator": "%%var.vm_communicator",
       "configuration_parameters": {
         "bios.bootDelay": "5000",
-        "bootOrder": "%%var.vm_boot_order"
+        "bootOrder": "%%var.vm_boot_order",
+        "isolation.tools.copy.disable": "FALSE",
+        "isolation.tools.paste.disable": "FALSE",
+        "isolation.tools.setGUIOptions.enable": "TRUE"
       },
       "shutdown_command": "%%local.vm_shutdown_command",
       "shutdown_timeout": "%%var.vm_shutdown_timeout",
@@ -68,15 +71,20 @@
   ],
   "provisioners": [
     {
+      "type": "file",
+      "source": "_common/cacerts.cfg",
+      "destination": "/tmp/cacerts.cfg"
+    },
+    {
       "type": "shell",
-      "execute_command": "echo '${var.build_username}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "execute_command": "echo '${var.build_username}' | sudo -H -S bash -c '{{ .Vars }} bash {{.Path}}' -c /tmp/cacerts.cfg",
       "scripts": [
         "_common/scripts/${var.vm_guest_os_family}/install_cacerts.sh"
       ]
     },
     {
       "type": "shell",
-      "execute_command": "echo '${var.build_username}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "execute_command": "echo '${var.build_username}' | sudo -S bash -c '{{ .Vars }} bash {{ .Path }}'",
       "environment_vars": [
         "BUILD_USERNAME=${var.build_username}",
         "BUILD_USER_SSH_PUBLIC_KEY=${var.build_ssh_public_key}"
@@ -89,7 +97,7 @@
     },
     {
       "type": "shell",
-      "execute_command": "echo '${var.build_username}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "execute_command": "echo '${var.build_username}' | sudo -S bash -c '{{ .Vars }} bash {{ .Path }}'",
       "environment_vars": [
         "BUILD_USERNAME=${var.build_username}",
         "BUILD_JOB_URL=${var.build_job_url}",
@@ -104,7 +112,7 @@
         "PIP_INSTALL_VERSION=${var.pip_version}",
         "ANSIBLE_VAULT_PASS=${var.ansible_vault_password}"
       ],
-      "execute_command": "echo '${var.build_username}' | {{.Vars}} bash '{{.Path}}'",
+      "execute_command": "echo '${var.build_username}' | bash -c '{{ .Vars }} bash {{ .Path }}'",
       "scripts": [
         "_common/scripts/${var.vm_guest_os_family}/${var.ansible_env_setup_script}"
       ]
@@ -125,7 +133,7 @@
       "environment_vars": [
         "ANSIBLE_STAGING_DIRECTORY=${var.ansible_staging_directory}"
       ],
-      "execute_command": "echo '${var.build_username}' | {{.Vars}} bash '{{.Path}}'",
+      "execute_command": "echo '${var.build_username}' | bash -c '{{ .Vars }} bash {{ .Path }}'",
       "scripts": [
         "_common/scripts/${var.vm_guest_os_family}/ansible-collections.sh"
       ]
@@ -149,19 +157,21 @@
     },
     {
       "type": "shell",
-      "execute_command": "echo '${var.build_username}' | {{.Vars}} sudo -H -S -E bash '{{.Path}}'",
-      "skip_clean": "true",
+      "execute_command": "echo '${var.build_username}' | sudo -S bash -c '{{ .Vars }} bash {{ .Path }}'",
       "expect_disconnect": "true",
+      "pause_after": "180s",
       "script": "_common/scripts/${var.vm_guest_os_family}/reboot.sh",
-      "pause_after": "120s"
+      "skip_clean": "true"
     },
     {
       "type": "shell",
-      "execute_command": "echo '${var.build_username}' | {{.Vars}} sudo -H -S -E bash '{{.Path}}'",
-      "scripts": [
-        "_common/scripts/${var.vm_guest_os_family}/cleanup.sh",
-        "_common/scripts/${var.vm_guest_os_family}/zerodisk.sh"
-      ]
+      "execute_command": "echo '${var.build_username}' | sudo -S bash -c '{{ .Vars }} bash {{ .Path }}'",
+      "script": "_common/scripts/${var.vm_guest_os_family}/cleanup.sh"
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo '${var.build_username}' | {{.Vars}} sudo -H -S bash '{{.Path}}'",
+      "script": "_common/scripts/${var.vm_guest_os_family}/zerodisk.sh"
     }
   ],
   "post-processors": [
